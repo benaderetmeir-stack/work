@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ניהול משמרות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f13;
+    --surface: #18181f;
+    --surface2: #22222d;
+    --border: #2e2e3d;
+    --accent: #f0a500;
+    --accent2: #e06c00;
+    --text: #f0eff5;
+    --text2: #9898b0;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --blue: #4a9eff;
+    --orange: #ff8c42;
+    --radius: 12px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; direction: rtl; }
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* LOGIN */
+  #loginScreen {
+    align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at 30% 20%, #1a1400 0%, #0f0f13 60%);
+    position: relative; overflow: hidden;
+  }
+  #loginScreen::before {
+    content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,165,0,0.08) 0%, transparent 70%);
+    top: -200px; right: -200px;
+  }
+  #loginScreen::after {
+    content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,108,0,0.06) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+  }
+  .login-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+    padding: 48px 40px; width: 400px; box-shadow: var(--shadow);
+    position: relative; z-index: 1; animation: slideUp 0.5s ease;
+  }
+  @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+  .login-logo { text-align: center; margin-bottom: 32px; }
+  .login-logo .icon { font-size: 48px; display: block; margin-bottom: 12px; }
+  .login-logo h1 { font-size: 26px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+  .login-logo p { color: var(--text2); font-size: 13px; margin-top: 4px; }
+  .login-tabs { display:flex; gap:4px; background:var(--bg); border-radius:10px; padding:4px; margin-bottom:28px; }
+  .login-tab {
+    flex:1; padding:10px; border:none; border-radius:8px; font-family:'Heebo',sans-serif;
+    font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; background:transparent; color:var(--text2);
+  }
+  .login-tab.active { background:var(--accent); color:#000; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display:block; font-size:13px; font-weight:600; color:var(--text2); margin-bottom:8px; }
+  .form-group input, .form-group select {
+    width:100%; padding:12px 16px; background:var(--surface2); border:1px solid var(--border);
+    border-radius:var(--radius); color:var(--text); font-family:'Heebo',sans-serif;
+    font-size:15px; transition:border-color .2s;
+  }
+  .form-group input { direction:ltr; text-align:right; }
+  .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--accent); }
+  .btn { width:100%; padding:13px; border:none; border-radius:var(--radius); font-family:'Heebo',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all .2s; }
+  .btn-primary { background:var(--accent); color:#000; }
+  .btn-primary:hover { background:var(--accent2); transform:translateY(-1px); }
+  .error-msg { color:var(--red); font-size:13px; text-align:center; margin-top:12px; min-height:18px; }
+
+  /* APP */
+  #appScreen { flex-direction: column; }
+  .topbar { background:var(--surface); border-bottom:1px solid var(--border); padding:0 24px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .topbar-logo { font-size:18px; font-weight:800; color:var(--accent); }
+  .topbar-user { font-size:13px; color:var(--text2); }
+  .topbar-user span { color:var(--text); font-weight:600; }
+  .btn-logout { padding:7px 16px; background:transparent; border:1px solid var(--border); border-radius:8px; color:var(--text2); font-family:'Heebo',sans-serif; font-size:13px; cursor:pointer; transition:all .2s; }
+  .btn-logout:hover { border-color:var(--red); color:var(--red); }
+  .nav-tabs { display:flex; gap:4px; padding:16px 24px 0; border-bottom:1px solid var(--border); background:var(--surface); }
+  .nav-tab { padding:10px 20px; border:none; background:transparent; color:var(--text2); font-family:'Heebo',sans-serif; font-size:14px; font-weight:600; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .2s; }
+  .nav-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .nav-tab:hover:not(.active) { color:var(--text); }
+  .content { padding:24px; flex:1; }
+  .panel { display:none; }
+  .panel.active { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+
+  /* CARDS */
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:24px; margin-bottom:20px; }
+  .card-title { font-size:16px; font-weight:700; margin-bottom:20px; color:var(--text); display:flex; align-items:center; gap:8px; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .form-row { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+  .form-row .form-group { margin-bottom:0; flex:1; min-width:120px; }
+  .btn-sm { padding:12px 20px; border:none; border-radius:var(--radius); font-family:'Heebo',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s; white-space:nowrap; }
+  .btn-accent { background:var(--accent); color:#000; }
+  .btn-accent:hover { background:var(--accent2); }
+  .btn-ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); }
+  .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:rgba(231,76,60,0.15); color:var(--red); border:1px solid rgba(231,76,60,0.3); }
+  .btn-danger:hover { background:rgba(231,76,60,0.25); }
+  .btn-success { background:rgba(46,204,113,0.15); color:var(--green); border:1px solid rgba(46,204,113,0.3); }
+  .btn-success:hover { background:rgba(46,204,113,0.25); }
+  .btn-blue { background:rgba(74,158,255,0.15); color:var(--blue); border:1px solid rgba(74,158,255,0.3); }
+  .btn-blue:hover { background:rgba(74,158,255,0.25); }
+
+  /* TABLE */
+  table { width:100%; border-collapse:collapse; }
+  th { text-align:right; padding:10px 12px; font-size:12px; font-weight:700; color:var(--text2); border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:.5px; }
+  td { padding:14px 12px; font-size:14px; border-bottom:1px solid rgba(46,46,61,0.5); vertical-align:middle; }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(255,255,255,0.02); }
+
+  /* BADGES */
+  .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+  .badge-role-0 { background:rgba(240,165,0,0.15); color:var(--accent); }
+  .badge-role-1 { background:rgba(74,158,255,0.15); color:var(--blue); }
+  .badge-role-2 { background:rgba(46,204,113,0.15); color:var(--green); }
+  .badge-role-3 { background:rgba(155,89,182,0.15); color:#b87fd4; }
+  .badge-role-4 { background:rgba(231,76,60,0.15); color:var(--red); }
+  .badge-role-5 { background:rgba(149,165,166,0.15); color:#aaa; }
+
+  /* SHIFT BUILDER */
+  .day-section { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:16px; overflow:hidden; }
+  .day-header { padding:14px 20px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
+  .day-header:hover { background:rgba(255,255,255,0.02); }
+  .day-name { font-weight:700; font-size:15px; }
+  .day-body { padding:0 20px 20px; }
+  .shift-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; margin-top:12px; position:relative; }
+  .shift-card-title { font-size:14px; font-weight:700; margin-bottom:12px; color:var(--accent); padding-left:40px; }
+  .shift-remove { position:absolute; top:12px; left:12px; background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.3); color:var(--red); cursor:pointer; font-size:13px; font-weight:700; transition:all .2s; border-radius:6px; padding:4px 10px; z-index:10; }
+  .shift-remove:hover { background:rgba(231,76,60,0.25); }
+  .roles-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+  .role-input { display:flex; flex-direction:column; gap:4px; }
+  .role-input label { font-size:11px; color:var(--text2); font-weight:600; }
+  .role-input input { width:100%; padding:8px 10px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Heebo',sans-serif; font-size:14px; text-align:center; direction:ltr; }
+  .role-input input:focus { outline:none; border-color:var(--accent); }
+
+  /* SHIFT NAME TABS */
+  .shift-name-tabs { display:flex; gap:6px; margin-bottom:12px; }
+  .shift-name-tab { padding:6px 16px; border:1px solid var(--border); border-radius:20px; background:transparent; color:var(--text2); font-family:'Heebo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .shift-name-tab.active { background:var(--accent); color:#000; border-color:var(--accent); }
+  .shift-name-tab:hover:not(.active) { border-color:var(--text); color:var(--text); }
+
+  /* CONFIRM SHIFT BUTTON */
+  .confirm-shift-btn {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%; padding:12px; margin-top:12px;
+    background:rgba(46,204,113,0.1); border:1px solid rgba(46,204,113,0.3);
+    border-radius:10px; color:var(--green); font-family:'Heebo',sans-serif;
+    font-size:14px; font-weight:700; cursor:pointer; transition:all .2s;
+  }
+  .confirm-shift-btn:hover { background:rgba(46,204,113,0.2); }
+  .confirm-shift-btn.confirmed { background:rgba(46,204,113,0.2); border-color:var(--green); }
+
+  /* SHIFT STATUS BANNERS */
+  .shift-status-complete {
+    display:flex; align-items:center; gap:12px;
+    padding:14px 20px; border-radius:10px; margin-top:8px;
+    background:linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.05));
+    border:1.5px solid var(--green);
+  }
+  .shift-status-incomplete {
+    display:flex; align-items:center; gap:12px;
+    padding:14px 20px; border-radius:10px; margin-top:8px;
+    background:linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.05));
+    border:1.5px solid var(--red);
+  }
+  .shift-status-icon { font-size:24px; }
+  .shift-status-text h4 { font-size:15px; font-weight:800; }
+  .shift-status-text p { font-size:12px; margin-top:2px; opacity:.8; }
+
+  /* AVAILABILITY */
+  .avail-shift { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .avail-info h4 { font-size:15px; font-weight:700; }
+  .avail-info p { font-size:13px; color:var(--text2); margin-top:2px; }
+  .toggle-avail { display:flex; gap:8px; align-items:center; }
+  .avail-btn { padding:8px 18px; border-radius:8px; border:1px solid var(--border); font-family:'Heebo',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; background:transparent; color:var(--text2); }
+  .avail-btn.yes.active { background:rgba(46,204,113,0.2); border-color:var(--green); color:var(--green); }
+  .avail-btn.no.active { background:rgba(231,76,60,0.2); border-color:var(--red); color:var(--red); }
+  .avail-btn:hover { border-color:var(--text); color:var(--text); }
+
+  /* APPROVE */
+  .approve-shift { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:16px; }
+  .approve-shift-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+  .approve-shift-header h4 { font-size:15px; font-weight:700; }
+  .approve-shift-header p { font-size:13px; color:var(--text2); }
+  .available-workers { display:flex; flex-wrap:wrap; gap:8px; }
+  .worker-chip { display:flex; align-items:center; gap:8px; padding:8px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface); font-size:13px; cursor:pointer; transition:all .2s; }
+  .worker-chip:hover { border-color:var(--accent); }
+  .worker-chip.approved { background:rgba(46,204,113,0.1); border-color:var(--green); color:var(--green); }
+  .worker-chip .wname { font-weight:600; }
+  .worker-chip .wrole { font-size:11px; color:var(--text2); }
+  .worker-chip.approved .wrole { color:rgba(46,204,113,0.7); }
+  .role-section { margin-bottom:16px; }
+  .role-section-title { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .needed-count { background:var(--surface2); border-radius:20px; padding:2px 8px; font-size:11px; color:var(--text2); }
+  .approved-count { border-radius:20px; padding:2px 8px; font-size:11px; font-weight:700; }
+  .approved-count.ok { background:rgba(46,204,113,0.15); color:var(--green); }
+  .approved-count.partial { background:rgba(240,165,0,0.15); color:var(--accent); }
+  .approved-count.over { background:rgba(255,140,66,0.2); color:var(--orange); }
+
+  /* OVER QUOTA WARNING */
+  .over-quota-warning {
+    display:flex; align-items:center; gap:8px;
+    padding:8px 12px; border-radius:8px; margin-top:6px;
+    background:rgba(255,140,66,0.12); border:1px solid rgba(255,140,66,0.4);
+    color:var(--orange); font-size:12px; font-weight:600;
+  }
+
+  /* MY SHIFTS */
+  .my-shift-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .my-shift-info h4 { font-size:15px; font-weight:700; }
+  .my-shift-info p { font-size:13px; color:var(--text2); margin-top:4px; }
+  .status-badge { padding:6px 14px; border-radius:20px; font-size:13px; font-weight:700; }
+  .status-approved { background:rgba(46,204,113,0.15); color:var(--green); }
+  .status-pending { background:rgba(240,165,0,0.15); color:var(--accent); }
+  .status-none { background:var(--surface); color:var(--text2); border:1px solid var(--border); }
+
+  /* STATS */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; text-align:center; }
+  .stat-num { font-size:32px; font-weight:900; color:var(--accent); }
+  .stat-label { font-size:12px; color:var(--text2); font-weight:600; margin-top:4px; }
+
+  /* EMPTY */
+  .empty { text-align:center; padding:48px 24px; color:var(--text2); }
+  .empty .emoji { font-size:48px; display:block; margin-bottom:12px; }
+  .empty p { font-size:15px; }
+
+  /* SELECT */
+  select { padding:12px 16px; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:'Heebo',sans-serif; font-size:14px; cursor:pointer; width:100%; }
+  select:focus { outline:none; border-color:var(--accent); }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 24px; font-size:14px; font-weight:600; z-index:9999; transition:transform .3s ease; box-shadow:var(--shadow); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+  .toast.success { border-color:var(--green); color:var(--green); }
+  .toast.error { border-color:var(--red); color:var(--red); }
+  .toast.warning { border-color:var(--orange); color:var(--orange); }
+
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:500; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; width:500px; max-width:95vw; animation:slideUp .3s ease; }
+  .modal h3 { font-size:18px; font-weight:800; margin-bottom:20px; }
+  .modal-footer { display:flex; gap:10px; margin-top:24px; justify-content:flex-end; }
+
+  /* EDIT EMPLOYEE MODAL */
+  .edit-field { margin-bottom:16px; }
+  .edit-field label { display:block; font-size:13px; font-weight:600; color:var(--text2); margin-bottom:8px; }
+  .edit-field input, .edit-field select { width:100%; padding:11px 14px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; color:var(--text); font-family:'Heebo',sans-serif; font-size:14px; }
+  .edit-field input:focus, .edit-field select:focus { outline:none; border-color:var(--accent); }
+
+  /* APPROVE CONFIRMED BANNER ON SHIFT CARD */
+  .approve-shift.complete { border-color:rgba(46,204,113,0.4); }
+  .approve-shift.incomplete { border-color:rgba(231,76,60,0.3); }
+
+  /* WEEK SUMMARY TABLE */
+  .week-summary { margin-bottom:24px; }
+  .week-summary-title { font-size:14px; font-weight:800; color:var(--text2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:12px; }
+  .summary-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .summary-table th { padding:8px 10px; text-align:right; font-size:11px; font-weight:700; color:var(--text2); border-bottom:1px solid var(--border); background:var(--bg); }
+  .summary-table td { padding:9px 10px; border-bottom:1px solid rgba(46,46,61,0.4); vertical-align:middle; }
+  .summary-table tr:last-child td { border-bottom:none; }
+  .summary-pill { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; }
+  .pill-full { background:rgba(46,204,113,0.15); color:var(--green); border:1px solid rgba(46,204,113,0.3); }
+  .pill-open { background:rgba(231,76,60,0.12); color:var(--red); border:1px solid rgba(231,76,60,0.3); }
+  .role-mini { display:inline-flex; align-items:center; gap:3px; font-size:11px; padding:2px 7px; border-radius:12px; margin:2px; }
+  .role-mini.ok { background:rgba(46,204,113,0.1); color:var(--green); }
+  .role-mini.miss { background:rgba(231,76,60,0.1); color:var(--red); }
+
+  @media(max-width:600px) {
+    .stats-row { grid-template-columns:1fr 1fr; }
+    .grid-2 { grid-template-columns:1fr; }
+    .roles-grid { grid-template-columns:1fr 1fr; }
+    .login-card { width:95vw; padding:32px 20px; }
+    .content { padding:16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="screen active">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="icon">🍽️</span>
+      <h1>ניהול משמרות</h1>
+      <p>מסעדה / בית קפה</p>
+    </div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('manager')">מנהל</button>
+      <button class="login-tab" onclick="switchLoginTab('employee')">עובד</button>
+    </div>
+    <div id="managerLoginForm">
+      <div class="form-group"><label>שם משתמש</label><input type="text" id="managerUser" placeholder="admin" /></div>
+      <div class="form-group"><label>סיסמה</label><input type="password" id="managerPass" placeholder="••••••" /></div>
+    </div>
+    <div id="employeeLoginForm" style="display:none">
+      <div class="form-group"><label>קוד אישי</label><input type="text" id="employeeCode" placeholder="הזן קוד שקיבלת" /></div>
+    </div>
+    <div class="error-msg" id="loginError"></div>
+    <button class="btn btn-primary" style="margin-top:8px" onclick="doLogin()">כניסה</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appScreen" class="screen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px"><span class="topbar-logo">🍽️ משמרות</span></div>
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="topbar-user">שלום, <span id="topbarName">—</span></span>
+      <button class="btn-logout" onclick="logout()">יציאה</button>
+    </div>
+  </div>
+  <div class="nav-tabs" id="managerNav">
+    <button class="nav-tab active" onclick="showPanel('dashboard')">📊 סקירה</button>
+    <button class="nav-tab" onclick="showPanel('employees')">👥 עובדים</button>
+    <button class="nav-tab" onclick="showPanel('schedule')">📅 בניית לוח</button>
+    <button class="nav-tab" onclick="showPanel('approve')">✅ אישור משמרות</button>
+  </div>
+  <div class="nav-tabs" id="employeeNav" style="display:none">
+    <button class="nav-tab active" onclick="showPanel('myshifts')">📋 המשמרות שלי</button>
+    <button class="nav-tab" onclick="showPanel('availability')">✋ זמינות</button>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="panel-dashboard" class="panel active">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="card">
+        <div class="card-title">📋 סיכום משמרות שבועי</div>
+        <div id="dashWeekSummary"></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="card-title">👥 עובדים לפי תפקיד</div><div id="roleBreakdown"></div></div>
+        <div class="card"><div class="card-title">📅 משמרות השבוע הקרוב</div><div id="upcomingShifts"></div></div>
+      </div>
+    </div>
+
+    <!-- EMPLOYEES -->
+    <div id="panel-employees" class="panel">
+      <div class="card">
+        <div class="card-title">➕ הוספת עובד חדש</div>
+        <div class="form-row">
+          <div class="form-group"><label>שם מלא</label><input type="text" id="newEmpName" placeholder="ישראל ישראלי" /></div>
+          <div class="form-group"><label>תפקיד</label>
+            <select id="newEmpRole">
+              <option value="manager">מנהל משמרת</option>
+              <option value="waiter">מלצר</option>
+              <option value="line">עובד פס</option>
+              <option value="pastry">קונדיטור</option>
+              <option value="kitchen">מטבח</option>
+              <option value="dishwasher">שוטף כלים</option>
+            </select>
+          </div>
+          <div class="form-group"><label>טלפון</label><input type="text" id="newEmpPhone" placeholder="050-0000000" /></div>
+          <button class="btn-sm btn-accent" onclick="addEmployee()">הוסף עובד</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">👥 רשימת עובדים</div>
+        <table id="empTable">
+          <thead><tr><th>שם</th><th>תפקיד</th><th>טלפון</th><th>קוד כניסה</th><th>פעולות</th></tr></thead>
+          <tbody id="empTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SCHEDULE -->
+    <div id="panel-schedule" class="panel">
+      <div class="card">
+        <div class="card-title">📅 בניית לוח שבועי</div>
+        <div class="form-row" style="margin-bottom:0">
+          <div class="form-group"><label>בחר שבוע (תאריך ראשון)</label><input type="date" id="weekStart" /></div>
+          <button class="btn-sm btn-ghost" onclick="loadWeek()">טען שבוע</button>
+        </div>
+      </div>
+      <div id="weekBuilder"></div>
+    </div>
+
+    <!-- APPROVE -->
+    <div id="panel-approve" class="panel">
+      <div class="card">
+        <div class="card-title">✅ אישור עובדים למשמרות</div>
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group"><label>בחר שבוע</label><input type="date" id="approveWeekStart" /></div>
+          <button class="btn-sm btn-ghost" onclick="loadApproveWeek()">טען</button>
+        </div>
+        <div id="approveList"></div>
+      </div>
+    </div>
+
+    <!-- MY SHIFTS -->
+    <div id="panel-myshifts" class="panel">
+      <div class="card"><div class="card-title">📋 המשמרות שלי</div><div id="myShiftsList"></div></div>
+    </div>
+
+    <!-- AVAILABILITY -->
+    <div id="panel-availability" class="panel">
+      <div class="card"><div class="card-title">✋ סמן זמינות</div><div id="availList"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL: SMS -->
+<div class="modal-overlay" id="smsModal">
+  <div class="modal">
+    <h3>📱 הודעת אישור (סימולציה)</h3>
+    <p style="color:var(--text2);font-size:13px;margin-bottom:16px">בסביבת ייצור, הודעה זו תישלח ב-SMS/וואטסאפ</p>
+    <div style="background:var(--surface2);border-radius:10px;padding:16px;font-size:14px;line-height:1.8;border:1px solid var(--border)" id="smsContent"></div>
+    <div class="modal-footer"><button class="btn-sm btn-ghost" onclick="closeModal('smsModal')">סגור</button></div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT EMPLOYEE -->
+<div class="modal-overlay" id="editEmpModal">
+  <div class="modal">
+    <h3>✏️ עריכת עובד</h3>
+    <input type="hidden" id="editEmpId" />
+    <div class="edit-field"><label>שם מלא</label><input type="text" id="editEmpName" /></div>
+    <div class="edit-field"><label>תפקיד</label>
+      <select id="editEmpRole">
+        <option value="manager">מנהל משמרת</option>
+        <option value="waiter">מלצר</option>
+        <option value="line">עובד פס</option>
+        <option value="pastry">קונדיטור</option>
+        <option value="kitchen">מטבח</option>
+        <option value="dishwasher">שוטף כלים</option>
+      </select>
+    </div>
+    <div class="edit-field"><label>טלפון</label><input type="text" id="editEmpPhone" /></div>
+    <div class="edit-field">
+      <label>קוד כניסה</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="editEmpCode" readonly style="flex:1;opacity:.7" />
+        <button class="btn-sm btn-ghost" style="white-space:nowrap" onclick="regenerateCode()">🔄 קוד חדש</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-ghost" onclick="closeModal('editEmpModal')">ביטול</button>
+      <button class="btn-sm btn-accent" onclick="saveEditEmployee()">שמור</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: OVER QUOTA CONFIRM -->
+<div class="modal-overlay" id="overQuotaModal">
+  <div class="modal">
+    <h3>⚠️ חריגה מהכמות המוגדרת</h3>
+    <p id="overQuotaMsg" style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:8px"></p>
+    <div class="modal-footer">
+      <button class="btn-sm btn-ghost" onclick="closeModal('overQuotaModal')">ביטול – הסר עובד</button>
+      <button class="btn-sm btn-accent" id="overQuotaConfirmBtn">אישור – הוסף בכל זאת</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: confirm delete shift -->
+<div class="modal-overlay" id="confirmDeleteModal">
+  <div class="modal" style="width:380px">
+    <h3>🗑️ מחיקת משמרת</h3>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:8px">האם למחוק את המשמרת? פעולה זו לא ניתנת לביטול.</p>
+    <div class="modal-footer">
+      <button class="btn-sm btn-ghost" onclick="closeModal('confirmDeleteModal')">ביטול</button>
+      <button class="btn-sm btn-danger" onclick="doRemoveShift()">כן, מחק</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: confirm delete employee -->
+<div class="modal-overlay" id="confirmDeleteEmpModal">
+  <div class="modal" style="width:380px">
+    <h3>🗑️ הסרת עובד</h3>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:8px">האם להסיר עובד זה מהמערכת?</p>
+    <div class="modal-footer">
+      <button class="btn-sm btn-ghost" onclick="closeModal('confirmDeleteEmpModal')">ביטול</button>
+      <button class="btn-sm btn-danger" onclick="doRemoveEmployee()">כן, הסר</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const ROLES = { manager:'מנהל משמרת', waiter:'מלצר', line:'עובד פס', pastry:'קונדיטור', kitchen:'מטבח', dishwasher:'שוטף כלים' };
+const ROLE_KEYS = Object.keys(ROLES);
+const SHIFT_NAMES = ['בוקר','ערב','לילה','צהריים','מיוחד'];
+const DAYS_HE = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const MANAGER_USER = 'admin';
+const MANAGER_PASS = '1234';
+let currentUser = null;
+let pendingOverQuota = null; // {shiftId, role, empId, arr}
+
+function getData(k,d){ try{return JSON.parse(localStorage.getItem(k))??d;}catch{return d;} }
+function setData(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+function getEmployees(){ return getData('employees',[]); }
+function setEmployees(e){ setData('employees',e); }
+function getShifts(){ return getData('shifts',[]); }
+function setShifts(s){ setData('shifts',s); }
+function getAvailability(){ return getData('availability',{}); }
+function setAvailability(a){ setData('availability',a); }
+function getApprovals(){ return getData('approvals',{}); }
+function setApprovals(a){ setData('approvals',a); }
+function getConfirmedShifts(){ return getData('confirmedShifts',{}); }
+function setConfirmedShifts(c){ setData('confirmedShifts',c); }
+function genCode(){ return Math.floor(10000+Math.random()*89999).toString(); }
+function genId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+
+/* ---- LOGIN ---- */
+let loginTab = 'manager';
+function switchLoginTab(t){
+  loginTab = t;
+  document.querySelectorAll('.login-tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&t==='manager')||(i===1&&t==='employee')));
+  document.getElementById('managerLoginForm').style.display = t==='manager'?'':'none';
+  document.getElementById('employeeLoginForm').style.display = t==='employee'?'':'none';
+  document.getElementById('loginError').textContent='';
+}
+function doLogin(){
+  const err=document.getElementById('loginError'); err.textContent='';
+  if(loginTab==='manager'){
+    if(document.getElementById('managerUser').value.trim()===MANAGER_USER && document.getElementById('managerPass').value.trim()===MANAGER_PASS){
+      currentUser={type:'manager'}; enterApp('מנהל');
+    } else { err.textContent='שם משתמש או סיסמה שגויים'; }
+  } else {
+    const code=document.getElementById('employeeCode').value.trim();
+    const emp=getEmployees().find(e=>e.code===code);
+    if(emp){ currentUser={type:'employee',emp}; enterApp(emp.name); }
+    else { err.textContent='קוד לא נמצא'; }
+  }
+}
+function enterApp(name){
+  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('appScreen').classList.add('active');
+  document.getElementById('topbarName').textContent=name;
+  document.getElementById('managerNav').style.display=currentUser.type==='manager'?'':'none';
+  document.getElementById('employeeNav').style.display=currentUser.type==='employee'?'':'none';
+  if(currentUser.type==='manager'){ showPanel('dashboard'); renderDashboard(); }
+  else { showPanel('myshifts'); renderMyShifts(); }
+  const today=new Date(); const sunday=new Date(today); sunday.setDate(today.getDate()-today.getDay());
+  const iso=sunday.toISOString().slice(0,10);
+  ['weekStart','approveWeekStart'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=iso; });
+}
+function logout(){
+  currentUser=null;
+  document.getElementById('appScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('active');
+  document.getElementById('loginError').textContent='';
+}
+
+/* ---- PANELS ---- */
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  const tabs=currentUser?.type==='manager'?['dashboard','employees','schedule','approve']:['myshifts','availability'];
+  const idx=tabs.indexOf(id);
+  const navTabs=document.querySelectorAll((currentUser?.type==='manager'?'#managerNav':'#employeeNav')+' .nav-tab');
+  navTabs.forEach((t,i)=>t.classList.toggle('active',i===idx));
+  if(id==='dashboard') renderDashboard();
+  if(id==='employees') renderEmployees();
+  if(id==='approve') loadApproveWeek();
+  if(id==='myshifts') renderMyShifts();
+  if(id==='availability') renderAvailability();
+}
+
+/* ---- TOAST ---- */
+function toast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ---- MODAL ---- */
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+/* ---- ROLE BADGE ---- */
+function roleBadge(r){ const idx=ROLE_KEYS.indexOf(r); return `<span class="badge badge-role-${idx}">${ROLES[r]||r}</span>`; }
+
+/* ---- DASH WEEK SUMMARY ---- */
+function renderDashWeekSummary(shifts, approvals){
+  const el = document.getElementById('dashWeekSummary');
+  if(!el) return;
+  if(!shifts.length){
+    el.innerHTML='<div class="empty"><span class="emoji">📅</span><p>אין משמרות מוגדרות עדיין</p></div>';
+    return;
+  }
+  // Get next 14 days of shifts
+  const now = new Date(); now.setHours(0,0,0,0);
+  const sorted = shifts.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
+  let rows='';
+  sorted.forEach(s=>{
+    const full=isShiftFull(s,approvals);
+    const anyNeeds=ROLE_KEYS.some(r=>(s.needs?.[r]||0)>0);
+    // total approved across all roles
+    const totalApproved = ROLE_KEYS.reduce((sum,r)=>(sum+(approvals[s.id]?.[r]||[]).length),0);
+    const totalNeeded = ROLE_KEYS.reduce((sum,r)=>(sum+(s.needs?.[r]||0)),0);
+    let roleMinis='';
+    ROLE_KEYS.forEach(role=>{
+      const needed=s.needs?.[role]||0; if(!needed) return;
+      const approved=(approvals[s.id]?.[role]||[]).length;
+      const ok=approved>=needed;
+      roleMinis+=`<span class="role-mini ${ok?'ok':'miss'}">${ROLES[role]} ${approved}/${needed}</span>`;
+    });
+    if(!anyNeeds) roleMinis=`<span style="color:var(--text2);font-size:11px">לא הוגדרו תפקידים</span>`;
+    const totalEl = anyNeeds
+      ? `<span style="font-weight:800;font-size:13px;color:${totalApproved>=totalNeeded?'var(--green)':'var(--red)'}">${totalApproved}/${totalNeeded}</span>`
+      : '—';
+    rows+=`<tr>
+      <td><strong style="cursor:pointer;color:var(--blue);text-decoration:underline dotted" onclick="goToApproveShift('${s.date}')" title="עבור לאישור משמרת זו">${formatDate(s.date)}</strong></td>
+      <td style="color:var(--accent);font-weight:700">${s.name||'—'}</td>
+      <td style="color:var(--text2);font-size:12px">${s.start}–${s.end}</td>
+      <td>${roleMinis}</td>
+      <td style="text-align:center">${totalEl}</td>
+      <td>${anyNeeds?`<span class="summary-pill ${full?'pill-full':'pill-open'}">${full?'✅ סגורה':'⚠️ פתוחה'}</span>`:'—'}</td>
+    </tr>`;
+  });
+  el.innerHTML=`
+    <table class="summary-table">
+      <thead><tr>
+        <th>יום</th><th>משמרת</th><th>שעות</th>
+        <th>עובדים לפי תפקיד (מאושר/נדרש)</th>
+        <th style="text-align:center">סה"כ עובדים</th>
+        <th>סטטוס</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+/* ---- DASHBOARD ---- */
+function renderDashboard(){
+  const emps=getEmployees(), shifts=getShifts(), approvals=getApprovals();
+  document.getElementById('statsRow').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${emps.length}</div><div class="stat-label">עובדים</div></div>
+    <div class="stat-card"><div class="stat-num">${shifts.length}</div><div class="stat-label">משמרות מוגדרות</div></div>
+    <div class="stat-card"><div class="stat-num">${countApproved(approvals)}</div><div class="stat-label">שיבוצים מאושרים</div></div>
+    <div class="stat-card"><div class="stat-num">${countConfirmedShifts()}</div><div class="stat-label">משמרות מאוישות</div></div>
+  `;
+  renderDashWeekSummary(shifts, approvals);
+  const counts={};ROLE_KEYS.forEach(r=>counts[r]=0);emps.forEach(e=>{if(counts[e.role]!==undefined)counts[e.role]++;});
+  let rb='';
+  ROLE_KEYS.forEach(r=>{ if(counts[r]>0) rb+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">${roleBadge(r)}<span style="font-weight:700">${counts[r]}</span></div>`; });
+  document.getElementById('roleBreakdown').innerHTML=rb||'<div class="empty"><span class="emoji">👥</span><p>אין עובדים עדיין</p></div>';
+  const now=new Date();
+  const upcoming=shifts.filter(s=>new Date(s.date)>=now).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,5);
+  let us='';
+  upcoming.forEach(s=>{ us+=`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${formatDate(s.date)} ${s.name||''}</span><span style="color:var(--text2)">${s.start}–${s.end}</span></div>`; });
+  document.getElementById('upcomingShifts').innerHTML=us||'<div class="empty"><span class="emoji">📅</span><p>אין משמרות קרובות</p></div>';
+}
+function countApproved(approvals){ let c=0; Object.values(approvals).forEach(sm=>Object.values(sm).forEach(arr=>c+=arr.length)); return c; }
+function countConfirmedShifts(){ return Object.keys(getConfirmedShifts()).length; }
+
+/* ---- EMPLOYEES ---- */
+function addEmployee(){
+  const name=document.getElementById('newEmpName').value.trim();
+  const role=document.getElementById('newEmpRole').value;
+  const phone=document.getElementById('newEmpPhone').value.trim();
+  if(!name||!phone){ toast('נא למלא שם וטלפון','error'); return; }
+  const emps=getEmployees(); const code=genCode();
+  emps.push({id:genId(),name,role,phone,code});
+  setEmployees(emps);
+  document.getElementById('newEmpName').value=''; document.getElementById('newEmpPhone').value='';
+  renderEmployees(); renderDashboard();
+  toast(`✅ עובד נוסף! קוד: ${code}`);
+  document.getElementById('smsContent').innerHTML=`שלום ${name}!<br>נרשמת למערכת ניהול משמרות.<br>קוד הכניסה שלך: <strong>${code}</strong><br>כנס/י דרך הלינק שקיבלת.`;
+  openModal('smsModal');
+}
+let pendingRemoveEmpId = null;
+function removeEmployee(id){
+  pendingRemoveEmpId = id;
+  openModal('confirmDeleteEmpModal');
+}
+function doRemoveEmployee(){
+  setEmployees(getEmployees().filter(e=>e.id!==pendingRemoveEmpId));
+  closeModal('confirmDeleteEmpModal');
+  renderEmployees(); renderDashboard(); toast('עובד הוסר','error');
+}
+function openEditEmployee(id){
+  const emp=getEmployees().find(e=>e.id===id); if(!emp) return;
+  document.getElementById('editEmpId').value=emp.id;
+  document.getElementById('editEmpName').value=emp.name;
+  document.getElementById('editEmpRole').value=emp.role;
+  document.getElementById('editEmpPhone').value=emp.phone;
+  document.getElementById('editEmpCode').value=emp.code;
+  openModal('editEmpModal');
+}
+function regenerateCode(){
+  document.getElementById('editEmpCode').value=genCode();
+}
+function saveEditEmployee(){
+  const id=document.getElementById('editEmpId').value;
+  const emps=getEmployees(); const emp=emps.find(e=>e.id===id); if(!emp) return;
+  emp.name=document.getElementById('editEmpName').value.trim();
+  emp.role=document.getElementById('editEmpRole').value;
+  emp.phone=document.getElementById('editEmpPhone').value.trim();
+  emp.code=document.getElementById('editEmpCode').value;
+  if(!emp.name||!emp.phone){ toast('נא למלא שם וטלפון','error'); return; }
+  setEmployees(emps); closeModal('editEmpModal'); renderEmployees(); renderDashboard();
+  toast('פרטי עובד עודכנו ✓');
+}
+function renderEmployees(){
+  const emps=getEmployees(); const tbody=document.getElementById('empTableBody');
+  if(!emps.length){ tbody.innerHTML=`<tr><td colspan="5"><div class="empty"><span class="emoji">👥</span><p>אין עובדים עדיין</p></div></td></tr>`; return; }
+  tbody.innerHTML=emps.map(e=>`
+    <tr>
+      <td><strong>${e.name}</strong></td>
+      <td>${roleBadge(e.role)}</td>
+      <td style="direction:ltr;text-align:right">${e.phone}</td>
+      <td><code style="background:var(--surface2);padding:4px 8px;border-radius:6px;font-size:13px">${e.code}</code></td>
+      <td style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-sm btn-blue" style="padding:8px 14px;font-size:12px" onclick="openEditEmployee('${e.id}')">✏️ ערוך</button>
+        <button class="btn-sm btn-danger" style="padding:8px 14px;font-size:12px" onclick="removeEmployee('${e.id}')">הסר</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ---- SCHEDULE ---- */
+function getWeekDates(startIso){
+  const start=new Date(startIso);
+  return Array.from({length:7},(_,i)=>{ const d=new Date(start); d.setDate(start.getDate()+i); return d.toISOString().slice(0,10); });
+}
+function formatDate(iso){ const d=new Date(iso); return `${DAYS_HE[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`; }
+
+function loadWeek(){
+  const ws=document.getElementById('weekStart').value;
+  if(!ws){ toast('בחר תאריך','error'); return; }
+  const dates=getWeekDates(ws); const shifts=getShifts();
+  let html='';
+  dates.forEach((date,di)=>{
+    const dayShifts=shifts.filter(s=>s.date===date);
+    html+=`
+    <div class="day-section">
+      <div class="day-header" onclick="toggleDay('day-${di}')">
+        <span class="day-name">${formatDate(date)}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:13px;color:var(--text2)">${dayShifts.length} משמרות</span>
+          <button class="btn-sm btn-accent" style="padding:6px 14px;font-size:12px" onclick="event.stopPropagation();addShift('${date}')">+ הוסף משמרת</button>
+        </div>
+      </div>
+      <div class="day-body" id="day-${di}">
+        ${dayShifts.length ? dayShifts.map(s=>renderShiftCard(s)).join('') : '<p style="color:var(--text2);font-size:13px;padding:8px 0">אין משמרות ליום זה</p>'}
+      </div>
+    </div>`;
+  });
+  document.getElementById('weekBuilder').innerHTML=html;
+}
+function toggleDay(id){ const el=document.getElementById(id); el.style.display=el.style.display==='none'?'':'none'; }
+
+function renderShiftCard(s){
+  const confirmed=getConfirmedShifts();
+  const isConfirmed=!!confirmed[s.id];
+  const roles=ROLE_KEYS.map(r=>`
+    <div class="role-input">
+      <label>${ROLES[r]}</label>
+      <input type="number" min="0" value="${s.needs?.[r]||0}" onchange="updateShiftNeed('${s.id}','${r}',this.value)" />
+    </div>`).join('');
+  const confirmBtn=`
+    <button class="confirm-shift-btn ${isConfirmed?'confirmed':''}" onclick="confirmShiftDefinition('${s.id}')">
+      ${isConfirmed ? '✅ משמרת מאושרת – לחץ לעדכון' : '✔️ אשר משמרת זו'}
+    </button>`;
+  return `
+    <div class="shift-card" id="sc-${s.id}" style="${isConfirmed?'border-color:rgba(46,204,113,0.3)':''}">
+      <button class="shift-remove" onclick="removeShift('${s.id}')" title="מחק משמרת">✕</button>
+      <div class="shift-card-title">⏰ ${s.start||''} – ${s.end||''} &nbsp;<span style="font-size:12px;color:var(--text2);font-weight:400">${s.name||''}</span></div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px">שם המשמרת:</div>
+        <div class="shift-name-tabs">
+          ${SHIFT_NAMES.map(n=>`<button class="shift-name-tab ${s.name===n?'active':''}" onclick="setShiftName('${s.id}','${n}',this)">${n}</button>`).join('')}
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label>שעת התחלה</label><input type="time" value="${s.start||''}" onchange="updateShiftField('${s.id}','start',this.value)" /></div>
+        <div class="form-group"><label>שעת סיום</label><input type="time" value="${s.end||''}" onchange="updateShiftField('${s.id}','end',this.value)" /></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">כמה עובדים נדרשים:</div>
+      <div class="roles-grid">${roles}</div>
+      ${confirmBtn}
+    </div>`;
+}
+
+function setShiftName(id, name, btn){
+  updateShiftField(id,'name',name);
+  // update tabs visually
+  const card=btn.closest('.shift-card');
+  card.querySelectorAll('.shift-name-tab').forEach(t=>t.classList.toggle('active',t.textContent===name));
+  card.querySelector('.shift-card-title').innerHTML=`⏰ ${getShifts().find(s=>s.id===id)?.start||''} – ${getShifts().find(s=>s.id===id)?.end||''} &nbsp;<span style="font-size:12px;color:var(--text2);font-weight:400">${name}</span>`;
+}
+
+function confirmShiftDefinition(id){
+  const confirmed=getConfirmedShifts();
+  confirmed[id]=true; setConfirmedShifts(confirmed);
+  toast('✅ משמרת אושרה!');
+  loadWeek();
+}
+
+function addShift(date){
+  const shifts=getShifts();
+  const s={id:genId(),date,name:'בוקר',start:'08:00',end:'16:00',needs:{}};
+  ROLE_KEYS.forEach(r=>s.needs[r]=0); shifts.push(s); setShifts(shifts); loadWeek(); toast('משמרת נוספה');
+}
+let pendingRemoveShiftId = null;
+function removeShift(id){
+  pendingRemoveShiftId = id;
+  openModal('confirmDeleteModal');
+}
+function doRemoveShift(){
+  const id = pendingRemoveShiftId;
+  setShifts(getShifts().filter(s=>s.id!==id));
+  const confirmed=getConfirmedShifts(); delete confirmed[id]; setConfirmedShifts(confirmed);
+  closeModal('confirmDeleteModal');
+  loadWeek(); toast('משמרת נמחקה','error');
+}
+function updateShiftField(id,field,val){ const shifts=getShifts(); const s=shifts.find(x=>x.id===id); if(s){s[field]=val;setShifts(shifts);} }
+function updateShiftNeed(id,role,val){ const shifts=getShifts(); const s=shifts.find(x=>x.id===id); if(s){if(!s.needs)s.needs={};s.needs[role]=parseInt(val)||0;setShifts(shifts);} }
+
+/* ---- APPROVE ---- */
+function isShiftFull(s, approvals){
+  if(!s.needs) return false;
+  return ROLE_KEYS.every(role=>{
+    const needed=s.needs[role]||0;
+    if(!needed) return true;
+    const approved=(approvals[s.id]?.[role]||[]).length;
+    return approved>=needed;
+  });
+}
+
+function renderWeekSummary(shifts, approvals){
+  if(!shifts.length){ document.getElementById('weekSummaryBox').innerHTML=''; return; }
+  const sorted=shifts.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
+  let rows='';
+  sorted.forEach(s=>{
+    const full=isShiftFull(s,approvals);
+    const anyNeeds=ROLE_KEYS.some(r=>(s.needs?.[r]||0)>0);
+    let roleMinis='';
+    ROLE_KEYS.forEach(role=>{
+      const needed=s.needs?.[role]||0; if(!needed) return;
+      const approved=(approvals[s.id]?.[role]||[]).length;
+      const ok=approved>=needed;
+      roleMinis+=`<span class="role-mini ${ok?'ok':'miss'}">${ROLES[role][0]}${ROLES[role][1]||''} ${approved}/${needed}</span>`;
+    });
+    if(!anyNeeds) roleMinis=`<span style="color:var(--text2);font-size:11px">לא הוגדרו תפקידים</span>`;
+    rows+=`<tr>
+      <td><strong>${formatDate(s.date)}</strong></td>
+      <td>${s.name||'—'}</td>
+      <td style="color:var(--text2)">${s.start}–${s.end}</td>
+      <td>${roleMinis}</td>
+      <td>${anyNeeds?`<span class="summary-pill ${full?'pill-full':'pill-open'}">${full?'✅ סגורה':'⚠️ פתוחה'}</span>`:'—'}</td>
+    </tr>`;
+  });
+  document.getElementById('weekSummaryBox').innerHTML=`
+    <div class="week-summary">
+      <div class="week-summary-title">📋 סיכום שבועי מהיר</div>
+      <table class="summary-table">
+        <thead><tr><th>יום</th><th>משמרת</th><th>שעות</th><th>עובדים לפי תפקיד (מאושר/נדרש)</th><th>סטטוס</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-bottom:20px"></div>`;
+}
+
+function loadApproveWeek(){
+  const ws=document.getElementById('approveWeekStart').value; if(!ws) return;
+  const dates=getWeekDates(ws);
+  const shifts=getShifts().filter(s=>dates.includes(s.date));
+  const avail=getAvailability(); const approvals=getApprovals(); const emps=getEmployees();
+  if(!shifts.length){
+    document.getElementById('approveList').innerHTML='<div class="empty"><span class="emoji">📅</span><p>אין משמרות בשבוע זה</p></div>';
+    return;
+  }
+
+  let html='';
+  shifts.sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
+  shifts.forEach(s=>{
+    if(!approvals[s.id]) approvals[s.id]={};
+    const full=isShiftFull(s,approvals);
+    let rolesHtml='';
+    ROLE_KEYS.forEach(role=>{
+      const needed=s.needs?.[role]||0; if(!needed) return;
+      const availEmps=emps.filter(e=>e.role===role&&avail?.[e.id]?.[s.id]==='yes');
+      if(!approvals[s.id][role]) approvals[s.id][role]=[];
+      const approvedIds=approvals[s.id][role];
+      const approvedCount=approvedIds.length;
+      const isOk=approvedCount>=needed;
+      const isOver=approvedCount>needed;
+      rolesHtml+=`
+        <div class="role-section">
+          <div class="role-section-title">
+            ${ROLES[role]}
+            <span class="needed-count">נדרש: ${needed}</span>
+            <span class="approved-count ${isOver?'over':isOk?'ok':'partial'}">מאושר: ${approvedCount}${isOver?' ⚠️':''}</span>
+          </div>
+          ${isOver?`<div class="over-quota-warning">⚠️ אישרת ${approvedCount} עובדים אך נדרשים רק ${needed}. האם זה מכוון?</div>`:''}
+          <div class="available-workers" style="margin-top:8px">
+            ${availEmps.length ? availEmps.map(e=>{
+              const approved=approvedIds.includes(e.id);
+              return `<div class="worker-chip ${approved?'approved':''}" onclick="toggleApproval('${s.id}','${role}','${e.id}','${needed}')">
+                <div><div class="wname">${e.name}</div><div class="wrole">${approved?'✓ מאושר':'זמין'}</div></div>
+              </div>`;
+            }).join('') : '<span style="color:var(--text2);font-size:13px">אין עובדים זמינים</span>'}
+          </div>
+        </div>`;
+    });
+    if(!rolesHtml) rolesHtml='<p style="color:var(--text2);font-size:13px">לא הוגדרו דרישות לתפקידים</p>';
+
+    // Status banner
+    const allRolesHaveNeeds=ROLE_KEYS.some(r=>(s.needs?.[r]||0)>0);
+    let statusBanner='';
+    if(allRolesHaveNeeds){
+      if(full){
+        statusBanner=`<div class="shift-status-complete"><span class="shift-status-icon">🎉</span><div class="shift-status-text"><h4 style="color:var(--green)">משמרת הושלמה!</h4><p style="color:var(--green)">כל התפקידים אוישו בהצלחה</p></div></div>`;
+      } else {
+        statusBanner=`<div class="shift-status-incomplete"><span class="shift-status-icon">⚠️</span><div class="shift-status-text"><h4 style="color:var(--red)">משמרת לא סגורה</h4><p style="color:var(--red)">חסרים עדיין עובדים בחלק מהתפקידים</p></div></div>`;
+      }
+    }
+
+    html+=`
+      <div class="approve-shift ${full?'complete':'incomplete'}">
+        <div class="approve-shift-header">
+          <div><h4>${formatDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end}</p></div>
+        </div>
+        ${rolesHtml}
+        ${statusBanner}
+      </div>`;
+  });
+  setApprovals(approvals);
+  document.getElementById('approveList').innerHTML=html;
+}
+
+function toggleApproval(shiftId, role, empId, needed){
+  const approvals=getApprovals();
+  if(!approvals[shiftId]) approvals[shiftId]={};
+  if(!approvals[shiftId][role]) approvals[shiftId][role]=[];
+  const arr=approvals[shiftId][role];
+  const idx=arr.indexOf(empId);
+  const emp=getEmployees().find(e=>e.id===empId);
+  const shift=getShifts().find(s=>s.id===shiftId);
+
+  if(idx===-1){
+    const neededNum=parseInt(needed)||0;
+    if(arr.length>=neededNum && neededNum>0){
+      // over quota – ask
+      pendingOverQuota={shiftId,role,empId,arr,approvals,emp,shift};
+      document.getElementById('overQuotaMsg').innerHTML=`
+        אתה עומד לאשר <strong>${emp?.name}</strong> לתפקיד <strong>${ROLES[role]}</strong> במשמרת <strong>${shift?.name||''} ${formatDate(shift?.date||'')}</strong>.<br><br>
+        הגדרת שצריך <strong>${neededNum}</strong> עובדים בתפקיד זה, וכבר מאושרים <strong>${arr.length}</strong>.<br>
+        האם ברצונך להוסיף עובד נוסף מעבר לכמות?`;
+      document.getElementById('overQuotaConfirmBtn').onclick=()=>{
+        const {shiftId,role,empId,arr,approvals,emp,shift}=pendingOverQuota;
+        arr.push(empId); setApprovals(approvals);
+        sendApprovalSMS(emp,shift,role);
+        toast(`✅ ${emp?.name} אושר (מעל מכסה)`,'warning');
+        closeModal('overQuotaModal'); loadApproveWeek();
+      };
+      openModal('overQuotaModal');
+      return;
+    }
+    arr.push(empId); setApprovals(approvals);
+    sendApprovalSMS(emp,shift,role);
+    toast(`✅ ${emp?.name} אושר למשמרת`);
+  } else {
+    arr.splice(idx,1); setApprovals(approvals);
+    toast(`${emp?.name} הוסר ממשמרת`,'error');
+  }
+  loadApproveWeek();
+}
+
+function sendApprovalSMS(emp,shift,role){
+  if(!emp||!shift) return;
+  document.getElementById('smsContent').innerHTML=`שלום ${emp.name}!<br>אושרת למשמרת:<br><strong>${shift.name||''} ${formatDate(shift.date)}</strong><br>שעות: ${shift.start}–${shift.end}<br>תפקיד: ${ROLES[role]}<br><br>בהצלחה! 👍`;
+  openModal('smsModal');
+}
+
+/* ---- EMPLOYEE VIEWS ---- */
+function renderMyShifts(){
+  const emp=currentUser.emp; const approvals=getApprovals(); const shifts=getShifts(); const avail=getAvailability();
+  const myShifts=[];
+  shifts.forEach(s=>{
+    const approvedHere=Object.entries(approvals[s.id]||{}).some(([role,ids])=>ids.includes(emp.id));
+    myShifts.push({shift:s,approved:approvedHere,markedAvail:avail?.[emp.id]?.[s.id]});
+  });
+  myShifts.sort((a,b)=>a.shift.date.localeCompare(b.shift.date));
+  if(!myShifts.length){ document.getElementById('myShiftsList').innerHTML='<div class="empty"><span class="emoji">📅</span><p>אין משמרות פתוחות כרגע</p></div>'; return; }
+  document.getElementById('myShiftsList').innerHTML=myShifts.map(m=>{
+    const s=m.shift;
+    let statusEl=m.approved?`<span class="status-badge status-approved">✓ אושרת</span>`:
+      m.markedAvail==='yes'?`<span class="status-badge status-pending">⏳ ממתין לאישור</span>`:
+      `<span class="status-badge status-none">לא הוגשה זמינות</span>`;
+    return `<div class="my-shift-card"><div class="my-shift-info"><h4>${formatDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end} | ${ROLES[emp.role]}</p></div>${statusEl}</div>`;
+  }).join('');
+}
+
+function renderAvailability(){
+  const emp=currentUser.emp;
+  const shifts=getShifts().sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
+  const avail=getAvailability(); if(!avail[emp.id]) avail[emp.id]={};
+  if(!shifts.length){ document.getElementById('availList').innerHTML='<div class="empty"><span class="emoji">📅</span><p>המנהל טרם הוסיף משמרות</p></div>'; return; }
+  document.getElementById('availList').innerHTML=shifts.map(s=>{
+    const val=avail[emp.id][s.id]||'none';
+    return `<div class="avail-shift">
+      <div class="avail-info"><h4>${formatDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end}</p></div>
+      <div class="toggle-avail">
+        <button class="avail-btn yes ${val==='yes'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','yes')">זמין ✓</button>
+        <button class="avail-btn no ${val==='no'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','no')">לא זמין ✗</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setAvail(empId,shiftId,val){
+  const avail=getAvailability(); if(!avail[empId]) avail[empId]={};
+  avail[empId][shiftId]=val; setAvailability(avail);
+  renderAvailability(); toast(val==='yes'?'נרשמת כזמין ✓':'נרשמת כלא זמין');
+}
+
+/* ---- NAVIGATE FROM SUMMARY ---- */
+function goToApproveShift(date){
+  // Find the week start (Sunday) of this date
+  const d = new Date(date);
+  const sunday = new Date(d);
+  sunday.setDate(d.getDate() - d.getDay());
+  const iso = sunday.toISOString().slice(0,10);
+  document.getElementById('approveWeekStart').value = iso;
+  showPanel('approve');
+  loadApproveWeek();
+  // Scroll to the specific shift after render
+  setTimeout(()=>{
+    const els = document.querySelectorAll('.approve-shift');
+    els.forEach(el=>{
+      const h4 = el.querySelector('h4');
+      if(h4 && h4.textContent.includes(formatDate(date))){
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+        el.style.outline = '2px solid var(--accent)';
+        setTimeout(()=>el.style.outline='', 2000);
+      }
+    });
+  }, 150);
+}
+
+/* ---- INIT ---- */
+window.addEventListener('load',()=>{
+  ['managerPass','employeeCode','managerUser'].forEach(id=>{
+    document.getElementById(id).addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+  });
+});
+</script>
+</body>
+</html>
