@@ -245,6 +245,7 @@
         <div class="card-title">📋 סיכום משמרות שבועי</div>
         <div id="dashWeekSummary"></div>
       </div>
+      <div class="card"><div class="card-title">👤 סיכום עובדים השבוע</div><div id="empWeeklySummary"></div></div>
       <div class="grid-2">
         <div class="card"><div class="card-title">👥 עובדים לפי תפקיד</div><div id="roleBreakdown"></div></div>
         <div class="card"><div class="card-title">📅 משמרות קרובות</div><div id="upcomingShifts"></div></div>
@@ -265,12 +266,13 @@
             </select>
           </div>
           <div class="form-group"><label>טלפון</label><input type="text" id="newEmpPhone" placeholder="050-0000000" /></div>
+          <div class="form-group"><label>סטטוס</label><select id="newEmpSenior"><option value="0">רגיל</option><option value="1">בכיר</option></select></div>
           <button class="btn-sm btn-accent" onclick="addEmployee()">הוסף עובד</button>
         </div>
       </div>
       <div class="card">
         <div class="card-title">👥 רשימת עובדים</div>
-        <table><thead><tr><th>שם</th><th>תפקיד</th><th>טלפון</th><th>קוד כניסה</th><th>פעולות</th></tr></thead>
+        <table><thead><tr><th>שם</th><th>תפקיד</th><th>סטטוס</th><th>טלפון</th><th>קוד כניסה</th><th>פעולות</th></tr></thead>
         <tbody id="empTableBody"></tbody></table>
       </div>
     </div>
@@ -333,6 +335,7 @@
       </select>
     </div>
     <div class="edit-field"><label>טלפון</label><input type="text" id="editEmpPhone" /></div>
+    <div class="edit-field"><label>סטטוס</label><select id="editEmpSenior"><option value="0">רגיל</option><option value="1">בכיר</option></select></div>
     <div class="edit-field"><label>קוד כניסה</label>
       <div style="display:flex;gap:8px">
         <input type="text" id="editEmpCode" readonly style="flex:1;opacity:.7" />
@@ -544,6 +547,7 @@ function renderDashboard(){
   document.getElementById('upcomingShifts').innerHTML=us||'<div class="empty"><span class="emoji">📅</span><p>אין משמרות קרובות</p></div>';
   // Week summary
   renderDashWeekSummary();
+  renderEmpWeeklySummary();
 }
 
 function renderDashWeekSummary(){
@@ -593,9 +597,10 @@ window.addEmployee = async function(){
   const name=document.getElementById('newEmpName').value.trim();
   const role=document.getElementById('newEmpRole').value;
   const phone=document.getElementById('newEmpPhone').value.trim();
+  const senior=parseInt(document.getElementById('newEmpSenior').value)||0;
   if(!name||!phone){ toast('נא למלא שם וטלפון','error'); return; }
   const code=genCode(); const id=genId();
-  await fbSet('employees',id,{name,role,phone,code});
+  await fbSet('employees',id,{name,role,phone,code,senior});
   document.getElementById('newEmpName').value=''; document.getElementById('newEmpPhone').value='';
   toast(`✅ עובד נוסף! קוד: ${code}`);
   document.getElementById('smsContent').innerHTML=`שלום ${name}!<br>נרשמת למערכת ניהול משמרות.<br>קוד הכניסה שלך: <strong>${code}</strong><br>כנס/י דרך הלינק שקיבלת.`;
@@ -612,6 +617,7 @@ window.openEditEmployee = function(id){
   document.getElementById('editEmpRole').value=emp.role;
   document.getElementById('editEmpPhone').value=emp.phone;
   document.getElementById('editEmpCode').value=emp.code;
+  document.getElementById('editEmpSenior').value=emp.senior||0;
   openModal('editEmpModal');
 };
 window.regenerateCode = function(){ document.getElementById('editEmpCode').value=genCode(); };
@@ -621,8 +627,9 @@ window.saveEditEmployee = async function(){
   const role=document.getElementById('editEmpRole').value;
   const phone=document.getElementById('editEmpPhone').value.trim();
   const code=document.getElementById('editEmpCode').value;
+  const senior=parseInt(document.getElementById('editEmpSenior').value)||0;
   if(!name||!phone){ toast('נא למלא שם וטלפון','error'); return; }
-  await fbSet('employees',id,{name,role,phone,code});
+  await fbSet('employees',id,{name,role,phone,code,senior});
   closeModal('editEmpModal'); toast('פרטי עובד עודכנו ✓');
 };
 
@@ -632,6 +639,7 @@ function renderEmployees(){
   tbody.innerHTML=emps.map(e=>`<tr>
     <td><strong>${e.name}</strong></td>
     <td>${roleBadge(e.role)}</td>
+    <td>${e.senior?'<span class="badge" style="background:rgba(240,165,0,0.15);color:var(--accent)">⭐ בכיר</span>':'<span style="color:var(--text2);font-size:12px">רגיל</span>'}</td>
     <td style="direction:ltr;text-align:right">${e.phone}</td>
     <td><code style="background:var(--surface2);padding:4px 8px;border-radius:6px;font-size:13px">${e.code}</code></td>
     <td style="display:flex;gap:8px;flex-wrap:wrap">
@@ -668,7 +676,14 @@ window.toggleDay = function(id){ const el=document.getElementById(id); el.style.
 
 function renderShiftCard(s){
   const isConfirmed=!!_confirmed[s.id];
-  const roles=ROLE_KEYS.map(r=>`<div class="role-input"><label>${ROLES[r]}</label><input type="number" min="0" value="${s.needs?.[r]||0}" onchange="updateShiftNeed('${s.id}','${r}',this.value)" /></div>`).join('');
+  const roles=ROLE_KEYS.map(r=>`<div class="role-input"><label>${ROLES[r]}</label>
+    <div style="display:flex;gap:4px;align-items:center;margin-bottom:4px">
+      <input type="number" min="0" value="${s.needs?.[r]||0}" onchange="updateShiftNeed('${s.id}','${r}',this.value)" style="flex:1" title="רגילים"/>
+      <span style="font-size:10px;color:var(--text2);white-space:nowrap">כולל</span>
+      <input type="number" min="0" value="${s.seniors?.[r]||0}" onchange="updateShiftSenior('${s.id}','${r}',this.value)" style="flex:1;border-color:rgba(240,165,0,0.4)" title="מתוכם בכירים" />
+      <span style="font-size:10px;color:var(--accent);white-space:nowrap">בכירים</span>
+    </div>
+  </div>`).join('');
   return `<div class="shift-card" id="sc-${s.id}" style="${isConfirmed?'border-color:rgba(46,204,113,0.3)':''}">
     <button class="shift-remove" onclick="removeShift('${s.id}')">✕ מחק</button>
     <div class="shift-card-title">⏰ ${s.start||''}–${s.end||''} &nbsp;<span style="font-size:12px;color:var(--text2);font-weight:400">${s.name||''}</span></div>
@@ -705,6 +720,7 @@ window.addShift = async function(date){
 };
 window.updateShiftField = function(id,field,val){ const s=_shifts.find(x=>x.id===id); if(s){s[field]=val; fbSet('shifts',id,s);} };
 window.updateShiftNeed = function(id,role,val){ const s=_shifts.find(x=>x.id===id); if(s){if(!s.needs)s.needs={}; s.needs[role]=parseInt(val)||0; fbSet('shifts',id,s);} };
+window.updateShiftSenior = function(id,role,val){ const s=_shifts.find(x=>x.id===id); if(s){if(!s.seniors)s.seniors={}; s.seniors[role]=parseInt(val)||0; fbSet('shifts',id,s);} };
 
 // ===== APPROVE =====
 window.loadApproveWeek = function(){
@@ -802,7 +818,32 @@ function renderAvailability(){
   if(!_availability[emp.id]) _availability[emp.id]={};
   document.getElementById('availList').innerHTML=shifts.map(s=>{
     const val=_availability[emp.id][s.id]||'none';
-    return `<div class="avail-shift"><div class="avail-info"><h4>${formatDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end}</p></div>
+    // Senior blocking logic
+    const isSenior = emp.senior===1;
+    const seniorNeeded = s.seniors?.[emp.role]||0;
+    let seniorBlocked = false;
+    let seniorBlockedBy = '';
+    if(isSenior && seniorNeeded>0){
+      // count how many seniors already marked available for this role
+      const seniorsAvail = _employees.filter(e=>e.role===emp.role && e.senior===1 && e.id!==emp.id && _availability[e.id]?.[s.id]==='yes');
+      if(seniorsAvail.length>=seniorNeeded && val!=='yes'){
+        seniorBlocked=true;
+        seniorBlockedBy=seniorsAvail.map(e=>e.name).join(', ');
+      }
+    }
+    if(seniorBlocked){
+      return `<div class="avail-shift" style="opacity:.7">
+        <div class="avail-info"><h4>${formatDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end}</p></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:8px;background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);font-size:13px;color:var(--accent)">
+          🔒 מאויש – ${seniorBlockedBy}
+        </div>
+      </div>`;
+    }
+    return `<div class="avail-shift">
+      <div class="avail-info">
+        <h4>${formatDate(s.date)} – ${s.name||''}</h4>
+        <p>${s.start} – ${s.end}${isSenior?' &nbsp;⭐ בכיר':''}</p>
+      </div>
       <div class="toggle-avail">
         <button class="avail-btn yes ${val==='yes'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','yes')">זמין ✓</button>
         <button class="avail-btn no ${val==='no'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','no')">לא זמין ✗</button>
@@ -817,6 +858,52 @@ window.setAvail = async function(empId,shiftId,val){
   await fbSet('availability',empId,_availability[empId]);
   renderAvailability(); toast(val==='yes'?'נרשמת כזמין ✓':'נרשמת כלא זמין');
 };
+
+// ===== EMPLOYEE WEEKLY SUMMARY =====
+function calcShiftHours(s){
+  try{
+    const [sh,sm]=s.start.split(':').map(Number);
+    const [eh,em]=s.end.split(':').map(Number);
+    let mins=(eh*60+em)-(sh*60+sm);
+    if(mins<0) mins+=24*60;
+    return Math.round(mins/60*10)/10;
+  }catch{return 0;}
+}
+
+function renderEmpWeeklySummary(){
+  const el=document.getElementById('empWeeklySummary'); if(!el) return;
+  const emps=_employees; const shifts=_shifts; const approvals=_approvals;
+  if(!emps.length){ el.innerHTML='<div class="empty"><span class="emoji">👥</span><p>אין עובדים עדיין</p></div>'; return; }
+  
+  // Get current week
+  const today=new Date(); today.setHours(0,0,0,0);
+  const sunday=new Date(today); sunday.setDate(today.getDate()-today.getDay());
+  const saturday=new Date(sunday); saturday.setDate(sunday.getDate()+6);
+  const weekShifts=shifts.filter(s=>{ const d=new Date(s.date); return d>=sunday&&d<=saturday; });
+  
+  let rows='';
+  emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).forEach(emp=>{
+    let count=0; let hours=0;
+    weekShifts.forEach(s=>{
+      const approvedHere=Object.entries(approvals[s.id]||{}).some(([,ids])=>ids.includes(emp.id));
+      if(approvedHere){ count++; hours+=calcShiftHours(s); }
+    });
+    rows+=`<tr>
+      <td><strong>${emp.name}</strong>${emp.senior?' <span style="font-size:11px;color:var(--accent)">⭐</span>':''}</td>
+      <td>${roleBadge(emp.role)}</td>
+      <td style="text-align:center;font-weight:700;color:${count>0?'var(--text)':'var(--text2)'}">${count}</td>
+      <td style="text-align:center;font-weight:700;color:${hours>0?'var(--accent)':'var(--text2)'}">${hours>0?hours+'h':'—'}</td>
+    </tr>`;
+  });
+  
+  const weekLabel=`${sunday.getDate()}/${sunday.getMonth()+1} – ${saturday.getDate()}/${saturday.getMonth()+1}`;
+  el.innerHTML=`
+    <p style="font-size:12px;color:var(--text2);margin-bottom:12px">שבוע נוכחי: ${weekLabel}</p>
+    <table class="summary-table">
+      <thead><tr><th>שם</th><th>תפקיד</th><th style="text-align:center">משמרות</th><th style="text-align:center">שעות</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async ()=>{
