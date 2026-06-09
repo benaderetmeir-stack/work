@@ -365,8 +365,10 @@
       </div>
       <div class="card">
         <div class="card-title">👥 רשימת עובדים</div>
-        <table><thead><tr><th>שם</th><th>תפקיד</th><th>סטטוס</th><th>טלפון</th><th>קוד כניסה</th><th>פעולות</th></tr></thead>
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table style="min-width:480px"><thead><tr><th>שם</th><th>תפקיד</th><th>סטטוס</th><th>טלפון</th><th>קוד</th><th>פעולות</th></tr></thead>
         <tbody id="empTableBody"></tbody></table>
+        </div>
       </div>
     </div>
 
@@ -639,8 +641,6 @@ window.saveEditEmployee=async function(){const id=document.getElementById('editE
 function renderEmployees(){
   const emps=_employees,tbody=document.getElementById('empTableBody');
   if(!emps.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><span class="emoji">👥</span><p>אין עובדים עדיין</p></div></td></tr>`;return;}
-  // Wrap table in scroll container
-  const tbl=document.querySelector('#panel-employees .card:last-child'); if(tbl&&!tbl.querySelector('.tbl-wrap')){const wrap=document.createElement('div');wrap.className='tbl-wrap';wrap.style.cssText='overflow-x:auto;-webkit-overflow-scrolling:touch';const t=tbl.querySelector('table');if(t)tbl.insertBefore(wrap,t),wrap.appendChild(t);}
   tbody.innerHTML=emps.map(e=>`<tr><td><strong>${e.name}</strong></td><td>${roleBadge(e.role)}</td><td>${e.senior?'<span class="badge badge-role-0">⭐ בכיר</span>':'<span style="color:var(--text2);font-size:12px">רגיל</span>'}</td><td style="direction:ltr;text-align:right">${e.phone}</td><td><code style="background:var(--surface2);padding:4px 8px;border-radius:6px;font-size:13px">${e.code}</code></td><td><div style="display:flex;gap:6px;flex-wrap:nowrap"><button class="btn-sm btn-blue" style="padding:7px 10px;font-size:12px" onclick="openEditEmployee('${e.id}')">✏️</button><button class="btn-sm btn-danger" style="padding:7px 10px;font-size:12px" onclick="removeEmployee('${e.id}')">🗑️</button></div></td></tr>`).join('');
 }
 
@@ -840,7 +840,7 @@ window.genHoursReport=function(){
   });
   if(!rows){document.getElementById('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין נתוני כניסה/יציאה לתקופה זו</p>';return;}
   rows+=`<tr class="total-row"><td colspan="5"><strong>סה"כ כללי</strong></td><td style="text-align:center"><strong>${Math.round(grandTotal*10)/10}h</strong></td></tr>`;
-  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4>דוח שעות עובדים בפועל | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס PDF</button></div><table class="report-table"><thead><tr><th>שם עובד</th><th>תאריך</th><th>משמרת</th><th style="text-align:center">כניסה</th><th style="text-align:center">יציאה</th><th style="text-align:center">שעות בפועל</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="report-table" style="min-width:480px"><thead><tr><th>שם עובד</th><th>תאריך</th><th>משמרת</th><th style="text-align:center">כניסה</th><th style="text-align:center">יציאה</th><th style="text-align:center">שעות</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   document.getElementById('reportOutput').innerHTML=html;
 };
 
@@ -856,7 +856,7 @@ window.genShiftsReport=function(){
     const full=isShiftFull(s);
     rows+=`<tr><td>${formatDate(s.date)}</td><td>${s.name||''}</td><td>${s.start}–${s.end}</td><td style="text-align:center">${approvedEmps.length}</td><td>${names}</td><td><span class="summary-pill ${full?'pill-full':'pill-open'}">${full?'✅ סגורה':'⚠️ פתוחה'}</span></td></tr>`;
   });
-  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><h4>דוח משמרות | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס PDF</button></div><table class="report-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות</th><th>סטטוס</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="report-table" style="min-width:500px"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   document.getElementById('reportOutput').innerHTML=html;
 };
 
@@ -867,35 +867,42 @@ function renderTodayWidget(){
   const todayShifts=_shifts.filter(s=>s.date===today).sort((a,b)=>a.start.localeCompare(b.start));
   if(!todayShifts.length){el.innerHTML='<p style="color:var(--text2);font-size:13px;padding:8px 0">אין משמרות היום</p>';return;}
   let html='';
-  todayShifts.forEach(s=>{
+  todayShifts.forEach((s,si)=>{
     const approvedEmps=_employees.filter(e=>Object.entries(_approvals[s.id]||{}).some(([,ids])=>ids.includes(e.id)));
     html+=`<div style="margin-bottom:16px">
-      <div style="font-weight:700;font-size:14px;color:var(--accent);margin-bottom:8px">⏰ ${s.name||''} ${s.start}–${s.end}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">`;
-    if(!approvedEmps.length){html+='<span style="color:var(--text2);font-size:13px">אין עובדים מאושרים</span>';}
-    approvedEmps.forEach(e=>{
-      const ck=_clockins[e.id+'_'+s.id]||{};
-      let status,color,icon;
-      if(ck.out){status='יצא';color='var(--red)';icon='🔴';}
-      else if(ck.in){status='בפנים';color='var(--green)';icon='🟢';}
-      else{status='טרם נכנס';color='var(--text2)';icon='⏳';}
-      const inStr=ck.in?formatTime(ck.in):'—';
-      const outStr=ck.out?formatTime(ck.out):'—';
-      html+=`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:8px 12px;min-width:0;flex:1;max-width:180px">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span style="font-weight:700;font-size:13px">${e.name}</span>
-          <span style="font-size:18px">${icon}</span>
-        </div>
-        <div style="font-size:11px;color:var(--text2);margin:2px 0">${ROLES[e.role]||e.role}</div>
-        <div style="font-size:11px;color:${color};font-weight:600">${status} | ${inStr}→${outStr}</div>
-        <button onclick="openEditClock('${e.id}','${s.id}','${e.name}')" style="margin-top:4px;padding:2px 8px;font-size:10px;border:1px solid var(--border);background:var(--surface);border-radius:5px;cursor:pointer;color:var(--text2)">✏️ ערוך</button>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-right:3px solid var(--accent)">
+        <span style="font-weight:800;font-size:14px;color:var(--accent)">${s.name||''}</span>
+        <span style="font-size:12px;color:var(--text2)">${s.start}–${s.end}</span>
+        <span style="font-size:12px;color:var(--text2);margin-right:auto">${approvedEmps.length} עובדים</span>
       </div>`;
-    });
-    html+='</div></div>';
+    if(!approvedEmps.length){
+      html+='<p style="color:var(--text2);font-size:13px;padding:4px 8px">אין עובדים מאושרים</p>';
+    } else {
+      approvedEmps.forEach(e=>{
+        const ck=_clockins[e.id+'_'+s.id]||{};
+        let statusTxt,color,dot;
+        if(ck.out){statusTxt='יצא '+formatTime(ck.out);color='var(--red)';dot='🔴';}
+        else if(ck.in){statusTxt='נכנס '+formatTime(ck.in);color='var(--green)';dot='🟢';}
+        else{statusTxt='טרם נכנס';color='var(--text2)';dot='⏳';}
+        const actual=ck.in&&ck.out?calcActualHours(e.id,s.id):null;
+        html+=`<div style="display:flex;align-items:center;padding:8px 10px;border-bottom:1px solid var(--border);gap:10px">
+          <span style="font-size:15px;flex-shrink:0">${dot}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:13px">${e.name}</div>
+            <div style="font-size:11px;color:var(--text2)">${ROLES[e.role]||e.role}</div>
+          </div>
+          <div style="text-align:left;flex-shrink:0">
+            <div style="font-size:12px;color:${color};font-weight:600">${statusTxt}</div>
+            ${actual?`<div style="font-size:11px;color:var(--text2)">${actual}h</div>`:''}
+          </div>
+          <button onclick="openEditClock('${e.id}','${s.id}','${e.name}')" style="padding:4px 8px;font-size:11px;border:1px solid var(--border);background:var(--surface);border-radius:6px;cursor:pointer;color:var(--text2);flex-shrink:0">✏️</button>
+        </div>`;
+      });
+    }
+    html+='</div>';
   });
   el.innerHTML=html;
 }
-
 window.openEditClock=function(empId,shiftId,empName){
   const ck=_clockins[empId+'_'+shiftId]||{};
   document.getElementById('editClockKey').value=empId+'_'+shiftId;
