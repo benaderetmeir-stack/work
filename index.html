@@ -641,7 +641,38 @@ window.saveEditEmployee=async function(){const id=document.getElementById('editE
 function renderEmployees(){
   const emps=_employees,tbody=document.getElementById('empTableBody');
   if(!emps.length){tbody.innerHTML=`<tr><td colspan="6"><div class="empty"><span class="emoji">👥</span><p>אין עובדים עדיין</p></div></td></tr>`;return;}
-  tbody.innerHTML=emps.map(e=>`<tr><td><strong>${e.name}</strong></td><td>${roleBadge(e.role)}</td><td>${e.senior?'<span class="badge badge-role-0">⭐ בכיר</span>':'<span style="color:var(--text2);font-size:12px">רגיל</span>'}</td><td style="direction:ltr;text-align:right">${e.phone}</td><td><code style="background:var(--surface2);padding:4px 8px;border-radius:6px;font-size:13px">${e.code}</code></td><td><div style="display:flex;gap:6px;flex-wrap:nowrap"><button class="btn-sm btn-blue" style="padding:7px 10px;font-size:12px" onclick="openEditEmployee('${e.id}')">✏️</button><button class="btn-sm btn-danger" style="padding:7px 10px;font-size:12px" onclick="removeEmployee('${e.id}')">🗑️</button></div></td></tr>`).join('');
+  // Mobile: cards; Desktop: table
+  const isMob = window.innerWidth <= 680;
+  if(isMob){
+    document.getElementById('empTableBody').closest('table').style.display='none';
+    let ec=document.getElementById('empCards');
+    if(!ec){ec=document.createElement('div');ec.id='empCards';document.getElementById('empTableBody').closest('[style*="overflow"]').after(ec);}
+    ec.innerHTML=emps.map(e=>`
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><div style="font-weight:800;font-size:15px">${e.name}${e.senior?' ⭐':''}</div><div style="margin-top:4px">${roleBadge(e.role)}</div></div>
+          <div style="display:flex;gap:6px">
+            <button class="btn-sm btn-blue" style="padding:8px 12px" onclick="openEditEmployee('${e.id}')">✏️</button>
+            <button class="btn-sm btn-danger" style="padding:8px 12px" onclick="removeEmployee('${e.id}')">🗑️</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:13px;flex-wrap:wrap">
+          <span style="color:var(--text2)">📱 ${e.phone}</span>
+          <span>🔑 <code style="background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px">${e.code}</code></span>
+        </div>
+      </div>`).join('');
+  } else {
+    const tbl=document.getElementById('empTableBody').closest('table');if(tbl)tbl.style.display='';
+    const ec=document.getElementById('empCards');if(ec)ec.innerHTML='';
+    tbody.innerHTML=emps.map(e=>`<tr>
+      <td><strong>${e.name}</strong></td>
+      <td>${roleBadge(e.role)}</td>
+      <td>${e.senior?'<span class="badge badge-role-0">⭐ בכיר</span>':'<span style="color:var(--text2);font-size:12px">רגיל</span>'}</td>
+      <td style="direction:ltr;text-align:right">${e.phone}</td>
+      <td><code style="background:var(--surface2);padding:4px 8px;border-radius:6px;font-size:13px">${e.code}</code></td>
+      <td><div style="display:flex;gap:6px"><button class="btn-sm btn-blue" style="padding:7px 10px;font-size:12px" onclick="openEditEmployee('${e.id}')">✏️ ערוך</button><button class="btn-sm btn-danger" style="padding:7px 10px;font-size:12px" onclick="removeEmployee('${e.id}')">🗑️ הסר</button></div></td>
+    </tr>`).join('');
+  }
 }
 
 // ===== SCHEDULE =====
@@ -816,6 +847,8 @@ window.renderMyHours=function(period){
 };
 
 // ===== REPORTS =====
+function isMobile(){ return window.innerWidth <= 680; }
+
 window.genHoursReport=function(){
   const from=new Date(document.getElementById('reportFrom').value),to=new Date(document.getElementById('reportTo').value);
   to.setDate(to.getDate()+1);
@@ -840,7 +873,37 @@ window.genHoursReport=function(){
   });
   if(!rows){document.getElementById('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין נתוני כניסה/יציאה לתקופה זו</p>';return;}
   rows+=`<tr class="total-row"><td colspan="5"><strong>סה"כ כללי</strong></td><td style="text-align:center"><strong>${Math.round(grandTotal*10)/10}h</strong></td></tr>`;
-  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="report-table" style="min-width:480px"><thead><tr><th>שם עובד</th><th>תאריך</th><th>משמרת</th><th style="text-align:center">כניסה</th><th style="text-align:center">יציאה</th><th style="text-align:center">שעות</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  let html;
+  if(isMobile()){
+    // Mobile: card format
+    let cards='';
+    emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).forEach(emp=>{
+      const myShifts2=shifts.filter(s=>Object.entries(_approvals[s.id]||{}).some(([,ids])=>ids.includes(emp.id)));
+      if(!myShifts2.length)return;
+      let empTotal2=0,hasAny2=false;
+      let shiftCards='';
+      myShifts2.forEach(s=>{
+        const ck2=_clockins[emp.id+'_'+s.id]||{};
+        if(!ck2.in)return;
+        hasAny2=true;
+        const actual2=calcActualHours(emp.id,s.id)||0;
+        empTotal2+=actual2;
+        shiftCards+=`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span>${formatDate(s.date)} ${s.name||''}</span>
+          <span style="color:var(--green);font-weight:700">${formatTime(ck2.in)}–${ck2.out?formatTime(ck2.out):'?'} | ${actual2}h</span>
+        </div>`;
+      });
+      if(!hasAny2)return;
+      cards+=`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div><strong style="font-size:14px">${emp.name}</strong><div style="font-size:12px;color:var(--text2)">${ROLES[emp.role]||emp.role}</div></div>
+          <span style="font-weight:800;color:var(--accent);font-size:16px">${Math.round(empTotal2*10)/10}h</span>
+        </div>${shiftCards}</div>`;
+    });
+    html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div>${cards||'<p style="color:var(--text2);text-align:center;padding:20px">אין נתונים</p>'}</div>`;
+  } else {
+    html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto"><table class="report-table"><thead><tr><th>שם עובד</th><th>תאריך</th><th>משמרת</th><th style="text-align:center">כניסה</th><th style="text-align:center">יציאה</th><th style="text-align:center">שעות</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
   document.getElementById('reportOutput').innerHTML=html;
 };
 
@@ -856,8 +919,26 @@ window.genShiftsReport=function(){
     const full=isShiftFull(s);
     rows+=`<tr><td>${formatDate(s.date)}</td><td>${s.name||''}</td><td>${s.start}–${s.end}</td><td style="text-align:center">${approvedEmps.length}</td><td>${names}</td><td><span class="summary-pill ${full?'pill-full':'pill-open'}">${full?'✅ סגורה':'⚠️ פתוחה'}</span></td></tr>`;
   });
-  const html=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table class="report-table" style="min-width:500px"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
-  document.getElementById('reportOutput').innerHTML=html;
+  let shiftHtml;
+  if(isMobile()){
+    let cards2='';
+    shifts.forEach(s=>{
+      const approvedEmps2=_employees.filter(e=>Object.entries(_approvals[s.id]||{}).some(([,ids])=>ids.includes(e.id)));
+      const full2=isShiftFull(s);
+      cards2+=`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;border-right:3px solid ${full2?'var(--green)':'var(--red)'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div><strong>${formatDate(s.date)}</strong> – <span style="color:var(--accent);font-weight:700">${s.name||''}</span></div>
+          <span class="summary-pill ${full2?'pill-full':'pill-open'}">${full2?'✅ סגורה':'⚠️ פתוחה'}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:8px">⏰ ${s.start}–${s.end} | ${approvedEmps2.length} עובדים</div>
+        ${approvedEmps2.map(e=>`<div style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:6px"><span>${e.name}</span><span style="color:var(--text2)">${ROLES[e.role]||e.role}</span></div>`).join('')}
+      </div>`;
+    });
+    shiftHtml=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div>${cards2}</div>`;
+  } else {
+    shiftHtml=`<div class="report-section"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות | ${document.getElementById('reportFrom').value} – ${document.getElementById('reportTo').value}</h4><button class="btn-sm btn-ghost" onclick="window.print()">🖨️ הדפס</button></div><div style="overflow-x:auto"><table class="report-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  }
+  document.getElementById('reportOutput').innerHTML=shiftHtml;
 };
 
 // ===== TODAY WIDGET =====
