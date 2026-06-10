@@ -754,7 +754,14 @@ window.toggleApproval=async function(shiftId,role,empId,needed){
       openModal('overQuotaModal');return;
     }
     arr.push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);sendSMS(emp,shift,role);toast(`✅ ${emp?.name} אושר`);
-  }else{arr.splice(idx,1);await fbSet('approvals',shiftId,_ap[shiftId]);toast(`${emp?.name} הוסר`,'error');}
+  }else{
+    arr.splice(idx,1);await fbSet('approvals',shiftId,_ap[shiftId]);
+    toast(`${emp?.name} הוסר`,'error');
+    if(emp&&shift){
+      const msg=waCancelMsg(emp,shift);
+      showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
+    }
+  }
   loadApproveWeek();
 };
 window.cancelAvail=async function(empId,shiftId){
