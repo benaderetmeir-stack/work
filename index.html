@@ -354,7 +354,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 
 <!-- MODALS -->
 <div class="modal-overlay" id="smsModal">
-<div class="modal"><h3>📱 הודעת אישור (סימולציה)</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">בסביבת ייצור תישלח ב-SMS/וואטסאפ</p><div style="background:var(--surface2);border-radius:10px;padding:14px;font-size:14px;line-height:1.8;border:1px solid var(--border)" id="smsContent"></div><div class="modal-footer"><button class="bs bg" onclick="closeModal('smsModal')">סגור</button></div></div>
+<div class="modal"><h3>📱 שלח הודעה בוואטסאפ</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">לחץ על הכפתור לפתיחת וואטסאפ ושליחה ישירה</p><div style="background:var(--surface2);border-radius:10px;padding:14px;font-size:14px;line-height:1.8;border:1px solid var(--border)" id="smsContent"></div><div class="modal-footer"><button class="bs bg" onclick="closeModal('smsModal')">סגור</button></div></div>
 </div>
 
 <div class="modal-overlay" id="confirmDelShift">
@@ -636,7 +636,7 @@ window.spontFromProfile = async function(){
   if(!_ap[shiftId])_ap[shiftId]={};
   if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
   if(!_ap[shiftId][emp.role].includes(empId)){ _ap[shiftId][emp.role].push(empId); await fbSet('approvals',shiftId,_ap[shiftId]); }
-  toast(`✅ ${emp.name} שובץ ל${shift.name||'משמרת'} ${fmtDate(shift.date)}`);
+  toast(`✅ ${emp.name} שובץ`);
   sendSMS(emp,shift,emp.role);
 };
 
@@ -690,7 +690,30 @@ function renderShiftCard(s){
 }
 function markDirty(id){_cf[id]={confirmed:true,dirty:true};fbSet('confirmed',id,{confirmed:true,dirty:true});const card=document.getElementById('sc-'+id);if(card){card.style.borderColor='rgba(192,57,43,0.4)';const btn=card.querySelector('.confirm-btn');if(btn){btn.className='confirm-btn dirty';btn.textContent='🔴 עדכן משמרת';}}}
 window.setShiftName=function(id,name,btn){const s=_shifts.find(x=>x.id===id);if(!s)return;s.name=name;fbSet('shifts',id,s);markDirty(id);btn.closest('.shift-card').querySelectorAll('.snt').forEach(t=>t.classList.toggle('active',t.textContent===name));};
-window.confirmShift=async function(id){await fbSet('confirmed',id,{confirmed:true,dirty:false});_cf[id]={confirmed:true,dirty:false};toast('✅ משמרת אושרה!');loadWeek();};
+window.confirmShift=async function(id){
+  const wasDirty=_cf[id]?.dirty;
+  await fbSet('confirmed',id,{confirmed:true,dirty:false});
+  _cf[id]={confirmed:true,dirty:false};
+  toast('✅ משמרת אושרה!');
+  // If was dirty (updated), offer to notify all approved employees
+  if(wasDirty){
+    const shift=_shifts.find(s=>s.id===id);
+    if(shift){
+      const appEmps=_emps.filter(e=>Object.entries(_ap[id]||{}).some(([,ids])=>ids.includes(e.id)));
+      if(appEmps.length>0){
+        let btns=appEmps.map(e=>{
+          const msg=waChangeMsg(e,shift);
+          return`<button class="bs bo" style="width:100%;margin-bottom:6px;font-size:13px" onclick="sendWhatsApp('${e.phone}','${msg.replace(/'/g,"\'")}')">📱 עדכן ${e.name}</button>`;
+        }).join('');
+        document.getElementById('smsContent').innerHTML=`
+          <div style="font-weight:700;margin-bottom:12px">🔄 המשמרת עודכנה – שלח עדכון לעובדים:</div>
+          ${btns}`;
+        openModal('smsModal');
+      }
+    }
+  }
+  loadWeek();
+};
 let _pendDelShift;
 window.delShift=function(id){_pendDelShift=id;openModal('confirmDelShift');};
 window.doDelShift=async function(){await fbDel('shifts',_pendDelShift);await fbDel('confirmed',_pendDelShift);closeModal('confirmDelShift');loadWeek();toast('משמרת נמחקה','error');};
@@ -740,8 +763,39 @@ window.toggleApproval=async function(shiftId,role,empId,needed){
   }else{arr.splice(idx,1);await fbSet('approvals',shiftId,_ap[shiftId]);toast(`${emp?.name} הוסר`,'error');}
   loadApproveWeek();
 };
-window.cancelAvail=async function(empId,shiftId){if(!_av[empId])return;_av[empId][shiftId]='no';await fbSet('availability',empId,_av[empId]);if(_ap[shiftId]){let ch=false;RK.forEach(r=>{const a=_ap[shiftId][r]||[],i=a.indexOf(empId);if(i!==-1){a.splice(i,1);ch=true;}});if(ch)await fbSet('approvals',shiftId,_ap[shiftId]);}const emp=_emps.find(e=>e.id===empId);toast(`זמינות ${emp?.name||''} בוטלה`,'error');loadApproveWeek();};
-function sendSMS(emp,shift,role){if(!emp||!shift)return;document.getElementById('smsContent').innerHTML=`שלום ${emp.name}!<br>אושרת למשמרת: <strong>${shift.name||''} ${fmtDate(shift.date)}</strong><br>שעות: ${shift.start}–${shift.end}<br>תפקיד: ${ROLES[role]}<br>בהצלחה! 👍`;openModal('smsModal');}
+window.cancelAvail=async function(empId,shiftId){
+  if(!_av[empId])return;
+  _av[empId][shiftId]='no';await fbSet('availability',empId,_av[empId]);
+  if(_ap[shiftId]){let ch=false;RK.forEach(r=>{const a=_ap[shiftId][r]||[],i=a.indexOf(empId);if(i!==-1){a.splice(i,1);ch=true;}});if(ch)await fbSet('approvals',shiftId,_ap[shiftId]);}
+  const emp=_emps.find(e=>e.id===empId);
+  const shift=_shifts.find(s=>s.id===shiftId);
+  toast(`זמינות ${emp?.name||''} בוטלה`,'error');
+  // Offer WA cancel message
+  if(emp&&shift){
+    const msg=waCancelMsg(emp,shift);
+    document.getElementById('smsContent').innerHTML=`
+      <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+        <button class="bs bd" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
+          📱 שלח הודעת ביטול בוואטסאפ
+        </button>
+      </div>`;
+    openModal('smsModal');
+  }
+  loadApproveWeek();
+};
+function sendSMS(emp,shift,role){
+  if(!emp||!shift)return;
+  const msg=waApprovalMsg(emp,shift,role);
+  document.getElementById('smsContent').innerHTML=`
+    <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="bs bgr" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
+        📱 שלח בוואטסאפ לעובד
+      </button>
+    </div>`;
+  openModal('smsModal');
+}
 
 // ===== SPONTANEOUS =====
 window.openSpont=function(){
@@ -757,8 +811,18 @@ window.doSpont=async function(){
   if(!_ap[shiftId])_ap[shiftId]={};
   if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
   if(!_ap[shiftId][emp.role].includes(empId)){_ap[shiftId][emp.role].push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);}
-  closeModal('spontModal');toast(`✅ ${emp.name} שובץ ל${shift.name||'משמרת'} ${fmtDate(shift.date)}`);
-  sendSMS(emp,shift,emp.role);loadApproveWeek();
+  closeModal('spontModal');
+  toast(`✅ ${emp.name} שובץ`);
+  const msg=waSpontMsg(emp,shift);
+  document.getElementById('smsContent').innerHTML=`
+    <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+      <button class="bs bgr" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
+        📱 שלח בוואטסאפ לעובד
+      </button>
+    </div>`;
+  openModal('smsModal');
+  loadApproveWeek();
 };
 
 // ===== EMPLOYEE: MY SHIFTS (unified) =====
@@ -934,6 +998,55 @@ window.genShiftsReport=function(){
   const header=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות${empTitle} | ${document.getElementById('repFrom').value} – ${document.getElementById('repTo').value}</h4><button class="bs bg" onclick="window.print()">🖨️ הדפס</button></div>`;
   document.getElementById('reportOutput').innerHTML=isMob?`<div>${header}${content}</div>`:`<div class="rep-card">${header}<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>${content}</tbody></table></div></div>`;
 };
+
+// ===== WHATSAPP =====
+function sendWhatsApp(phone, msg){
+  if(!phone){ toast('אין מספר טלפון לעובד זה','error'); return; }
+  // Clean phone number - remove dashes, spaces, leading 0, add 972
+  let p = phone.replace(/[-\s]/g,'');
+  if(p.startsWith('0')) p = '972' + p.slice(1);
+  const url = `https://wa.me/${p}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+function waApprovalMsg(emp, shift, role){
+  return `שלום ${emp.name}! 👋
+
+אושרת למשמרת:
+📅 ${fmtDate(shift.date)}
+⏰ ${shift.start}–${shift.end}
+💼 ${ROLES[role]}
+
+בהצלחה! 🙂`;
+}
+function waSpontMsg(emp, shift){
+  return `שלום ${emp.name}! 👋
+
+שובצת למשמרת:
+📅 ${fmtDate(shift.date)}
+⏰ ${shift.start}–${shift.end}
+💼 ${ROLES[emp.role]}
+
+בהצלחה! 🙂`;
+}
+function waChangeMsg(emp, shift){
+  return `שלום ${emp.name}! 🔄
+
+עודכנה משמרת שלך:
+📅 ${fmtDate(shift.date)}
+⏰ ${shift.start}–${shift.end}
+
+נא לבדוק את הפרטים במערכת.`;
+}
+function waCancelMsg(emp, shift){
+  return `שלום ${emp.name}! ❌
+
+המשמרת הבאה בוטלה:
+📅 ${fmtDate(shift.date)}
+⏰ ${shift.start}–${shift.end}
+
+לפרטים נוספים פנה/י למנהל.`;
+}
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded',()=>{
