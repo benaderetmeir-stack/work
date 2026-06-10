@@ -1001,15 +1001,21 @@ function waCancelMsg(emp, shift){
   return 'שלום ' + emp.name + '! ❌\n\nהמשמרת הבאה בוטלה:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n\nלפרטים פנה/י למנהל.';
 }
 
+function waLink(phone, msg){
+  let p = phone.replace(/[-\s]/g,'');
+  if(p.startsWith('0')) p = '972' + p.slice(1);
+  if(p.startsWith('+')) p = p.slice(1);
+  return 'https://wa.me/' + p + '?text=' + encodeURIComponent(msg.replace(/\\n/g,'\n'));
+}
+
 function showWaModal(items){
-  // items = [{label, phone, msg}]
   _waPending = items;
-  let btns = items.map((item,i) => {
-    const preview = item.msg.replace(/\n/g,'<br>');
+  let btns = items.map((item) => {
+    const preview = item.msg.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');
+    const link = waLink(item.phone||'', item.msg);
     return '<div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px">' +
       '<div style="font-size:13px;line-height:1.7;margin-bottom:10px">' + preview + '</div>' +
-      '<button class="bs bgr" style="width:100%;font-size:13px" onclick="sendWaPending(' + i + ')">' +
-      '📱 שלח לוואטסאפ של ' + item.label + '</button></div>';
+      '<a href="' + link + '" target="_blank" rel="noopener" style="display:block;width:100%;padding:10px;background:rgba(45,122,58,0.15);border:1px solid rgba(45,122,58,0.3);border-radius:10px;color:var(--green);font-weight:700;font-size:13px;text-align:center;text-decoration:none">📱 שלח לוואטסאפ של ' + item.label + '</a></div>';
   }).join('');
   document.getElementById('smsContent').innerHTML = btns;
   openModal('smsModal');
