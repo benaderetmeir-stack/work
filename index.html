@@ -366,10 +366,24 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 </div>
 
 <div class="modal-overlay" id="spontModal">
-<div class="modal"><h3>⚡ שיבוץ ספונטני</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">שבץ עובד למשמרת מיידית ללא תהליך זמינות</p>
-  <div class="fg"><label>בחר משמרת</label><select id="spontShift"></select></div>
-  <div class="fg"><label>בחר עובד</label><select id="spontEmp"></select></div>
-  <div class="modal-footer"><button class="bs bg" onclick="closeModal('spontModal')">ביטול</button><button class="bs ba" onclick="doSpont()">שבץ</button></div>
+<div class="modal"><h3>⚡ שיבוץ ספונטני</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">שבץ עובד ללא תהליך זמינות – עם משמרת קיימת או ללא</p>
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button class="bs bg" id="spontModeExist" onclick="setSpontMode('exist')" style="flex:1">📅 משמרת קיימת</button>
+    <button class="bs ba" id="spontModeFree" onclick="setSpontMode('free')" style="flex:1">✏️ תאריך חופשי</button>
+  </div>
+  <div id="spontExistBlock">
+    <div class="fg"><label>בחר משמרת</label><select id="spontShift"></select></div>
+  </div>
+  <div id="spontFreeBlock" style="display:none">
+    <div class="form-row">
+      <div class="fg"><label>תאריך</label><input type="date" id="spontDate"/></div>
+      <div class="fg"><label>שעת התחלה</label><input type="time" id="spontStart" value="08:00"/></div>
+      <div class="fg"><label>שעת סיום</label><input type="time" id="spontEnd" value="16:00"/></div>
+    </div>
+    <div class="fg" style="margin-top:8px"><label>שם משמרת</label><input id="spontName" placeholder="בוקר / ערב..."/></div>
+  </div>
+  <div class="fg" style="margin-top:10px"><label>בחר עובד</label><select id="spontEmp"></select></div>
+  <div class="modal-footer"><button class="bs bg" onclick="closeModal('spontModal')">ביטול</button><button class="bs ba" onclick="doSpont()">שבץ ושלח וואטסאפ</button></div>
 </div>
 </div>
 
@@ -462,11 +476,27 @@ function renderTodayWidget(){
     appEmps.forEach(e=>{
       const entries=getCkEntries(e.id,s.id);
       const inNow=isCurrentlyIn(e.id,s.id);
-      let statusTxt,color,dot;
-      if(entries.length>0){const last=entries[entries.length-1];if(!last.out){statusTxt='בפנים '+fmtTime(last.in);color='var(--green)';dot='🟢';}else{statusTxt=`נכנס ${fmtTime(entries[0].in)} | יצא ${fmtTime(last.out)}`;color='var(--red)';dot='🔴';}}
-      else{statusTxt='טרם נכנס';color='var(--text2)';dot='⏳';}
+      let dot=entries.length===0?'⏳':inNow?'🟢':'🔴';
+      let statusTxt=entries.length===0?'טרם נכנס':inNow?'בפנים':'סיים';
+      let color=entries.length===0?'var(--text2)':inNow?'var(--green)':'var(--red)';
       const mins=calcActualMins(e.id,s.id);
-      html+=`<div style="display:flex;align-items:center;padding:7px 10px;border-bottom:1px solid var(--border);gap:10px"><span style="font-size:14px;flex-shrink:0">${dot}</span><div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">${e.name}</div><div style="font-size:11px;color:var(--text2)">${ROLES[e.role]||e.role}</div></div><div style="flex-shrink:0;text-align:left"><div style="font-size:12px;color:${color};font-weight:600">${statusTxt}</div>${mins>0?`<div style="font-size:11px;color:var(--text2)">${fmtMins(mins)}</div>`:''}</div><button onclick="openEditClockMgr('${e.id}','${s.id}','${e.name}')" style="padding:3px 7px;font-size:11px;border:1px solid var(--border);background:var(--surface);border-radius:5px;cursor:pointer;color:var(--text2);flex-shrink:0">✏️</button></div>`;
+      // Build all entries string
+      let entriesStr='';
+      entries.forEach((en,i)=>{
+        entriesStr+=`<span style="font-size:11px;color:var(--text2);margin-left:6px">כניסה ${i+1}: <span style="color:var(--green)">${fmtTime(en.in)}</span>${en.out?` ← <span style="color:var(--red)">${fmtTime(en.out)}</span>':' <span style="color:var(--green)">(בפנים)</span>'}</span>`;
+      });
+      html+=`<div style="padding:8px 10px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:14px;flex-shrink:0">${dot}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:13px">${e.name} <span style="color:${color};font-size:12px">${statusTxt}</span></div>
+            <div style="font-size:11px;color:var(--text2)">${ROLES[e.role]||e.role}</div>
+            ${entries.length>0?`<div style="margin-top:3px;flex-wrap:wrap;display:flex;gap:4px">${entriesStr}</div>`:''}
+          </div>
+          ${mins>0?`<span style="font-size:12px;color:var(--text2);flex-shrink:0">${fmtMins(mins)}</span>`:''}
+          <button onclick="openEditClockMgr('${e.id}','${s.id}','${e.name}')" style="padding:3px 7px;font-size:11px;border:1px solid var(--border);background:var(--surface);border-radius:5px;cursor:pointer;color:var(--text2);flex-shrink:0">✏️</button>
+        </div>
+      </div>`;
     });
     html+='</div>';
   });
@@ -600,7 +630,6 @@ window.addProfileClockEntry = async function(){
 
 function renderProfileClockEntries(empId, date){
   const el = document.getElementById('profileClockEntries'); if(!el) return;
-  // Show all entries for this date across all shifts
   const dayShifts = _shifts.filter(s=>s.date===date);
   const manualKey = 'manual_'+date;
   let html = '';
@@ -608,15 +637,29 @@ function renderProfileClockEntries(empId, date){
     const ck = _ck[empId+'_'+sid]||{};
     const entries = Array.isArray(ck.entries)?ck.entries:(ck.in?[{in:ck.in,out:ck.out||null}]:[]);
     entries.forEach((e,i)=>{
-      html+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface2);border-radius:7px;margin-bottom:6px;font-size:13px">
-        <span style="color:var(--green);font-weight:600">↗ ${fmtTime(e.in)}</span>
-        ${e.out?`<span style="color:var(--red);font-weight:600">↙ ${fmtTime(e.out)}</span>`:'<span style="color:var(--text2)">בפנים</span>'}
-        <button onclick="delProfileEntry('${empId}','${sid}',${i})" style="margin-right:auto;padding:2px 7px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:11px">✕</button>
+      const inTime = e.in ? new Date(e.in).toTimeString().slice(0,5) : '';
+      const outTime = e.out ? new Date(e.out).toTimeString().slice(0,5) : '';
+      html+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:7px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-size:12px;color:var(--text2);font-weight:600">כניסה ${i+1}:</span>
+        <input type="time" value="${inTime}" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--green);font-weight:700;font-size:13px;width:100px" onchange="updateProfileEntry('${empId}','${sid}',${i},'in',this.value,'${date}')"/>
+        <span style="color:var(--text2)">→</span>
+        <input type="time" value="${outTime}" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--red);font-weight:700;font-size:13px;width:100px" onchange="updateProfileEntry('${empId}','${sid}',${i},'out',this.value,'${date}')"/>
+        <button onclick="delProfileEntry('${empId}','${sid}',${i})" style="margin-right:auto;padding:3px 8px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:11px">✕ מחק</button>
       </div>`;
     });
   });
-  el.innerHTML = html || '<p style="color:var(--text2);font-size:12px">אין רשומות לתאריך זה</p>';
+  el.innerHTML = html || '<p style="color:var(--text2);font-size:12px;padding:8px 0">אין רשומות לתאריך זה</p>';
 }
+
+window.updateProfileEntry = async function(empId, shiftId, idx, field, val, date){
+  function toTs(t){ if(!t)return null; const[h,m]=t.split(':').map(Number); const d=new Date(date); d.setHours(h,m,0,0); return d.getTime(); }
+  const existing = _ck[empId+'_'+shiftId]||{};
+  let entries = Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+  if(!entries[idx]) return;
+  entries[idx][field] = toTs(val);
+  await fbSet('clockins', empId+'_'+shiftId, {entries});
+  toast('שעה עודכנה ✓');
+};
 
 window.delProfileEntry = async function(empId, shiftId, idx){
   const existing = _ck[empId+'_'+shiftId]||{};
@@ -788,15 +831,46 @@ window.openSpont=function(){
   const sel1=document.getElementById('spontShift'),sel2=document.getElementById('spontEmp');
   sel1.innerHTML=_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>`<option value="${s.id}">${fmtDate(s.date)} ${s.name||''} ${s.start}–${s.end}</option>`).join('');
   sel2.innerHTML=_emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).map(e=>`<option value="${e.id}">${e.name} – ${ROLES[e.role]||e.role}</option>`).join('');
+  setSpontMode('exist');
+  document.getElementById('spontDate').value=new Date().toISOString().slice(0,10);
   openModal('spontModal');
 };
+
+window.setSpontMode=function(mode){
+  document.getElementById('spontExistBlock').style.display=mode==='exist'?'':'none';
+  document.getElementById('spontFreeBlock').style.display=mode==='free'?'':'none';
+  document.getElementById('spontModeExist').className='bs '+(mode==='exist'?'ba':'bg');
+  document.getElementById('spontModeFree').className='bs '+(mode==='free'?'ba':'bg');
+};
 window.doSpont=async function(){
-  const shiftId=document.getElementById('spontShift').value,empId=document.getElementById('spontEmp').value;
-  const emp=_emps.find(e=>e.id===empId),shift=_shifts.find(s=>s.id===shiftId);
-  if(!emp||!shift){toast('בחר משמרת ועובד','error');return;}
-  if(!_ap[shiftId])_ap[shiftId]={};
-  if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
-  if(!_ap[shiftId][emp.role].includes(empId)){_ap[shiftId][emp.role].push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);}
+  const empId=document.getElementById('spontEmp').value;
+  const emp=_emps.find(e=>e.id===empId);
+  if(!emp){toast('בחר עובד','error');return;}
+  const freeMode=document.getElementById('spontFreeBlock').style.display!=='none';
+  let shift;
+  if(freeMode){
+    const date=document.getElementById('spontDate').value;
+    const start=document.getElementById('spontStart').value;
+    const end=document.getElementById('spontEnd').value;
+    const name=document.getElementById('spontName').value||'ספונטני';
+    if(!date){toast('בחר תאריך','error');return;}
+    // Create new shift
+    const id=genId();
+    shift={id,date,name,start,end,needs:{}};
+    shift.needs[emp.role]=1;
+    await fbSet('shifts',id,shift);
+    if(!_ap[id])_ap[id]={};
+    if(!_ap[id][emp.role])_ap[id][emp.role]=[];
+    _ap[id][emp.role].push(empId);
+    await fbSet('approvals',id,_ap[id]);
+  } else {
+    const shiftId=document.getElementById('spontShift').value;
+    shift=_shifts.find(s=>s.id===shiftId);
+    if(!shift){toast('בחר משמרת','error');return;}
+    if(!_ap[shiftId])_ap[shiftId]={};
+    if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
+    if(!_ap[shiftId][emp.role].includes(empId)){_ap[shiftId][emp.role].push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);}
+  }
   closeModal('spontModal');
   toast(`✅ ${emp.name} שובץ`);
   const msg=waSpontMsg(emp,shift);
