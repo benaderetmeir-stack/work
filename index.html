@@ -701,14 +701,8 @@ window.confirmShift=async function(id){
     if(shift){
       const appEmps=_emps.filter(e=>Object.entries(_ap[id]||{}).some(([,ids])=>ids.includes(e.id)));
       if(appEmps.length>0){
-        let btns=appEmps.map(e=>{
-          const msg=waChangeMsg(e,shift);
-          return`<button class="bs bo" style="width:100%;margin-bottom:6px;font-size:13px" onclick="sendWhatsApp('${e.phone}','${msg.replace(/'/g,"\'")}')">📱 עדכן ${e.name}</button>`;
-        }).join('');
-        document.getElementById('smsContent').innerHTML=`
-          <div style="font-weight:700;margin-bottom:12px">🔄 המשמרת עודכנה – שלח עדכון לעובדים:</div>
-          ${btns}`;
-        openModal('smsModal');
+        const items=appEmps.map(e=>({label:e.name, phone:e.phone, msg:waChangeMsg(e,shift)}));
+        showWaModal(items);
       }
     }
   }
@@ -770,31 +764,16 @@ window.cancelAvail=async function(empId,shiftId){
   const emp=_emps.find(e=>e.id===empId);
   const shift=_shifts.find(s=>s.id===shiftId);
   toast(`זמינות ${emp?.name||''} בוטלה`,'error');
-  // Offer WA cancel message
   if(emp&&shift){
     const msg=waCancelMsg(emp,shift);
-    document.getElementById('smsContent').innerHTML=`
-      <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
-      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-        <button class="bs bd" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
-          📱 שלח הודעת ביטול בוואטסאפ
-        </button>
-      </div>`;
-    openModal('smsModal');
+    showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
   }
   loadApproveWeek();
 };
 function sendSMS(emp,shift,role){
   if(!emp||!shift)return;
   const msg=waApprovalMsg(emp,shift,role);
-  document.getElementById('smsContent').innerHTML=`
-    <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-      <button class="bs bgr" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
-        📱 שלח בוואטסאפ לעובד
-      </button>
-    </div>`;
-  openModal('smsModal');
+  showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
 }
 
 // ===== SPONTANEOUS =====
@@ -814,14 +793,7 @@ window.doSpont=async function(){
   closeModal('spontModal');
   toast(`✅ ${emp.name} שובץ`);
   const msg=waSpontMsg(emp,shift);
-  document.getElementById('smsContent').innerHTML=`
-    <div style="white-space:pre-wrap;font-size:13px;line-height:1.7">${msg}</div>
-    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
-      <button class="bs bgr" style="width:100%;font-size:14px" onclick="sendWhatsApp('${emp.phone}','${msg.replace(/'/g,"\'")}')">
-        📱 שלח בוואטסאפ לעובד
-      </button>
-    </div>`;
-  openModal('smsModal');
+  showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
   loadApproveWeek();
 };
 
@@ -1000,52 +972,47 @@ window.genShiftsReport=function(){
 };
 
 // ===== WHATSAPP =====
+let _waPending = []; // array of {phone, msg} for pending sends
+
 function sendWhatsApp(phone, msg){
   if(!phone){ toast('אין מספר טלפון לעובד זה','error'); return; }
-  // Clean phone number - remove dashes, spaces, leading 0, add 972
   let p = phone.replace(/[-\s]/g,'');
   if(p.startsWith('0')) p = '972' + p.slice(1);
-  const url = `https://wa.me/${p}?text=${encodeURIComponent(msg)}`;
+  if(p.startsWith('+')) p = p.slice(1);
+  const url = 'https://wa.me/' + p + '?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
 }
 
+window.sendWaPending = function(idx){
+  const item = _waPending[idx];
+  if(item) sendWhatsApp(item.phone, item.msg);
+};
+
 function waApprovalMsg(emp, shift, role){
-  return `שלום ${emp.name}! 👋
-
-אושרת למשמרת:
-📅 ${fmtDate(shift.date)}
-⏰ ${shift.start}–${shift.end}
-💼 ${ROLES[role]}
-
-בהצלחה! 🙂`;
+  return 'שלום ' + emp.name + '! 👋\n\nאושרת למשמרת:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n💼 ' + ROLES[role] + '\n\nבהצלחה! 🙂';
 }
 function waSpontMsg(emp, shift){
-  return `שלום ${emp.name}! 👋
-
-שובצת למשמרת:
-📅 ${fmtDate(shift.date)}
-⏰ ${shift.start}–${shift.end}
-💼 ${ROLES[emp.role]}
-
-בהצלחה! 🙂`;
+  return 'שלום ' + emp.name + '! 👋\n\nשובצת למשמרת:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n💼 ' + ROLES[emp.role] + '\n\nבהצלחה! 🙂';
 }
 function waChangeMsg(emp, shift){
-  return `שלום ${emp.name}! 🔄
-
-עודכנה משמרת שלך:
-📅 ${fmtDate(shift.date)}
-⏰ ${shift.start}–${shift.end}
-
-נא לבדוק את הפרטים במערכת.`;
+  return 'שלום ' + emp.name + '! 🔄\n\nעודכנה משמרת שלך:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n\nנא לבדוק פרטים במערכת.';
 }
 function waCancelMsg(emp, shift){
-  return `שלום ${emp.name}! ❌
+  return 'שלום ' + emp.name + '! ❌\n\nהמשמרת הבאה בוטלה:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n\nלפרטים פנה/י למנהל.';
+}
 
-המשמרת הבאה בוטלה:
-📅 ${fmtDate(shift.date)}
-⏰ ${shift.start}–${shift.end}
-
-לפרטים נוספים פנה/י למנהל.`;
+function showWaModal(items){
+  // items = [{label, phone, msg}]
+  _waPending = items;
+  let btns = items.map((item,i) => {
+    const preview = item.msg.replace(/\n/g,'<br>');
+    return '<div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px">' +
+      '<div style="font-size:13px;line-height:1.7;margin-bottom:10px">' + preview + '</div>' +
+      '<button class="bs bgr" style="width:100%;font-size:13px" onclick="sendWaPending(' + i + ')">' +
+      '📱 שלח לוואטסאפ של ' + item.label + '</button></div>';
+  }).join('');
+  document.getElementById('smsContent').innerHTML = btns;
+  openModal('smsModal');
 }
 
 // ===== INIT =====
