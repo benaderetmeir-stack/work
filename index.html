@@ -150,7 +150,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
   .card{padding:14px;}
   .form-row{flex-direction:column;}
   .form-row .fg{width:100%;}
-  .bs{width:100%;padding:10px;}
+  .form-row .bs{width:100%;padding:10px;}
   .modal-footer{flex-direction:column;}
   .modal-footer .bs{width:100%;}
 }
@@ -1160,6 +1160,9 @@ $('closeSmsBtn').addEventListener('click',()=>closeModal('smsModal'));
 
 // INIT
 document.addEventListener('DOMContentLoaded',()=>{
+  // Set min dates
+  const todayMin=new Date().toISOString().slice(0,10);
+  ['spontDate','pSpontDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.min=todayMin;});
   startListeners();
   setTimeout(()=>{$('loadingOverlay').style.display='none';$('loginScreen').classList.add('active');},1500);
 });
