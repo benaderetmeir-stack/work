@@ -200,6 +200,11 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
     <div class="card"><div class="card-title">👥 לפי תפקיד</div><div id="roleBreakdown"></div></div>
     <div class="card"><div class="card-title">📅 קרובות</div><div id="upcomingShifts"></div></div>
   </div>
+  <div class="card" style="border-color:rgba(192,57,43,0.3);margin-top:0">
+    <div class="card-title" style="color:var(--red)">⚠️ אזור סכנה</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px">מחיקת כל נתוני המערכת – עובדים, משמרות, זמינות, אישורים ושעות.</p>
+    <button class="bs bd" id="resetSystemBtn" style="width:auto">🗑️ איפוס מערכת מלא</button>
+  </div>
 </div>
 
 <div id="panel-employees" class="panel">
@@ -291,6 +296,27 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 </div>
 
 <!-- MODALS -->
+<div class="modal-overlay" id="resetModal">
+<div class="modal" style="width:420px">
+  <h3 style="color:var(--red)">⚠️ איפוס מערכת מלא</h3>
+  <p style="color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:8px">פעולה זו תמחק לצמיתות:</p>
+  <ul style="color:var(--text2);font-size:13px;margin-bottom:16px;padding-right:20px;line-height:2">
+    <li>כל העובדים וקודי הכניסה</li>
+    <li>כל המשמרות והלוחות</li>
+    <li>כל הזמינויות והאישורים</li>
+    <li>כל שעות הכניסה/יציאה</li>
+  </ul>
+  <div class="fg">
+    <label>לאישור, הקלד: <strong>אפס</strong></label>
+    <input id="resetConfirmInput" placeholder='הקלד "אפס" לאישור' style="direction:rtl;text-align:right"/>
+  </div>
+  <div class="modal-footer">
+    <button class="bs bg2" id="cancelResetBtn">ביטול</button>
+    <button class="bs bd" id="confirmResetBtn">מחק הכל לצמיתות</button>
+  </div>
+</div>
+</div>
+
 <div class="modal-overlay" id="smsModal">
 <div class="modal"><h3>📱 שלח הודעה בוואטסאפ</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">לחץ על הכפתור לפתיחת וואטסאפ ושליחה ישירה</p><div id="smsContent"></div><div class="modal-footer"><button class="bs bg2" id="closeSmsBtn">סגור</button></div></div>
 </div>
@@ -1142,6 +1168,18 @@ function genShiftsReport(){
   $('reportOutput').innerHTML=isMob?'<div>'+hdr+content+'</div>':'<div class="rep-card">'+hdr+'<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>'+content+'</tbody></table></div></div>';
 }
 
+// RESET SYSTEM
+async function resetSystem(){
+  const {getDocs,collection:col2}=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+  const cols=['employees','shifts','approvals','availability','clockins','confirmed'];
+  let total=0;
+  for(const c of cols){
+    const snap=await getDocs(col2(db,c));
+    for(const d of snap.docs){await deleteDoc(doc(db,c,d.id));total++;}
+  }
+  return total;
+}
+
 // WHATSAPP
 function waLink(phone,msg){let p=phone.replace(/[-\s]/g,'');if(p.startsWith('0'))p='972'+p.slice(1);if(p.startsWith('+'))p=p.slice(1);return 'https://wa.me/'+p+'?text='+encodeURIComponent(msg);}
 function showWaModal(items){
@@ -1162,6 +1200,27 @@ $('closeSmsBtn').addEventListener('click',()=>closeModal('smsModal'));
 
 // INIT
 document.addEventListener('DOMContentLoaded',()=>{
+  // Reset system
+  document.addEventListener('click',function(e){
+    if(e.target.id==='resetSystemBtn') openModal('resetModal');
+  });
+  $('cancelResetBtn').addEventListener('click',()=>closeModal('resetModal'));
+  $('confirmResetBtn').addEventListener('click',async()=>{
+    if($('resetConfirmInput').value.trim()!=='אפס'){toast('נא להקליד "אפס" לאישור','error');return;}
+    $('confirmResetBtn').textContent='מוחק...';
+    $('confirmResetBtn').disabled=true;
+    try{
+      await resetSystem();
+      closeModal('resetModal');
+      $('resetConfirmInput').value='';
+      toast('✅ המערכת אופסה בהצלחה!');
+      logout();
+    }catch(err){
+      toast('שגיאה: '+err.message,'error');
+      $('confirmResetBtn').textContent='מחק הכל לצמיתות';
+      $('confirmResetBtn').disabled=false;
+    }
+  });
   // Set min dates
   const todayMin=new Date().toISOString().slice(0,10);
   ['spontDate','pSpontDate'].forEach(id=>{const el=document.getElementById(id);if(el)el.min=todayMin;});
