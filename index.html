@@ -216,7 +216,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
     <div class="collapsible-body" id="addEmpBody">
       <div class="form-row">
         <div class="fg"><label>שם מלא</label><input id="newName" placeholder="ישראל ישראלי"/></div>
-        <div class="fg"><label>תפקיד</label><select id="newRole"><option value="manager">מנהל משמרת</option><option value="waiter">מלצר</option><option value="line">עובד פס</option><option value="pastry">קונדיטור</option><option value="kitchen">מטבח</option><option value="dishwasher">שוטף כלים</option></select></div>
+        <div class="fg"><label>תפקיד</label><select id="newRole"><option value="manager">מנהל משמרת</option><option value="waiter">מלצר</option><option value="line">עובד פס</option><option value="pastry">קונדיטור</option><option value="kitchen">מטבח</option><option value="dishwasher">שוטף כלים</option><option value="general">עובד כללי</option><option value="warehouse">מחסנאי</option><option value="cashier">קופאי</option></select></div>
         <div class="fg"><label>סטטוס</label><select id="newSenior"><option value="0">רגיל</option><option value="1">⭐ בכיר</option></select></div>
       </div>
       <div class="form-row" style="margin-top:8px">
@@ -327,7 +327,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
   <input type="hidden" id="profileEmpId"/>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
     <div class="fg"><label>שם מלא</label><input id="pName"/></div>
-    <div class="fg"><label>תפקיד</label><select id="pRole"><option value="manager">מנהל משמרת</option><option value="waiter">מלצר</option><option value="line">עובד פס</option><option value="pastry">קונדיטור</option><option value="kitchen">מטבח</option><option value="dishwasher">שוטף כלים</option></select></div>
+    <div class="fg"><label>תפקיד</label><select id="pRole"><option value="manager">מנהל משמרת</option><option value="waiter">מלצר</option><option value="line">עובד פס</option><option value="pastry">קונדיטור</option><option value="kitchen">מטבח</option><option value="dishwasher">שוטף כלים</option><option value="general">עובד כללי</option><option value="warehouse">מחסנאי</option><option value="cashier">קופאי</option></select></div>
     <div class="fg"><label>סטטוס</label><select id="pSenior"><option value="0">רגיל</option><option value="1">⭐ בכיר</option></select></div>
     <div class="fg"><label>טלפון</label><input id="pPhone"/></div>
     <div class="fg"><label>ת"ז</label><input id="pTZ"/></div>
@@ -414,7 +414,7 @@ import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-ap
 import{getFirestore,collection,doc,getDoc,setDoc,deleteDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const FC={apiKey:"AIzaSyBkIC6CtLNkPrF84EMX6u0XbvFbeYDzcxM",authDomain:"workers-ca7a7.firebaseapp.com",projectId:"workers-ca7a7",storageBucket:"workers-ca7a7.firebasestorage.app",messagingSenderId:"755551077925",appId:"1:755551077925:web:0f9cf7bbd23974f8fda1cc"};
 const db=getFirestore(initializeApp(FC));
-const ROLES={manager:'מנהל משמרת',waiter:'מלצר',line:'עובד פס',pastry:'קונדיטור',kitchen:'מטבח',dishwasher:'שוטף כלים'};
+const ROLES={manager:'מנהל משמרת',waiter:'מלצר',line:'עובד פס',pastry:'קונדיטור',kitchen:'מטבח',dishwasher:'שוטף כלים',general:'עובד כללי',warehouse:'מחסנאי',cashier:'קופאי'};
 const RK=Object.keys(ROLES);
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 const SN=['בוקר','ערב','לילה','צהריים','מיוחד'];
@@ -811,8 +811,14 @@ function renderShiftCard(s){
   SN.forEach(n=>{html+='<button class="snt snt-btn '+(s.name===n?'active':'')+'" data-sid="'+s.id+'" data-name="'+n+'">'+n+'</button>';});
   html+='</div>';
   html+='<div class="form-row" style="margin-bottom:10px"><div class="fg"><label>שעת התחלה</label><input type="time" value="'+(s.start||'')+'" class="shift-time-input" data-sid="'+s.id+'" data-field="start"/></div><div class="fg"><label>שעת סיום</label><input type="time" value="'+(s.end||'')+'" class="shift-time-input" data-sid="'+s.id+'" data-field="end"/></div></div>';
+  // Only show roles that have at least one employee
+  const activeRoles=RK.filter(r=>_emps.some(e=>e.role===r));
   html+='<div class="roles-grid">';
-  RK.forEach(r=>{html+='<div class="ri"><label>'+ROLES[r]+'</label><div style="display:flex;gap:3px;align-items:center"><input type="number" min="0" value="'+(s.needs?.[r]||0)+'" class="need-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1"/><span style="font-size:9px;color:var(--text2)">כולל</span><input type="number" min="0" value="'+(s.seniors?.[r]||0)+'" class="senior-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1;border-color:rgba(139,105,20,0.4)"/><span style="font-size:9px;color:var(--accent)">בכיר</span></div></div>';});
+  if(activeRoles.length===0){
+    html+='<p style="color:var(--text2);font-size:13px;grid-column:1/-1">אין עובדים מוגדרים במערכת</p>';
+  } else {
+    activeRoles.forEach(r=>{html+='<div class="ri"><label>'+ROLES[r]+'</label><div style="display:flex;gap:3px;align-items:center"><input type="number" min="0" value="'+(s.needs?.[r]||0)+'" class="need-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1"/><span style="font-size:9px;color:var(--text2)">כולל</span><input type="number" min="0" value="'+(s.seniors?.[r]||0)+'" class="senior-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1;border-color:rgba(139,105,20,0.4)"/><span style="font-size:9px;color:var(--accent)">בכיר</span></div></div>';});
+  }
   html+='</div>';
   html+='<button class="confirm-btn '+btnCls+' confirm-shift-btn" data-sid="'+s.id+'">'+btnTxt+'</button>';
   html+='</div>';
