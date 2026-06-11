@@ -532,7 +532,7 @@ function renderTodayWidget(){
       if(entries.length>0)html+='<div style="margin-top:3px">'+entriesStr+'</div>';
       html+='</div>';
       if(mins>0)html+='<span style="font-size:12px;color:var(--text2);flex-shrink:0">'+fmtMins(mins)+'</span>';
-      html+='<button class="edit-clock-mgr-btn bs bg2" data-eid="'+e.id+'" data-sid="'+s.id+'" data-ename="'+e.name+'" style="padding:4px 8px;font-size:11px;flex-shrink:0">✏️</button>';
+      html+='<button class="edit-clock-mgr-btn" data-eid="'+e.id+'" data-sid="'+s.id+'" data-ename="'+e.name+'" style="padding:4px 8px;font-size:11px;flex-shrink:0;border:1px solid var(--border);background:var(--surface);border-radius:6px;cursor:pointer;color:var(--text2);white-space:nowrap">✏️</button>';
       html+='</div></div>';
     });
     html+='</div>';
@@ -938,16 +938,20 @@ function openSpont(){
   $('spontEmp').innerHTML=_emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).map(e=>'<option value="'+e.id+'">'+e.name+' – '+(ROLES[e.role]||e.role)+'</option>').join('');
   $('spontShift').innerHTML='<option value="">-- ללא משמרת קיימת --</option>'+_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>'<option value="'+s.id+'">'+fmtDate(s.date)+' '+(s.name||'')+' '+s.start+'–'+s.end+'</option>').join('');
   $('spontDate').value='';
+  $('spontDate').min=new Date().toISOString().slice(0,10);
   openModal('spontModal');
 }
 $('closeSpontBtn').addEventListener('click',()=>closeModal('spontModal'));
 $('doSpontBtn').addEventListener('click',doSpont);
+$('spontDate').min=new Date().toISOString().slice(0,10);
 async function doSpont(){
   const empId=$('spontEmp').value,emp=_emps.find(e=>e.id===empId);
   if(!emp){toast('בחר עובד','error');return;}
   const freeDate=$('spontDate').value;
   let shift;
   if(freeDate){
+    const today=new Date().toISOString().slice(0,10);
+    if(freeDate<today){toast('לא ניתן לשבץ לתאריך עבר','error');return;}
     const start=$('spontStart').value,end=$('spontEnd').value,name=$('spontName').value||'ספונטני';
     const id=genId();shift={id,date:freeDate,name,start,end,needs:{}};shift.needs[emp.role]=1;
     await fbSet('shifts',id,shift);
