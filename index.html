@@ -684,6 +684,8 @@ async function spontFromProfile(){
   const freeDate=$('pSpontDate').value;
   let shift;
   if(freeDate){
+    const todayChk=new Date().toISOString().slice(0,10);
+    if(freeDate<todayChk){toast('⚠️ לא ניתן לשבץ לתאריך עבר','error');return;}
     const start=$('pSpontStart').value,end=$('pSpontEnd').value,name=$('pSpontName').value||'ספונטני';
     const id=genId();shift={id,date:freeDate,name,start,end,needs:{}};shift.needs[emp.role]=1;
     await fbSet('shifts',id,shift);
@@ -951,7 +953,7 @@ async function doSpont(){
   let shift;
   if(freeDate){
     const today=new Date().toISOString().slice(0,10);
-    if(freeDate<today){toast('לא ניתן לשבץ לתאריך עבר','error');return;}
+    if(freeDate<today){toast('⚠️ לא ניתן לשבץ לתאריך עבר','error');return;}
     const start=$('spontStart').value,end=$('spontEnd').value,name=$('spontName').value||'ספונטני';
     const id=genId();shift={id,date:freeDate,name,start,end,needs:{}};shift.needs[emp.role]=1;
     await fbSet('shifts',id,shift);
