@@ -21,9 +21,9 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .login-tabs{display:flex;gap:4px;background:var(--bg);border-radius:10px;padding:4px;margin-bottom:28px;}
 .login-tab{flex:1;padding:10px;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--text2);}
 .login-tab.active{background:var(--accent);color:#fff;}
-.fg{margin-bottom:16px;}.fg label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px;}
+.fg{margin-bottom:14px;}.fg label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:7px;}
 .fg input,.fg select,.fg textarea{width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;transition:border-color .2s;}
-.fg input{direction:ltr;text-align:right;}.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--accent);}
+.fg input{direction:ltr;text-align:right;}.fg input:focus,.fg select:focus{outline:none;border-color:var(--accent);}
 .btn{width:100%;padding:13px;border:none;border-radius:var(--radius);font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;}
 .btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:var(--accent2);}
 .error-msg{color:var(--red);font-size:13px;text-align:center;margin-top:12px;min-height:18px;}
@@ -46,112 +46,101 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .form-row .fg{margin-bottom:0;flex:1;min-width:120px;}
 .bs{padding:10px 18px;border:none;border-radius:var(--radius);font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
 .ba{background:var(--accent);color:#fff;}.ba:hover{background:var(--accent2);}
-.bg{background:var(--surface2);color:var(--text);border:1px solid var(--border);}.bg:hover{border-color:var(--accent);color:var(--accent);}
-.bd{background:rgba(192,57,43,0.1);color:var(--red);border:1px solid rgba(192,57,43,0.3);}.bd:hover{background:rgba(192,57,43,0.2);}
-.bb{background:rgba(37,99,168,0.1);color:var(--blue);border:1px solid rgba(37,99,168,0.3);}.bb:hover{background:rgba(37,99,168,0.2);}
-.bgr{background:rgba(45,122,58,0.1);color:var(--green);border:1px solid rgba(45,122,58,0.3);}.bgr:hover{background:rgba(45,122,58,0.2);}
+.bg2{background:var(--surface2);color:var(--text);border:1px solid var(--border);}.bg2:hover{border-color:var(--accent);color:var(--accent);}
+.bd{background:rgba(192,57,43,0.1);color:var(--red);border:1px solid rgba(192,57,43,0.3);}
+.bb{background:rgba(37,99,168,0.1);color:var(--blue);border:1px solid rgba(37,99,168,0.3);}
+.bgr{background:rgba(45,122,58,0.1);color:var(--green);border:1px solid rgba(45,122,58,0.3);}
 .bo{background:rgba(196,95,10,0.1);color:var(--orange);border:1px solid rgba(196,95,10,0.3);}
 table{width:100%;border-collapse:collapse;}
 th{text-align:right;padding:9px 10px;font-size:11px;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);background:var(--surface2);}
-td{padding:10px 10px;font-size:13px;border-bottom:1px solid var(--border);}
+td{padding:10px;font-size:13px;border-bottom:1px solid var(--border);}
 tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03);}
 .badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;}
-.br0{background:rgba(139,105,20,0.12);color:var(--accent);}.br1{background:rgba(37,99,168,0.12);color:var(--blue);}.br2{background:rgba(45,122,58,0.12);color:var(--green);}.br3{background:rgba(130,60,150,0.12);color:#7b3fa0;}.br4{background:rgba(192,57,43,0.12);color:var(--red);}.br5{background:rgba(100,80,50,0.12);color:#6b5030;}
-/* COLLAPSE */
-.collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:12px 16px;background:var(--surface2);border-radius:10px;margin-bottom:12px;user-select:none;}
+.br0{background:rgba(139,105,20,0.12);color:var(--accent);}
+.br1{background:rgba(37,99,168,0.12);color:var(--blue);}
+.br2{background:rgba(45,122,58,0.12);color:var(--green);}
+.br3{background:rgba(130,60,150,0.12);color:#7b3fa0;}
+.br4{background:rgba(192,57,43,0.12);color:var(--red);}
+.br5{background:rgba(100,80,50,0.12);color:#6b5030;}
+.collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:14px 18px;background:var(--surface2);border-radius:10px;margin-bottom:0;user-select:none;}
 .collapsible-header:hover{background:#e8dcc8;}
-.collapsible-body{display:none;}.collapsible-body.open{display:block;}
-/* DAY SECTION */
+.collapsible-body{display:none;padding:16px;border-top:1px solid var(--border);}.collapsible-body.open{display:block;}
 .day-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;}
 .day-header{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;background:var(--surface2);border-radius:var(--radius) var(--radius) 0 0;}
-.day-header:hover{background:#e8dcc8;}
 .day-body{padding:0 16px 16px;}
 .shift-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;position:relative;}
 .shift-remove{position:absolute;top:10px;left:10px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);color:var(--red);cursor:pointer;font-size:11px;font-weight:700;border-radius:6px;padding:4px 8px;z-index:10;}
-.shift-remove:hover{background:rgba(192,57,43,0.2);}
-.shift-name-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
 .snt{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:transparent;color:var(--text2);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
 .snt.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 .roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
 .ri{display:flex;flex-direction:column;gap:3px;}
 .ri label{font-size:10px;color:var(--text2);font-weight:600;}
 .ri input{width:100%;padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'Heebo',sans-serif;font-size:13px;text-align:center;direction:ltr;}
-.confirm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;margin-top:8px;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:1px solid rgba(45,122,58,0.3);background:rgba(45,122,58,0.08);color:var(--green);}
-.confirm-btn.confirmed{background:rgba(45,122,58,0.15);border-color:var(--green);}
-.confirm-btn.dirty{background:rgba(192,57,43,0.08);border-color:var(--red);color:var(--red);}
-/* AVAIL */
+.confirm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px;margin-top:8px;border-radius:8px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.confirm-btn.green{border:1px solid rgba(45,122,58,0.3);background:rgba(45,122,58,0.08);color:var(--green);}
+.confirm-btn.red{border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);}
 .avail-shift{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
 .avail-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .avail-info h4{font-size:14px;font-weight:700;}.avail-info p{font-size:12px;color:var(--text2);margin-top:2px;}
-.toggle-avail{display:flex;gap:6px;}
 .avail-btn{padding:7px 16px;border-radius:8px;border:1px solid var(--border);font-family:'Heebo',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--text2);}
 .avail-btn.yes.active{background:rgba(45,122,58,0.15);border-color:var(--green);color:var(--green);}
 .avail-btn.no.active{background:rgba(192,57,43,0.12);border-color:var(--red);color:var(--red);}
-/* CLOCK */
-.clock-entries{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
-.clock-entry{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--border);font-size:12px;}
-.clock-entry:last-child{border-bottom:none;}
-.stopwatch{background:var(--green);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;font-family:monospace;display:inline-block;margin-top:6px;}
-/* APPROVE */
 .approve-shift{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;}
 .approve-shift.complete{border-color:rgba(45,122,58,0.5);background:rgba(45,122,58,0.02);}
 .worker-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);font-size:12px;cursor:pointer;transition:all .2s;margin:3px;}
 .worker-chip:hover{border-color:var(--accent);}
 .worker-chip.approved{background:rgba(45,122,58,0.1);border-color:var(--green);color:var(--green);}
-/* MY SHIFTS */
 .ms-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
 .ms-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;}
 .ms-info h4{font-size:14px;font-weight:700;}.ms-info p{font-size:12px;color:var(--text2);margin-top:3px;}
 .sbadge{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;}
-.s-app{background:rgba(45,122,58,0.12);color:var(--green);}.s-pend{background:rgba(139,105,20,0.12);color:var(--accent);}.s-none{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
-/* STATS */
+.s-app{background:rgba(45,122,58,0.12);color:var(--green);}
+.s-pend{background:rgba(139,105,20,0.12);color:var(--accent);}
+.s-none{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.stopwatch{background:var(--green);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;font-family:monospace;display:inline-block;}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
 .stat-num{font-size:28px;font-weight:900;color:var(--accent);}.stat-label{font-size:11px;color:var(--text2);font-weight:600;margin-top:3px;}
-/* SEARCH */
 .search-bar{width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Heebo',sans-serif;font-size:14px;margin-bottom:14px;}
 .search-bar:focus{outline:none;border-color:var(--accent);}
-/* EMP CARD */
 .emp-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;cursor:pointer;transition:all .2s;}
-.emp-card:hover{border-color:var(--accent);background:rgba(139,105,20,0.04);}
+.emp-card:hover{border-color:var(--accent);}
 .emp-card-top{display:flex;align-items:center;justify-content:space-between;}
 .emp-name{font-weight:800;font-size:15px;}
 .emp-meta{font-size:12px;color:var(--text2);margin-top:4px;}
-/* SUMMARY TABLE */
 .sum-table{width:100%;border-collapse:collapse;font-size:12px;}
 .sum-table th{padding:7px 8px;text-align:right;font-size:11px;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);background:var(--surface2);}
-.sum-table td{padding:8px 8px;border-bottom:1px solid var(--border);}
+.sum-table td{padding:8px;border-bottom:1px solid var(--border);}
 .sum-table tr:last-child td{border-bottom:none;}
 .pill{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;}
 .pill-ok{background:rgba(45,122,58,0.12);color:var(--green);border:1px solid rgba(45,122,58,0.3);}
 .pill-no{background:rgba(192,57,43,0.08);color:var(--red);border:1px solid rgba(192,57,43,0.25);}
-.rm{display:inline-flex;align-items:center;font-size:10px;padding:2px 5px;border-radius:10px;margin:2px;}
-.rm-ok{background:rgba(45,122,58,0.1);color:var(--green);}.rm-no{background:rgba(192,57,43,0.08);color:var(--red);}
-/* REPORT */
+.rm{display:inline-flex;font-size:10px;padding:2px 5px;border-radius:10px;margin:2px;}
+.rm-ok{background:rgba(45,122,58,0.1);color:var(--green);}
+.rm-no{background:rgba(192,57,43,0.08);color:var(--red);}
 .rep-card{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;}
 .rep-table{width:100%;border-collapse:collapse;font-size:12px;}
 .rep-table th{background:var(--accent);color:#fff;padding:8px 10px;text-align:right;font-size:11px;}
 .rep-table td{padding:8px 10px;border-bottom:1px solid var(--border);}
 .rep-table .tot td{background:var(--surface2);font-weight:700;border-top:2px solid var(--border);}
-/* STATUS BANNER */
 .s-complete{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;margin-top:8px;background:rgba(45,122,58,0.08);border:1.5px solid var(--green);}
 .s-incomplete{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px;margin-top:8px;background:rgba(192,57,43,0.06);border:1.5px solid var(--red);}
-/* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(44,31,10,0.5);z-index:500;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto;animation:slideUp .3s ease;box-shadow:var(--shadow);}
 .modal h3{font-size:17px;font-weight:800;margin-bottom:18px;}
 .modal-footer{display:flex;gap:8px;margin-top:20px;justify-content:flex-end;flex-wrap:wrap;}
-/* TOAST */
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:2px solid var(--border);border-radius:var(--radius);padding:12px 22px;font-size:13px;font-weight:600;z-index:9999;transition:transform .3s ease;box-shadow:var(--shadow);}
 .toast.show{transform:translateX(-50%) translateY(0);}
-.toast.success{border-color:var(--green);color:var(--green);}.toast.error{border-color:var(--red);color:var(--red);}.toast.warning{border-color:var(--orange);color:var(--orange);}
-/* LOADING */
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.warning{border-color:var(--orange);color:var(--orange);}
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
 .spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.spont-free-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;}
 @media print{.topbar,.nav-tabs,.bs,.btn,.modal-overlay,.toast,.loading-overlay{display:none!important;}.card{box-shadow:none;}body{background:#fff;}}
 @media(max-width:680px){
   .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
@@ -164,87 +153,148 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
   .bs{width:100%;padding:10px;}
   .modal-footer{flex-direction:column;}
   .modal-footer .bs{width:100%;}
-  .sum-table,.rep-table{font-size:11px;}
 }
 </style>
 </head>
 <body>
 <div class="loading-overlay" id="loadingOverlay"><div class="spinner"></div><p style="color:var(--text2)">מתחבר לשרת...</p></div>
 
-<!-- LOGIN -->
 <div id="loginScreen" class="screen">
 <div class="login-card">
   <div class="login-logo"><span class="icon">🍽️</span><h1>ניהול משמרות</h1><p>מסעדה / בית קפה <span class="sync-dot"></span></p></div>
-  <div class="login-tabs"><button class="login-tab active" onclick="switchTab('manager')">מנהל</button><button class="login-tab" onclick="switchTab('employee')">עובד</button></div>
+  <div class="login-tabs">
+    <button class="login-tab active" id="tabMgr">מנהל</button>
+    <button class="login-tab" id="tabEmp">עובד</button>
+  </div>
   <div id="mgrForm"><div class="fg"><label>שם משתמש</label><input id="mgrUser" placeholder="admin"/></div><div class="fg"><label>סיסמה</label><input type="password" id="mgrPass" placeholder="••••••"/></div></div>
   <div id="empForm" style="display:none"><div class="fg"><label>קוד אישי</label><input id="empCode" placeholder="הזן קוד שקיבלת"/></div></div>
   <div class="error-msg" id="loginErr"></div>
-  <button class="btn btn-primary" style="margin-top:8px" onclick="doLogin()">כניסה</button>
+  <button class="btn btn-primary" id="loginBtn" style="margin-top:8px">כניסה</button>
 </div>
 </div>
 
-<!-- APP -->
 <div id="appScreen" class="screen">
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:10px"><span class="topbar-logo">🍽️ משמרות</span><span class="sync-dot"></span></div>
-  <div style="display:flex;align-items:center;gap:12px"><span class="topbar-user">שלום, <span id="topbarName">—</span></span><button class="btn-logout" onclick="logout()">יציאה</button></div>
+  <div style="display:flex;align-items:center;gap:12px"><span class="topbar-user">שלום, <span id="topbarName">—</span></span><button class="btn-logout" id="logoutBtn">יציאה</button></div>
 </div>
 <div class="nav-tabs" id="mgrNav">
-  <button class="nav-tab active" onclick="showPanel('dashboard')">📊 סקירה</button>
-  <button class="nav-tab" onclick="showPanel('employees')">👥 עובדים</button>
-  <button class="nav-tab" onclick="showPanel('schedule')">📅 לוח</button>
-  <button class="nav-tab" onclick="showPanel('approve')">✅ אישור</button>
-  <button class="nav-tab" onclick="showPanel('reports')">📄 דוחות</button>
+  <button class="nav-tab active" data-panel="dashboard">📊 סקירה</button>
+  <button class="nav-tab" data-panel="employees">👥 עובדים</button>
+  <button class="nav-tab" data-panel="schedule">📅 לוח</button>
+  <button class="nav-tab" data-panel="approve">✅ אישור</button>
+  <button class="nav-tab" data-panel="reports">📄 דוחות</button>
 </div>
 <div class="nav-tabs" id="empNav" style="display:none">
-  <button class="nav-tab active" onclick="showPanel('myshifts')">📋 המשמרות שלי</button>
-  <button class="nav-tab" onclick="showPanel('myhours')">⏱️ שעות שלי</button>
+  <button class="nav-tab active" data-panel="myshifts">📋 המשמרות שלי</button>
+  <button class="nav-tab" data-panel="myhours">⏱️ שעות שלי</button>
 </div>
 <div class="content">
 
-<!-- DASHBOARD -->
 <div id="panel-dashboard" class="panel active">
   <div class="stats-row" id="statsRow"></div>
   <div class="card"><div class="card-title">🕐 משמרות היום</div><div id="todayWidget"></div></div>
-  <div class="card"><div class="card-title" style="justify-content:space-between">📋 סיכום שבועי <span style="font-size:12px;color:var(--text2);font-weight:400" id="weekLabel"></span></div><div style="overflow-x:auto"><div id="dashSummary"></div></div></div>
-  <div class="card"><div class="card-title">👤 עובדים השבוע <span style="font-size:11px;color:var(--text2);font-weight:400;margin-right:8px">(לחץ לפרופיל)</span></div><div id="empWeekSummary"></div></div>
+  <div class="card"><div class="card-title" style="justify-content:space-between">📋 סיכום שבועי <span id="weekLabel" style="font-size:12px;color:var(--text2);font-weight:400"></span></div><div style="overflow-x:auto"><div id="dashSummary"></div></div></div>
+  <div class="card"><div class="card-title">👤 עובדים השבוע <small style="font-size:11px;color:var(--text2);font-weight:400">(לחץ לפרופיל)</small></div><div id="empWeekSummary"></div></div>
   <div class="grid-2">
     <div class="card"><div class="card-title">👥 לפי תפקיד</div><div id="roleBreakdown"></div></div>
-    <div class="card"><div class="card-title">📅 משמרות קרובות</div><div id="upcomingShifts"></div></div>
+    <div class="card"><div class="card-title">📅 קרובות</div><div id="upcomingShifts"></div></div>
   </div>
 </div>
 
-<!-- EMPLOYEES -->
 <div id="panel-employees" class="panel">
-  <!-- ADD EMPLOYEE COLLAPSIBLE -->
   <div class="card" style="padding:0;overflow:hidden">
-    <div class="collapsible-header" onclick="toggleCollapse('addEmpBody')">
+    <div class="collapsible-header" id="addEmpHeader">
       <span style="font-weight:700;font-size:15px">➕ הוספת עובד חדש</span>
       <span id="addEmpArrow" style="font-size:18px;transition:transform .2s">▼</span>
     </div>
-    <div class="collapsible-body" id="addEmpBody" style="padding:16px">
+    <div class="collapsible-body" id="addEmpBody">
       <div class="form-row">
         <div class="fg"><label>שם מלא</label><input id="newName" placeholder="ישראל ישראלי"/></div>
         <div class="fg"><label>תפקיד</label><select id="newRole"><option value="manager">מנהל משמרת</option><option value="waiter">מלצר</option><option value="line">עובד פס</option><option value="pastry">קונדיטור</option><option value="kitchen">מטבח</option><option value="dishwasher">שוטף כלים</option></select></div>
         <div class="fg"><label>סטטוס</label><select id="newSenior"><option value="0">רגיל</option><option value="1">⭐ בכיר</option></select></div>
       </div>
-      <div class="form-row" style="margin-top:10px">
+      <div class="form-row" style="margin-top:8px">
         <div class="fg"><label>טלפון</label><input id="newPhone" placeholder="050-0000000"/></div>
         <div class="fg"><label>ת"ז</label><input id="newTZ" placeholder="000000000"/></div>
         <div class="fg"><label>תאריך לידה</label><input type="date" id="newBirth"/></div>
       </div>
-      <button class="bs ba" style="margin-top:12px;width:auto;padding:10px 24px" onclick="addEmployee()">הוסף עובד</button>
+      <button class="bs ba" id="addEmpBtn" style="margin-top:12px;width:auto;padding:10px 24px">הוסף עובד</button>
     </div>
   </div>
-  <!-- EMPLOYEE LIST -->
   <div class="card">
     <div class="card-title">👥 רשימת עובדים</div>
-    <input class="search-bar" id="empSearch" placeholder="🔍 חיפוש לפי שם או ת\"ז..." oninput="renderEmployees()"/>
+    <input class="search-bar" id="empSearch" placeholder='🔍 חיפוש לפי שם או ת"ז...'/>
     <div id="empList"></div>
   </div>
 </div>
 
-<!-- EMPLOYEE PROFILE MODAL -->
+<div id="panel-schedule" class="panel">
+  <div class="card">
+    <div class="card-title">📅 בניית לוח שבועי</div>
+    <div class="form-row">
+      <div class="fg"><label>בחר שבוע</label><input type="date" id="weekStart"/></div>
+      <button class="bs bg2" id="loadWeekBtn">טען שבוע</button>
+    </div>
+  </div>
+  <div id="weekBuilder"></div>
+</div>
+
+<div id="panel-approve" class="panel">
+  <div class="card">
+    <div class="card-title">✅ אישור עובדים</div>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="fg"><label>בחר שבוע</label><input type="date" id="approveWeekStart"/></div>
+      <button class="bs bg2" id="loadApproveBtn">טען</button>
+      <button class="bs bo" id="openSpontBtn">⚡ שיבוץ ספונטני</button>
+    </div>
+    <div id="approveList"></div>
+  </div>
+</div>
+
+<div id="panel-reports" class="panel">
+  <div class="card">
+    <div class="card-title">📄 דוחות</div>
+    <div class="form-row">
+      <div class="fg"><label>מתאריך</label><input type="date" id="repFrom"/></div>
+      <div class="fg"><label>עד תאריך</label><input type="date" id="repTo"/></div>
+    </div>
+    <div class="fg" style="margin-top:10px">
+      <label>עובד</label>
+      <input class="search-bar" id="repEmpSearch" placeholder="🔍 חיפוש עובד..." style="margin-bottom:6px"/>
+      <select id="repEmp"><option value="">כל העובדים</option></select>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="bs ba" id="repHoursBtn">📊 שעות עובדים</button>
+      <button class="bs bg2" id="repShiftsBtn">📅 דוח משמרות</button>
+    </div>
+    <div id="reportOutput" style="margin-top:16px"></div>
+  </div>
+</div>
+
+<div id="panel-myshifts" class="panel">
+  <div class="card"><div class="card-title">📋 המשמרות שלי</div><div id="myShiftsList"></div></div>
+</div>
+
+<div id="panel-myhours" class="panel">
+  <div class="card">
+    <div class="card-title">⏱️ שעות שלי</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="bs bg2" id="myHoursWeekBtn">השבוע</button>
+      <button class="bs bg2" id="myHoursMonthBtn">החודש</button>
+    </div>
+    <div id="myHoursList"></div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="smsModal">
+<div class="modal"><h3>📱 שלח הודעה בוואטסאפ</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">לחץ על הכפתור לפתיחת וואטסאפ ושליחה ישירה</p><div id="smsContent"></div><div class="modal-footer"><button class="bs bg2" id="closeSmsBtn">סגור</button></div></div>
+</div>
+
 <div class="modal-overlay" id="empProfileModal">
 <div class="modal">
   <h3>👤 פרופיל עובד</h3>
@@ -257,137 +307,76 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
     <div class="fg"><label>ת"ז</label><input id="pTZ"/></div>
     <div class="fg"><label>תאריך לידה</label><input type="date" id="pBirth"/></div>
   </div>
-  <div class="fg" style="margin-top:10px"><label>קוד כניסה</label><div style="display:flex;gap:8px"><input id="pCode" readonly style="flex:1;opacity:.7"/><button class="bs bg" onclick="document.getElementById('pCode').value=genCode()">🔄 חדש</button></div></div>
-  <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:16px">
+  <div class="fg" style="margin-top:8px"><label>קוד כניסה</label><div style="display:flex;gap:8px"><input id="pCode" readonly style="flex:1;opacity:.7"/><button class="bs bg2" id="regenCodeBtn">🔄 חדש</button></div></div>
+  <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
     <div style="font-weight:700;font-size:14px;margin-bottom:10px">✏️ עריכת שעות בפועל</div>
     <div class="form-row">
-      <div class="fg"><label>תאריך</label><input type="date" id="pClockDate"/></div>
+      <div class="fg"><label>תאריך (עד היום)</label><input type="date" id="pClockDate"/></div>
       <div class="fg"><label>כניסה</label><input type="time" id="pClockIn"/></div>
       <div class="fg"><label>יציאה</label><input type="time" id="pClockOut"/></div>
-      <button class="bs ba" style="margin-top:0" onclick="addProfileClockEntry()">+ הוסף כניסה</button>
+      <button class="bs ba" id="addClockEntryBtn">+ הוסף</button>
     </div>
     <div id="profileClockEntries" style="margin-top:10px"></div>
   </div>
-  <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+  <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
     <div style="font-weight:700;font-size:14px;margin-bottom:10px">⚡ שיבוץ ספונטני</div>
-    <div class="form-row">
-      <div class="fg"><label>משמרת</label><select id="pSpontShift"></select></div>
-      <button class="bs bo" onclick="spontFromProfile()">שבץ עכשיו</button>
+    <div class="fg"><label>משמרת קיימת (אופציונלי)</label><select id="pSpontShift"><option value="">-- ללא --</option></select></div>
+    <div class="spont-free-box" style="margin-top:10px">
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px">📅 או תאריך חופשי:</div>
+      <div class="fg"><label>תאריך</label><input type="date" id="pSpontDate"/></div>
+      <div style="display:flex;gap:8px">
+        <div class="fg"><label>התחלה</label><input type="time" id="pSpontStart" value="08:00"/></div>
+        <div class="fg"><label>סיום</label><input type="time" id="pSpontEnd" value="16:00"/></div>
+      </div>
+      <div class="fg" style="margin-top:6px"><label>שם משמרת</label><input id="pSpontName" placeholder="בוקר / ערב..."/></div>
     </div>
+    <button class="bs bo" id="spontFromProfileBtn" style="margin-top:10px;width:100%">⚡ שבץ ושלח וואטסאפ</button>
   </div>
-  <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+  <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">
     <div style="font-weight:700;font-size:14px;margin-bottom:10px">📋 משמרות מאושרות</div>
     <div id="profileShifts" style="max-height:200px;overflow-y:auto"></div>
   </div>
   <div class="modal-footer">
-    <button class="bs bd" onclick="removeEmpFromProfile()">🗑️ הסר עובד</button>
-    <button class="bs bg" onclick="closeModal('empProfileModal')">סגור</button>
-    <button class="bs ba" onclick="saveProfile()">💾 שמור</button>
+    <button class="bs bd" id="removeEmpBtn">🗑️ הסר</button>
+    <button class="bs bg2" id="closeProfileBtn">סגור</button>
+    <button class="bs ba" id="saveProfileBtn">💾 שמור</button>
   </div>
 </div>
-</div>
-
-<!-- SCHEDULE -->
-<div id="panel-schedule" class="panel">
-  <div class="card">
-    <div class="card-title">📅 בניית לוח שבועי</div>
-    <div class="form-row">
-      <div class="fg"><label>בחר שבוע</label><input type="date" id="weekStart"/></div>
-      <button class="bs bg" onclick="loadWeek()">טען שבוע</button>
-    </div>
-  </div>
-  <div id="weekBuilder"></div>
-</div>
-
-<!-- APPROVE -->
-<div id="panel-approve" class="panel">
-  <div class="card">
-    <div class="card-title">✅ אישור עובדים + שיבוץ ספונטני</div>
-    <div class="form-row" style="margin-bottom:14px">
-      <div class="fg"><label>בחר שבוע</label><input type="date" id="approveWeekStart"/></div>
-      <button class="bs bg" onclick="loadApproveWeek()">טען</button>
-    </div>
-    <div id="approveList"></div>
-  </div>
-</div>
-
-<!-- REPORTS -->
-<div id="panel-reports" class="panel">
-  <div class="card">
-    <div class="card-title">📄 דוחות</div>
-    <div class="form-row">
-      <div class="fg"><label>מתאריך</label><input type="date" id="repFrom"/></div>
-      <div class="fg"><label>עד תאריך</label><input type="date" id="repTo"/></div>
-      <div class="fg"><label>עובד</label>
-        <input id="repEmpSearch" class="search-bar" placeholder="🔍 חיפוש עובד לפי שם..." oninput="filterRepEmps()" style="margin-bottom:6px"/>
-        <select id="repEmp" size="1"><option value="">כל העובדים</option></select>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <button class="bs ba" onclick="genHoursReport()">📊 שעות עובדים</button>
-      <button class="bs bg" onclick="genShiftsReport()">📅 דוח משמרות</button>
-    </div>
-    <p style="font-size:11px;color:var(--text2);margin-top:8px">* סינון לפי עובד חל על שני הדוחות</p>
-    <div id="reportOutput" style="margin-top:16px"></div>
-  </div>
-</div>
-
-<!-- MY SHIFTS (EMPLOYEE) -->
-<div id="panel-myshifts" class="panel">
-  <div class="card"><div class="card-title">📋 המשמרות שלי</div><div id="myShiftsList"></div></div>
-</div>
-
-<!-- MY HOURS (EMPLOYEE) -->
-<div id="panel-myhours" class="panel">
-  <div class="card">
-    <div class="card-title">⏱️ סיכום שעות שלי</div>
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-      <button class="bs bg" onclick="renderMyHours('week')">השבוע</button>
-      <button class="bs bg" onclick="renderMyHours('month')">החודש</button>
-    </div>
-    <div id="myHoursList"></div>
-  </div>
-</div>
-
-</div><!-- content -->
-</div><!-- appScreen -->
-
-<!-- MODALS -->
-<div class="modal-overlay" id="smsModal">
-<div class="modal"><h3>📱 שלח הודעה בוואטסאפ</h3><p style="color:var(--text2);font-size:13px;margin-bottom:14px">לחץ על הכפתור לפתיחת וואטסאפ ושליחה ישירה</p><div style="background:var(--surface2);border-radius:10px;padding:14px;font-size:14px;line-height:1.8;border:1px solid var(--border)" id="smsContent"></div><div class="modal-footer"><button class="bs bg" onclick="closeModal('smsModal')">סגור</button></div></div>
 </div>
 
 <div class="modal-overlay" id="confirmDelShift">
-<div class="modal" style="width:360px"><h3>🗑️ מחיקת משמרת</h3><p style="color:var(--text2);font-size:14px">האם למחוק? פעולה זו אינה ניתנת לביטול.</p><div class="modal-footer"><button class="bs bg" onclick="closeModal('confirmDelShift')">ביטול</button><button class="bs bd" onclick="doDelShift()">מחק</button></div></div>
+<div class="modal" style="width:360px"><h3>🗑️ מחיקת משמרת</h3><p style="color:var(--text2);font-size:14px">האם למחוק? פעולה זו אינה ניתנת לביטול.</p><div class="modal-footer"><button class="bs bg2" id="cancelDelShiftBtn">ביטול</button><button class="bs bd" id="confirmDelShiftBtn">מחק</button></div></div>
 </div>
 
 <div class="modal-overlay" id="overQuotaModal">
-<div class="modal"><h3>⚠️ חריגה ממכסה</h3><p id="overQuotaMsg" style="color:var(--text2);font-size:14px;line-height:1.7"></p><div class="modal-footer"><button class="bs bg" onclick="closeModal('overQuotaModal')">ביטול</button><button class="bs ba" id="overQuotaOK">אישור בכל זאת</button></div></div>
+<div class="modal"><h3>⚠️ חריגה ממכסה</h3><p id="overQuotaMsg" style="color:var(--text2);font-size:14px;line-height:1.7"></p><div class="modal-footer"><button class="bs bg2" id="cancelOQBtn">ביטול</button><button class="bs ba" id="confirmOQBtn">אישור בכל זאת</button></div></div>
 </div>
 
 <div class="modal-overlay" id="spontModal">
-<div class="modal"><h3>⚡ שיבוץ ספונטני</h3>
-  <p style="color:var(--text2);font-size:13px;margin-bottom:14px">שבץ עובד ללא תהליך זמינות</p>
+<div class="modal">
+  <h3>⚡ שיבוץ ספונטני</h3>
+  <p style="color:var(--text2);font-size:13px;margin-bottom:16px">שבץ עובד מיידי ללא תהליך זמינות</p>
   <div class="fg">
-    <label>סוג שיבוץ</label>
-    <select id="spontType" style="margin-bottom:14px">
-      <option value="exist">📅 משמרת קיימת</option>
-      <option value="free">✏️ תאריך חופשי</option>
-    </select>
+    <label>בחר עובד</label>
+    <select id="spontEmp"></select>
   </div>
-  <div id="spontExistBlock">
-    <div class="fg"><label>בחר משמרת</label><select id="spontShift"></select></div>
+  <div class="fg">
+    <label>משמרת קיימת</label>
+    <select id="spontShift"><option value="">-- ללא משמרת קיימת --</option></select>
   </div>
-  <div id="spontFreeBlock" style="display:none">
+  <div class="spont-free-box">
+    <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px">📅 תאריך חופשי (ללא משמרת קיימת):</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px">אם תמלא תאריך כאן – תיווצר משמרת חדשה אוטומטית</p>
     <div class="fg"><label>תאריך</label><input type="date" id="spontDate"/></div>
-    <div class="fg"><label>שעת התחלה</label><input type="time" id="spontStart" value="08:00"/></div>
-    <div class="fg"><label>שעת סיום</label><input type="time" id="spontEnd" value="16:00"/></div>
-    <div class="fg"><label>שם משמרת</label><input id="spontName" placeholder="בוקר / ערב..."/></div>
+    <div style="display:flex;gap:10px">
+      <div class="fg"><label>שעת התחלה</label><input type="time" id="spontStart" value="08:00"/></div>
+      <div class="fg"><label>שעת סיום</label><input type="time" id="spontEnd" value="16:00"/></div>
+    </div>
+    <div class="fg" style="margin-top:8px"><label>שם משמרת</label><input id="spontName" placeholder="בוקר / ערב..."/></div>
   </div>
-  <div class="fg" style="margin-top:10px"><label>בחר עובד</label><select id="spontEmp"></select></div>
   <div class="modal-footer">
-    <button class="bs bg" onclick="closeModal('spontModal')">ביטול</button>
-    <button class="bs ba" onclick="doSpont()">שבץ ושלח וואטסאפ</button>
+    <button class="bs bg2" id="closeSpontBtn">ביטול</button>
+    <button class="bs ba" id="doSpontBtn">⚡ שבץ ושלח וואטסאפ</button>
   </div>
 </div>
 </div>
@@ -396,88 +385,132 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import{getFirestore,collection,doc,setDoc,deleteDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+import{getFirestore,collection,doc,getDoc,setDoc,deleteDoc,onSnapshot}from"https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const FC={apiKey:"AIzaSyBkIC6CtLNkPrF84EMX6u0XbvFbeYDzcxM",authDomain:"workers-ca7a7.firebaseapp.com",projectId:"workers-ca7a7",storageBucket:"workers-ca7a7.firebasestorage.app",messagingSenderId:"755551077925",appId:"1:755551077925:web:0f9cf7bbd23974f8fda1cc"};
 const db=getFirestore(initializeApp(FC));
-
 const ROLES={manager:'מנהל משמרת',waiter:'מלצר',line:'עובד פס',pastry:'קונדיטור',kitchen:'מטבח',dishwasher:'שוטף כלים'};
 const RK=Object.keys(ROLES);
 const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
 const SN=['בוקר','ערב','לילה','צהריים','מיוחד'];
-
-let CU=null; // current user
-let _emps=[],_shifts=[],_av={},_ap={},_cf={},_ck={};
-let stopwatchTimers={};
-
-// ===== FIREBASE =====
+let CU=null,_emps=[],_shifts=[],_av={},_ap={},_cf={},_ck={},_pendDelShift=null,_pendOQ=null,stopwatchTimers={};
+let _prevNeeds={}; // snapshot of needs before edit
+const $=id=>document.getElementById(id);
 async function fbSet(c,id,d){await setDoc(doc(db,c,id),d);}
 async function fbDel(c,id){await deleteDoc(doc(db,c,id));}
-
 function startListeners(){
   onSnapshot(collection(db,'employees'),s=>{_emps=s.docs.map(d=>({id:d.id,...d.data()}));if(CU?.type==='manager'){renderEmployees();renderDashboard();}});
-  onSnapshot(collection(db,'shifts'),s=>{_shifts=s.docs.map(d=>({id:d.id,...d.data()}));if(CU?.type==='manager')renderDashboard();if(CU?.type==='employee'){renderMyShifts();}});
+  onSnapshot(collection(db,'shifts'),s=>{_shifts=s.docs.map(d=>({id:d.id,...d.data()}));if(CU?.type==='manager')renderDashboard();if(CU?.type==='employee')renderMyShifts();});
   onSnapshot(collection(db,'availability'),s=>{_av={};s.docs.forEach(d=>{_av[d.id]=d.data();});if(CU?.type==='employee')renderMyShifts();if(CU?.type==='manager')renderDashboard();});
   onSnapshot(collection(db,'approvals'),s=>{_ap={};s.docs.forEach(d=>{_ap[d.id]=d.data();});if(CU?.type==='employee')renderMyShifts();if(CU?.type==='manager')renderDashboard();});
   onSnapshot(collection(db,'confirmed'),s=>{_cf={};s.docs.forEach(d=>{_cf[d.id]=d.data();});});
-  onSnapshot(collection(db,'clockins'),s=>{_ck={};s.docs.forEach(d=>{_ck[d.id]=d.data();});if(CU?.type==='manager'){renderTodayWidget();renderEmpWeekSummary();}if(CU?.type==='employee'){renderMyShifts();}});
+  onSnapshot(collection(db,'clockins'),s=>{_ck={};s.docs.forEach(d=>{_ck[d.id]=d.data();});if(CU?.type==='manager'){renderTodayWidget();renderEmpWeekSummary();}if(CU?.type==='employee')renderMyShifts();});
+}
+function genCode(){return Math.floor(10000+Math.random()*89999).toString();}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function fmtDate(iso){const d=new Date(iso);return DAYS[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);}
+function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function roleBadge(r){const i=RK.indexOf(r);return '<span class="badge br'+i+'">'+(ROLES[r]||r)+'</span>';}
+function toast(msg,type='success'){const t=$('toast');t.textContent=msg;t.className='toast '+type;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+function openModal(id){$(id).classList.add('open');}
+function closeModal(id){$(id).classList.remove('open');}
+function getWeekDates(iso){const s=new Date(iso);return Array.from({length:7},(_,i)=>{const d=new Date(s);d.setDate(s.getDate()+i);return d.toISOString().slice(0,10);});}
+function shiftMins(s){try{const[sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number);let m=(eh*60+em)-(sh*60+sm);if(m<0)m+=1440;return m;}catch{return 0;}}
+function fmtMins(m){const h=Math.floor(m/60),mn=m%60;return h>0?(mn>0?h+'h '+mn+'m':h+'h'):mn+'m';}
+function getCkEntries(eId,sId){const d=_ck[eId+'_'+sId];if(!d)return[];if(Array.isArray(d.entries))return d.entries;if(d.in)return[{in:d.in,out:d.out||null}];return[];}
+function calcActualMins(eId,sId){let t=0;getCkEntries(eId,sId).forEach(e=>{if(e.in&&e.out)t+=Math.round((e.out-e.in)/60000);});return t;}
+function isCurrentlyIn(eId,sId){const e=getCkEntries(eId,sId);if(!e.length)return false;const l=e[e.length-1];return l.in&&!l.out;}
+function isShiftFull(s){if(!s.needs)return false;return RK.every(r=>{const n=s.needs[r]||0;if(!n)return true;return(_ap[s.id]?.[r]||[]).length>=n;});}
+
+// LOGIN
+let loginTab='manager';
+$('tabMgr').addEventListener('click',()=>{loginTab='manager';$('tabMgr').classList.add('active');$('tabEmp').classList.remove('active');$('mgrForm').style.display='';$('empForm').style.display='none';$('loginErr').textContent='';});
+$('tabEmp').addEventListener('click',()=>{loginTab='employee';$('tabEmp').classList.add('active');$('tabMgr').classList.remove('active');$('empForm').style.display='';$('mgrForm').style.display='none';$('loginErr').textContent='';});
+$('loginBtn').addEventListener('click',doLogin);
+['mgrPass','empCode','mgrUser'].forEach(id=>$(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
+$('logoutBtn').addEventListener('click',logout);
+
+function doLogin(){
+  const err=$('loginErr');err.textContent='';
+  if(loginTab==='manager'){
+    if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};enterApp('מנהל');}
+    else err.textContent='שם משתמש או סיסמה שגויים';
+  }else{
+    const code=$('empCode').value.trim();
+    const emp=_emps.find(e=>e.code===code);
+    if(emp){CU={type:'employee',emp};enterApp(emp.name);}
+    else err.textContent='קוד לא נמצא';
+  }
+}
+function enterApp(name){
+  $('loginScreen').classList.remove('active');$('appScreen').classList.add('active');
+  $('topbarName').textContent=name;
+  $('mgrNav').style.display=CU.type==='manager'?'':'none';
+  $('empNav').style.display=CU.type==='employee'?'':'none';
+  if(CU.type==='manager'){showPanel('dashboard');renderDashboard();populateRepEmpSelect();}
+  else{showPanel('myshifts');renderMyShifts();}
+  const today=new Date(),sun=new Date(today);sun.setDate(today.getDate()-today.getDay());
+  const iso=sun.toISOString().slice(0,10);
+  ['weekStart','approveWeekStart'].forEach(id=>{const el=$(id);if(el)el.value=iso;});
+  const now=new Date();
+  $('repFrom').value=new Date(now.getFullYear(),now.getMonth(),1).toISOString().slice(0,10);
+  $('repTo').value=iso;
+  $('pClockDate').max=new Date().toISOString().slice(0,10);
+}
+function logout(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;$('appScreen').classList.remove('active');$('loginScreen').classList.add('active');}
+
+// PANELS
+document.querySelectorAll('#mgrNav .nav-tab,#empNav .nav-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>showPanel(btn.dataset.panel));
+});
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('panel-'+id).classList.add('active');
+  const mgr=['dashboard','employees','schedule','approve','reports'],emp=['myshifts','myhours'];
+  const tabs=CU?.type==='manager'?mgr:emp;
+  const navSel=CU?.type==='manager'?'#mgrNav':'#empNav';
+  document.querySelectorAll(navSel+' .nav-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===id));
+  if(id==='dashboard')renderDashboard();
+  if(id==='employees')renderEmployees();
+  if(id==='approve')loadApproveWeek();
+  if(id==='myshifts')renderMyShifts();
+  if(id==='myhours')renderMyHours('week');
 }
 
-// ===== UTILS =====
-window.genCode=function(){return Math.floor(10000+Math.random()*89999).toString();};
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-function fmtDate(iso){const d=new Date(iso);return`${DAYS[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`;}
-function fmtTime(ts){if(!ts)return'—';const d=new Date(ts);return`${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;}
-function roleBadge(r){const i=RK.indexOf(r);return`<span class="badge br${i}">${ROLES[r]||r}</span>`;}
-window.toast=function(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+type;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);};
-window.openModal=function(id){document.getElementById(id).classList.add('open');};
-window.closeModal=function(id){document.getElementById(id).classList.remove('open');};
-function getWeekDates(iso){const s=new Date(iso);return Array.from({length:7},(_,i)=>{const d=new Date(s);d.setDate(s.getDate()+i);return d.toISOString().slice(0,10);});}
-function shiftHours(s){try{const[sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number);let m=(eh*60+em)-(sh*60+sm);if(m<0)m+=1440;return m;}catch{return 0;}}
-function fmtMins(m){const h=Math.floor(m/60),mn=m%60;return h>0?(mn>0?`${h}h ${mn}m`:`${h}h`):`${mn}m`;}
-// Clock: multiple entries per shift stored as array
-function getCkEntries(empId,shiftId){const d=_ck[empId+'_'+shiftId];if(!d)return[];if(Array.isArray(d.entries))return d.entries;if(d.in)return[{in:d.in,out:d.out||null}];return[];}
-function calcActualMins(empId,shiftId){const entries=getCkEntries(empId,shiftId);let total=0;entries.forEach(e=>{if(e.in&&e.out)total+=Math.round((e.out-e.in)/60000);});return total;}
-function isCurrentlyIn(empId,shiftId){const entries=getCkEntries(empId,shiftId);if(!entries.length)return false;const last=entries[entries.length-1];return last.in&&!last.out;}
+// COLLAPSIBLE
+$('addEmpHeader').addEventListener('click',()=>{
+  $('addEmpBody').classList.toggle('open');
+  $('addEmpArrow').style.transform=$('addEmpBody').classList.contains('open')?'rotate(180deg)':'';
+});
 
-// ===== LOGIN =====
-let loginTab='manager';
-window.switchTab=function(t){loginTab=t;document.querySelectorAll('.login-tab').forEach((b,i)=>b.classList.toggle('active',(i===0&&t==='manager')||(i===1&&t==='employee')));document.getElementById('mgrForm').style.display=t==='manager'?'':'none';document.getElementById('empForm').style.display=t==='employee'?'':'none';document.getElementById('loginErr').textContent='';};
-window.doLogin=function(){const err=document.getElementById('loginErr');err.textContent='';if(loginTab==='manager'){if(document.getElementById('mgrUser').value.trim()==='admin'&&document.getElementById('mgrPass').value.trim()==='1234'){CU={type:'manager'};enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}else{const code=document.getElementById('empCode').value.trim();const emp=_emps.find(e=>e.code===code);if(emp){CU={type:'employee',emp};enterApp(emp.name);}else err.textContent='קוד לא נמצא';}};
-function enterApp(name){document.getElementById('loginScreen').classList.remove('active');document.getElementById('appScreen').classList.add('active');document.getElementById('topbarName').textContent=name;document.getElementById('mgrNav').style.display=CU.type==='manager'?'':'none';document.getElementById('empNav').style.display=CU.type==='employee'?'':'none';if(CU.type==='manager'){showPanel('dashboard');renderDashboard();populateRepEmpSelect();}else{showPanel('myshifts');renderMyShifts();}const today=new Date(),sun=new Date(today);sun.setDate(today.getDate()-today.getDay());const iso=sun.toISOString().slice(0,10);['weekStart','approveWeekStart'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=iso;});const now=new Date();document.getElementById('repFrom').value=new Date(now.getFullYear(),now.getMonth(),1).toISOString().slice(0,10);document.getElementById('repTo').value=iso;}
-window.logout=function(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;document.getElementById('appScreen').classList.remove('active');document.getElementById('loginScreen').classList.add('active');};
-
-// ===== PANELS =====
-window.showPanel=function(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');const mgr=['dashboard','employees','schedule','approve','reports'],emp=['myshifts','myhours'];const tabs=CU?.type==='manager'?mgr:emp;const idx=tabs.indexOf(id);document.querySelectorAll((CU?.type==='manager'?'#mgrNav':'#empNav')+' .nav-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));if(id==='dashboard')renderDashboard();if(id==='employees')renderEmployees();if(id==='approve')loadApproveWeek();if(id==='myshifts')renderMyShifts();if(id==='myhours')renderMyHours('week');};
-
-window.toggleCollapse=function(id){const body=document.getElementById(id);const arrow=document.getElementById('addEmpArrow');body.classList.toggle('open');if(arrow)arrow.style.transform=body.classList.contains('open')?'rotate(180deg)':'';};
-
-// ===== DASHBOARD =====
-function isShiftFull(s){if(!s.needs)return false;return RK.every(r=>{const n=s.needs[r]||0;if(!n)return true;return(_ap[s.id]?.[r]||[]).length>=n;});}
+// DASHBOARD
 function renderDashboard(){
   const emps=_emps,shifts=_shifts;
   const ta=Object.values(_ap).reduce((s,m)=>s+Object.values(m).reduce((s2,a)=>s2+a.length,0),0);
   const full=shifts.filter(s=>isShiftFull(s)).length;
-  document.getElementById('statsRow').innerHTML=`<div class="stat-card"><div class="stat-num">${emps.length}</div><div class="stat-label">עובדים</div></div><div class="stat-card"><div class="stat-num">${shifts.length}</div><div class="stat-label">משמרות</div></div><div class="stat-card"><div class="stat-num">${ta}</div><div class="stat-label">שיבוצים</div></div><div class="stat-card"><div class="stat-num">${full}</div><div class="stat-label">משמרות מלאות</div></div>`;
+  $('statsRow').innerHTML='<div class="stat-card"><div class="stat-num">'+emps.length+'</div><div class="stat-label">עובדים</div></div><div class="stat-card"><div class="stat-num">'+shifts.length+'</div><div class="stat-label">משמרות</div></div><div class="stat-card"><div class="stat-num">'+ta+'</div><div class="stat-label">שיבוצים</div></div><div class="stat-card"><div class="stat-num">'+full+'</div><div class="stat-label">משמרות מלאות</div></div>';
   const counts={};RK.forEach(r=>counts[r]=0);emps.forEach(e=>{if(counts[e.role]!==undefined)counts[e.role]++;});
-  let rb='';RK.forEach(r=>{if(counts[r]>0)rb+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">${roleBadge(r)}<span style="font-weight:700">${counts[r]}</span></div>`;});
-  document.getElementById('roleBreakdown').innerHTML=rb||'<p style="color:var(--text2)">אין עובדים</p>';
+  let rb='';RK.forEach(r=>{if(counts[r]>0)rb+='<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">'+roleBadge(r)+'<span style="font-weight:700">'+counts[r]+'</span></div>';});
+  $('roleBreakdown').innerHTML=rb||'<p style="color:var(--text2)">אין עובדים</p>';
   const now=new Date();now.setHours(0,0,0,0);
   const up=shifts.filter(s=>new Date(s.date)>=now).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,5);
-  let us='';up.forEach(s=>{us+=`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${fmtDate(s.date)} ${s.name||''}</span><span style="color:var(--text2)">${s.start}–${s.end}</span></div>`;});
-  document.getElementById('upcomingShifts').innerHTML=us||'<p style="color:var(--text2)">אין משמרות קרובות</p>';
+  let us='';up.forEach(s=>{us+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span>'+fmtDate(s.date)+' '+(s.name||'')+'</span><span style="color:var(--text2)">'+s.start+'–'+s.end+'</span></div>';});
+  $('upcomingShifts').innerHTML=us||'<p style="color:var(--text2)">אין משמרות קרובות</p>';
   renderTodayWidget();renderDashSummary();renderEmpWeekSummary();
 }
 
 function renderTodayWidget(){
-  const el=document.getElementById('todayWidget');if(!el)return;
+  const el=$('todayWidget');if(!el)return;
   const today=new Date().toISOString().slice(0,10);
-  const todayShifts=_shifts.filter(s=>s.date===today).sort((a,b)=>a.start.localeCompare(b.start));
-  if(!todayShifts.length){el.innerHTML='<p style="color:var(--text2);font-size:13px">אין משמרות היום</p>';return;}
+  const ts=_shifts.filter(s=>s.date===today).sort((a,b)=>a.start.localeCompare(b.start));
+  if(!ts.length){el.innerHTML='<p style="color:var(--text2);font-size:13px">אין משמרות היום</p>';return;}
   let html='';
-  todayShifts.forEach(s=>{
+  ts.forEach(s=>{
     const appEmps=_emps.filter(e=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(e.id)));
-    html+=`<div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-right:3px solid var(--accent)"><span style="font-weight:800;color:var(--accent)">${s.name||''}</span><span style="font-size:12px;color:var(--text2)">${s.start}–${s.end}</span><span style="font-size:12px;color:var(--text2);margin-right:auto">${appEmps.length} עובדים</span></div>`;
+    html+='<div style="margin-bottom:14px">';
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-right:3px solid var(--accent)">';
+    html+='<span style="font-weight:800;color:var(--accent)">'+(s.name||'')+'</span>';
+    html+='<span style="font-size:12px;color:var(--text2)">'+s.start+'–'+s.end+'</span>';
+    html+='<span style="font-size:12px;color:var(--text2);margin-right:auto">'+appEmps.length+' עובדים</span></div>';
     appEmps.forEach(e=>{
       const entries=getCkEntries(e.id,s.id);
       const inNow=isCurrentlyIn(e.id,s.id);
@@ -486,21 +519,20 @@ function renderTodayWidget(){
       const color=entries.length===0?'var(--text2)':inNow?'var(--green)':'var(--red)';
       const mins=calcActualMins(e.id,s.id);
       let entriesStr='';
-      entries.forEach((en,idx2)=>{
-        const outS=en.out?(' ← '+fmtTime(en.out)):'(בפנים)';
+      entries.forEach((en,idx)=>{
+        const outS=en.out?(' → '+fmtTime(en.out)):'(בפנים)';
         const outC=en.out?'var(--red)':'var(--green)';
-        entriesStr+='<span style="font-size:11px;color:var(--text2)">כניסה '+(idx2+1)+': <span style="color:var(--green)">'+fmtTime(en.in)+'</span> <span style="color:'+outC+'">'+outS+'</span></span> ';
+        entriesStr+='<span style="font-size:11px;color:var(--text2)">כניסה '+(idx+1)+': <span style="color:var(--green)">'+fmtTime(en.in)+'</span> <span style="color:'+outC+'">'+outS+'</span></span> ';
       });
       html+='<div style="padding:8px 10px;border-bottom:1px solid var(--border)">';
       html+='<div style="display:flex;align-items:center;gap:10px">';
       html+='<span style="font-size:14px;flex-shrink:0">'+dot+'</span>';
-      html+='<div style="flex:1;min-width:0">';
-      html+='<div style="font-weight:700;font-size:13px">'+e.name+' <span style="color:'+color+';font-size:12px">'+statusTxt+'</span></div>';
+      html+='<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13px">'+e.name+' <span style="color:'+color+';font-size:12px">'+statusTxt+'</span></div>';
       html+='<div style="font-size:11px;color:var(--text2)">'+(ROLES[e.role]||e.role)+'</div>';
       if(entries.length>0)html+='<div style="margin-top:3px">'+entriesStr+'</div>';
       html+='</div>';
       if(mins>0)html+='<span style="font-size:12px;color:var(--text2);flex-shrink:0">'+fmtMins(mins)+'</span>';
-      html+='<button data-eid="'+e.id+'" data-sid="'+s.id+'" data-ename="'+e.name+'" class="edit-clock-btn" style="padding:3px 7px;font-size:11px;border:1px solid var(--border);background:var(--surface);border-radius:5px;cursor:pointer;color:var(--text2);flex-shrink:0">✏️</button>';
+      html+='<button class="edit-clock-mgr-btn bs bg2" data-eid="'+e.id+'" data-sid="'+s.id+'" data-ename="'+e.name+'" style="padding:4px 8px;font-size:11px;flex-shrink:0">✏️</button>';
       html+='</div></div>';
     });
     html+='</div>';
@@ -513,422 +545,438 @@ function renderDashSummary(){
   const today=new Date();today.setHours(0,0,0,0);
   const sun=new Date(today);sun.setDate(today.getDate()-today.getDay());
   const sat=new Date(sun);sat.setDate(sun.getDate()+6);
-  document.getElementById('weekLabel').textContent=`${sun.getDate()}/${sun.getMonth()+1} – ${sat.getDate()}/${sat.getMonth()+1}`;
-  if(!shifts.length){document.getElementById('dashSummary').innerHTML='<p style="color:var(--text2)">אין משמרות</p>';return;}
+  $('weekLabel').textContent=sun.getDate()+'/'+(sun.getMonth()+1)+' – '+sat.getDate()+'/'+(sat.getMonth()+1);
+  if(!shifts.length){$('dashSummary').innerHTML='<p style="color:var(--text2)">אין משמרות</p>';return;}
   const sorted=shifts.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
   let rows='';
   sorted.forEach(s=>{
     const full=isShiftFull(s),anyN=RK.some(r=>(s.needs?.[r]||0)>0);
-    const ta2=RK.reduce((sum,r)=>sum+(_ap[s.id]?.[r]||[]).length,0);
-    const tn2=RK.reduce((sum,r)=>sum+(s.needs?.[r]||0),0);
-    let rm='';RK.forEach(r=>{const n=s.needs?.[r]||0;if(!n)return;const a=(_ap[s.id]?.[r]||[]).length;rm+=`<span class="rm ${a>=n?'rm-ok':'rm-no'}">${ROLES[r].slice(0,2)} ${a}/${n}</span>`;});
-    rows+=`<tr><td><strong style="cursor:pointer;color:var(--blue)" onclick="goToApprove('${s.date}')">${fmtDate(s.date)}</strong></td><td style="color:var(--accent);font-weight:700">${s.name||'—'}</td><td style="font-size:12px;color:var(--text2)">${s.start}–${s.end}</td><td>${rm}</td><td style="text-align:center;font-weight:700;color:${ta2>=tn2?'var(--green)':'var(--red)'}">${anyN?`${ta2}/${tn2}`:'—'}</td><td>${anyN?`<span class="pill ${full?'pill-ok':'pill-no'}">${full?'✅':'⚠️'}</span>`:'—'}</td></tr>`;
+    const ta=RK.reduce((sum,r)=>sum+(_ap[s.id]?.[r]||[]).length,0);
+    const tn=RK.reduce((sum,r)=>sum+(s.needs?.[r]||0),0);
+    let rm='';RK.forEach(r=>{const n=s.needs?.[r]||0;if(!n)return;const a=(_ap[s.id]?.[r]||[]).length;rm+='<span class="rm '+(a>=n?'rm-ok':'rm-no')+'">'+ROLES[r].slice(0,2)+' '+a+'/'+n+'</span>';});
+    rows+='<tr><td><strong class="goto-approve" data-date="'+s.date+'" style="cursor:pointer;color:var(--blue)">'+fmtDate(s.date)+'</strong></td><td style="color:var(--accent);font-weight:700">'+(s.name||'—')+'</td><td style="font-size:12px;color:var(--text2)">'+s.start+'–'+s.end+'</td><td>'+rm+'</td><td style="text-align:center;font-weight:700;color:'+(ta>=tn?'var(--green)':'var(--red)')+'">'+( anyN?ta+'/'+tn:'—')+'</td><td>'+(anyN?'<span class="pill '+(full?'pill-ok':'pill-no')+'">'+(full?'✅':'⚠️')+'</span>':'—')+'</td></tr>';
   });
-  document.getElementById('dashSummary').innerHTML=`<table class="sum-table" style="min-width:460px"><thead><tr><th>יום</th><th>משמרת</th><th>שעות</th><th>תפקידים</th><th style="text-align:center">סה"כ</th><th>סטטוס</th></tr></thead><tbody>${rows}</tbody></table>`;
+  $('dashSummary').innerHTML='<table class="sum-table" style="min-width:460px"><thead><tr><th>יום</th><th>משמרת</th><th>שעות</th><th>תפקידים</th><th style="text-align:center">סה"כ</th><th>סטטוס</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-window.goToApprove=function(date){const d=new Date(date),sun=new Date(d);sun.setDate(d.getDate()-d.getDay());document.getElementById('approveWeekStart').value=sun.toISOString().slice(0,10);showPanel('approve');loadApproveWeek();setTimeout(()=>{document.querySelectorAll('.approve-shift').forEach(el=>{if(el.querySelector('h4')?.textContent.includes(fmtDate(date))){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='',2000);}});},200);};
 
 function renderEmpWeekSummary(){
-  const el=document.getElementById('empWeekSummary');if(!el)return;
-  const today=new Date();today.setHours(0,0,0,0);const sun=new Date(today);sun.setDate(today.getDate()-today.getDay());const sat=new Date(sun);sat.setDate(sun.getDate()+6);
+  const el=$('empWeekSummary');if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const sun=new Date(today);sun.setDate(today.getDate()-today.getDay());
+  const sat=new Date(sun);sat.setDate(sun.getDate()+6);
   const ws=_shifts.filter(s=>{const d=new Date(s.date);return d>=sun&&d<=sat;});
   if(!_emps.length){el.innerHTML='<p style="color:var(--text2)">אין עובדים</p>';return;}
-  // Sort by role
   const sorted=[..._emps].sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
   let rows='';
   sorted.forEach(emp=>{
     let cnt=0,mins=0,actualMins=0;
-    ws.forEach(s=>{const app=Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id));if(app){cnt++;mins+=shiftHours(s);actualMins+=calcActualMins(emp.id,s.id);}});
-    rows+=`<tr style="cursor:pointer" onclick="openEmpProfile('${emp.id}')"><td><strong>${emp.name}</strong>${emp.senior?' ⭐':''}</td><td>${roleBadge(emp.role)}</td><td style="text-align:center">${cnt||'—'}</td><td style="text-align:center;color:var(--accent)">${mins>0?fmtMins(mins):'—'}</td><td style="text-align:center;color:var(--green)">${actualMins>0?fmtMins(actualMins):'—'}</td></tr>`;
+    ws.forEach(s=>{const app=Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id));if(app){cnt++;mins+=shiftMins(s);actualMins+=calcActualMins(emp.id,s.id);}});
+    rows+='<tr class="emp-week-row" data-empid="'+emp.id+'" style="cursor:pointer"><td><strong>'+emp.name+(emp.senior?' ⭐':'')+'</strong></td><td>'+roleBadge(emp.role)+'</td><td style="text-align:center">'+(cnt||'—')+'</td><td style="text-align:center;color:var(--accent)">'+(mins>0?fmtMins(mins):'—')+'</td><td style="text-align:center;color:var(--green)">'+(actualMins>0?fmtMins(actualMins):'—')+'</td></tr>';
   });
-  el.innerHTML=`<div style="overflow-x:auto"><table class="sum-table" style="min-width:420px"><thead><tr><th>שם</th><th>תפקיד</th><th style="text-align:center">משמרות</th><th style="text-align:center">מתוכנן</th><th style="text-align:center">בפועל</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  el.innerHTML='<div style="overflow-x:auto"><table class="sum-table" style="min-width:420px"><thead><tr><th>שם</th><th>תפקיד</th><th style="text-align:center">משמרות</th><th style="text-align:center">מתוכנן</th><th style="text-align:center">בפועל</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
 
-// ===== EMPLOYEES =====
-window.addEmployee=async function(){
-  const name=document.getElementById('newName').value.trim(),role=document.getElementById('newRole').value,senior=parseInt(document.getElementById('newSenior').value)||0,phone=document.getElementById('newPhone').value.trim(),tz=document.getElementById('newTZ').value.trim(),birth=document.getElementById('newBirth').value;
+// EMPLOYEES
+$('addEmpBtn').addEventListener('click',addEmployee);
+$('empSearch').addEventListener('input',renderEmployees);
+
+async function addEmployee(){
+  const name=$('newName').value.trim(),role=$('newRole').value,senior=parseInt($('newSenior').value)||0;
+  const phone=$('newPhone').value.trim(),tz=$('newTZ').value.trim(),birth=$('newBirth').value;
   if(!name||!phone){toast('נא למלא שם וטלפון','error');return;}
   const code=genCode(),id=genId();
   await fbSet('employees',id,{name,role,senior,phone,tz,birth,code});
-  ['newName','newPhone','newTZ','newBirth'].forEach(i=>document.getElementById(i).value='');
-  toast(`✅ עובד נוסף! קוד: ${code}`);
-  document.getElementById('smsContent').innerHTML=`שלום ${name}!<br>נרשמת למערכת.<br>קוד הכניסה: <strong>${code}</strong>`;
-  openModal('smsModal');
-};
+  ['newName','newPhone','newTZ','newBirth'].forEach(i=>$(i).value='');
+  toast('✅ עובד נוסף! קוד: '+code);
+  const msg='שלום '+name+'!\nנרשמת למערכת.\nקוד הכניסה: '+code;
+  showWaModal([{label:name,phone:phone,msg:msg}]);
+}
 
-window.renderEmployees=function(){
-  const q=document.getElementById('empSearch')?.value?.toLowerCase()||'';
+function renderEmployees(){
+  const q=$('empSearch').value.toLowerCase();
   const sorted=[..._emps].filter(e=>!q||e.name.toLowerCase().includes(q)||(e.tz||'').includes(q)).sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
-  const el=document.getElementById('empList');
+  const el=$('empList');
   if(!sorted.length){el.innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין עובדים</p>';return;}
-  el.innerHTML=sorted.map(e=>`
-    <div class="emp-card" onclick="openEmpProfile('${e.id}')">
-      <div class="emp-card-top">
-        <div><div class="emp-name">${e.name}${e.senior?' ⭐':''}</div>${roleBadge(e.role)}</div>
-        <div style="font-size:20px;color:var(--text2)">›</div>
-      </div>
-      <div class="emp-meta">📱 ${e.phone||'—'} &nbsp;|&nbsp; 🔑 ${e.code} ${e.tz?`&nbsp;|&nbsp; ת"ז: ${e.tz}`:''}</div>
-    </div>`).join('');
-};
+  el.innerHTML=sorted.map(e=>'<div class="emp-card open-profile-btn" data-empid="'+e.id+'"><div class="emp-card-top"><div><div class="emp-name">'+e.name+(e.senior?' ⭐':'')+'</div>'+roleBadge(e.role)+'</div><div style="font-size:20px;color:var(--text2)">›</div></div><div class="emp-meta">📱 '+(e.phone||'—')+' &nbsp;|&nbsp; 🔑 '+e.code+(e.tz?' &nbsp;|&nbsp; ת"ז: '+e.tz:'')+'</div></div>').join('');
+}
 
-window.openEmpProfile=function(id){
+// PROFILE MODAL
+$('closeProfileBtn').addEventListener('click',()=>closeModal('empProfileModal'));
+$('regenCodeBtn').addEventListener('click',()=>$('pCode').value=genCode());
+$('saveProfileBtn').addEventListener('click',saveProfile);
+$('removeEmpBtn').addEventListener('click',removeEmpFromProfile);
+$('addClockEntryBtn').addEventListener('click',addProfileClockEntry);
+$('spontFromProfileBtn').addEventListener('click',spontFromProfile);
+$('pClockDate').addEventListener('change',function(){renderProfileClockEntries($('profileEmpId').value,this.value);});
+
+function openEmpProfile(id){
   const emp=_emps.find(e=>e.id===id);if(!emp)return;
-  document.getElementById('profileEmpId').value=emp.id;
-  document.getElementById('pName').value=emp.name;
-  document.getElementById('pRole').value=emp.role;
-  document.getElementById('pSenior').value=emp.senior||0;
-  document.getElementById('pPhone').value=emp.phone||'';
-  document.getElementById('pTZ').value=emp.tz||'';
-  document.getElementById('pBirth').value=emp.birth||'';
-  document.getElementById('pCode').value=emp.code;
-  // populate spont shift select
-  const spontSel = document.getElementById('pSpontShift');
-  spontSel.innerHTML=_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>`<option value="${s.id}">${fmtDate(s.date)} ${s.name||''} ${s.start}–${s.end}</option>`).join('');
-  document.getElementById('pClockDate').value='';
-  document.getElementById('pClockDate').max=new Date().toISOString().slice(0,10);
-  document.getElementById('pClockIn').value='';
-  document.getElementById('pClockOut').value='';
-  document.getElementById('profileClockEntries').innerHTML='';
-  document.getElementById('pClockDate').onchange=function(){renderProfileClockEntries(emp.id,this.value);};
-  // Show approved shifts
+  $('profileEmpId').value=emp.id;$('pName').value=emp.name;$('pRole').value=emp.role;$('pSenior').value=emp.senior||0;$('pPhone').value=emp.phone||'';$('pTZ').value=emp.tz||'';$('pBirth').value=emp.birth||'';$('pCode').value=emp.code;
+  $('pClockDate').max=new Date().toISOString().slice(0,10);
+  $('pClockDate').value='';$('pClockIn').value='';$('pClockOut').value='';
+  $('profileClockEntries').innerHTML='';
+  const spontSel=$('pSpontShift');
+  spontSel.innerHTML=_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>'<option value="'+s.id+'">'+fmtDate(s.date)+' '+(s.name||'')+' '+s.start+'–'+s.end+'</option>').join('');
   const appShifts=_shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id))).sort((a,b)=>a.date.localeCompare(b.date));
-  document.getElementById('profileShifts').innerHTML=appShifts.length?appShifts.map(s=>{const mins=calcActualMins(emp.id,s.id);return`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${fmtDate(s.date)} – ${s.name||''}</span><span style="color:var(--text2)">${s.start}–${s.end} ${mins>0?'| '+fmtMins(mins):''}</span></div>`;}).join(''):'<p style="color:var(--text2);font-size:13px">אין משמרות מאושרות</p>';
+  $('profileShifts').innerHTML=appShifts.length?appShifts.map(s=>{const mins=calcActualMins(emp.id,s.id);return'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px"><span>'+fmtDate(s.date)+' – '+(s.name||'')+'</span><span style="color:var(--text2)">'+s.start+'–'+s.end+(mins>0?' | '+fmtMins(mins):'')+'</span></div>';}).join(''):'<p style="color:var(--text2);font-size:13px">אין משמרות מאושרות</p>';
   openModal('empProfileModal');
-};
+}
 
-window.saveProfile=async function(){
-  const id=document.getElementById('profileEmpId').value;
-  const name=document.getElementById('pName').value.trim(),role=document.getElementById('pRole').value,senior=parseInt(document.getElementById('pSenior').value)||0,phone=document.getElementById('pPhone').value.trim(),tz=document.getElementById('pTZ').value.trim(),birth=document.getElementById('pBirth').value,code=document.getElementById('pCode').value;
+async function saveProfile(){
+  const id=$('profileEmpId').value;
+  const name=$('pName').value.trim(),role=$('pRole').value,senior=parseInt($('pSenior').value)||0;
+  const phone=$('pPhone').value.trim(),tz=$('pTZ').value.trim(),birth=$('pBirth').value,code=$('pCode').value;
   if(!name||!phone){toast('נא למלא שם וטלפון','error');return;}
   await fbSet('employees',id,{name,role,senior,phone,tz,birth,code});
   closeModal('empProfileModal');toast('פרטים עודכנו ✓');
-};
+}
 
-window.removeEmpFromProfile=async function(){
-  const id=document.getElementById('profileEmpId').value;
-  await fbDel('employees',id);closeModal('empProfileModal');toast('עובד הוסר','error');
-};
+async function removeEmpFromProfile(){
+  await fbDel('employees',$('profileEmpId').value);
+  closeModal('empProfileModal');toast('עובד הוסר','error');
+}
 
-// Profile clock entries (temp storage before save)
-let _profileClockEntries = [];
-let _profileClockDate = '';
-
-window.addProfileClockEntry = async function(){
-  const empId = document.getElementById('profileEmpId').value;
-  const date = document.getElementById('pClockDate').value;
-  const inVal = document.getElementById('pClockIn').value;
-  const outVal = document.getElementById('pClockOut').value;
-  if(!date || !inVal){ toast('נא למלא תאריך ושעת כניסה','error'); return; }
-  const today = new Date().toISOString().slice(0,10);
-  if(date > today){ toast('לא ניתן להזין שעות לתאריך עתידי','error'); return; }
-  function toTs(t,d){ if(!t)return null; const[h,m]=t.split(':').map(Number); const dt=new Date(d); dt.setHours(h,m,0,0); return dt.getTime(); }
-  // Find shift for this date (or use date as key)
-  const dayShifts = _shifts.filter(s=>s.date===date);
-  const shiftId = dayShifts.length ? dayShifts[0].id : 'manual_'+date;
-  const existing = _ck[empId+'_'+shiftId]||{};
-  const entries = Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  entries.push({in:toTs(inVal,date), out:toTs(outVal,date)||null});
-  await fbSet('clockins', empId+'_'+shiftId, {entries});
+async function addProfileClockEntry(){
+  const empId=$('profileEmpId').value;
+  const date=$('pClockDate').value;
+  const inVal=$('pClockIn').value,outVal=$('pClockOut').value;
+  if(!date||!inVal){toast('נא למלא תאריך ושעת כניסה','error');return;}
+  const today=new Date().toISOString().slice(0,10);
+  if(date>today){toast('לא ניתן להזין שעות לתאריך עתידי','error');return;}
+  function toTs(t){if(!t)return null;const[h,m]=t.split(':').map(Number);const d=new Date(date);d.setHours(h,m,0,0);return d.getTime();}
+  const dayShifts=_shifts.filter(s=>s.date===date);
+  const shiftId=dayShifts.length?dayShifts[0].id:'manual_'+date;
+  const existing=_ck[empId+'_'+shiftId]||{};
+  const entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+  entries.push({in:toTs(inVal),out:toTs(outVal)||null});
+  await fbSet('clockins',empId+'_'+shiftId,{entries});
   toast('✅ כניסה נוספה!');
-  renderProfileClockEntries(empId, date);
-};
+  renderProfileClockEntries(empId,date);
+}
 
-function renderProfileClockEntries(empId, date){
-  const el = document.getElementById('profileClockEntries'); if(!el) return;
-  const dayShifts = _shifts.filter(s=>s.date===date);
-  const manualKey = 'manual_'+date;
-  let html = '';
-  [...dayShifts.map(s=>s.id), manualKey].forEach(sid=>{
-    const ck = _ck[empId+'_'+sid]||{};
-    const entries = Array.isArray(ck.entries)?ck.entries:(ck.in?[{in:ck.in,out:ck.out||null}]:[]);
+function renderProfileClockEntries(empId,date){
+  const el=$('profileClockEntries');if(!el)return;
+  const dayShifts=_shifts.filter(s=>s.date===date);
+  const manualKey='manual_'+date;
+  let html='';
+  [...dayShifts.map(s=>s.id),manualKey].forEach(sid=>{
+    const ck=_ck[empId+'_'+sid]||{};
+    const entries=Array.isArray(ck.entries)?ck.entries:(ck.in?[{in:ck.in,out:ck.out||null}]:[]);
     entries.forEach((e,i)=>{
-      const inTime = e.in ? new Date(e.in).toTimeString().slice(0,5) : '';
-      const outTime = e.out ? new Date(e.out).toTimeString().slice(0,5) : '';
-      const rowId = 'ckrow_'+empId+'_'+sid+'_'+i;
-      html += '<div id="'+rowId+'" style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:7px;margin-bottom:6px;flex-wrap:wrap">' +
-        '<span style="font-size:12px;color:var(--text2);font-weight:600">כניסה '+(i+1)+':</span>' +
-        '<input type="time" value="'+inTime+'" data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" data-field="in" data-date="'+date+'" class="ck-time-input" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--green);font-weight:700;font-size:13px;width:100px"/>' +
-        '<span style="color:var(--text2)">→</span>' +
-        '<input type="time" value="'+outTime+'" data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" data-field="out" data-date="'+date+'" class="ck-time-input" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--red);font-weight:700;font-size:13px;width:100px"/>' +
-        '<button data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" class="ck-del-btn" style="margin-right:auto;padding:3px 8px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:11px">✕ מחק</button>' +
-        '</div>';
+      const inTime=e.in?new Date(e.in).toTimeString().slice(0,5):'';
+      const outTime=e.out?new Date(e.out).toTimeString().slice(0,5):'';
+      html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface2);border-radius:7px;margin-bottom:6px;flex-wrap:wrap">';
+      html+='<span style="font-size:12px;color:var(--text2);font-weight:600">כניסה '+(i+1)+':</span>';
+      html+='<input type="time" value="'+inTime+'" data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" data-field="in" data-date="'+date+'" class="ck-time-input" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--green);font-weight:700;font-size:13px;width:100px"/>';
+      html+='<span style="color:var(--text2)">→</span>';
+      html+='<input type="time" value="'+outTime+'" data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" data-field="out" data-date="'+date+'" class="ck-time-input" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--red);font-weight:700;font-size:13px;width:100px"/>';
+      html+='<button data-eid="'+empId+'" data-sid="'+sid+'" data-idx="'+i+'" class="ck-del-btn bs bd" style="margin-right:auto;padding:3px 8px;font-size:11px">✕ מחק</button>';
+      html+='</div>';
     });
   });
-  el.innerHTML = html || '<p style="color:var(--text2);font-size:12px;padding:8px 0">אין רשומות לתאריך זה</p>';
+  el.innerHTML=html||'<p style="color:var(--text2);font-size:12px;padding:8px 0">אין רשומות לתאריך זה</p>';
 }
 
-// Event delegation for clock time inputs and delete buttons
-document.addEventListener('change', async function(e){
+async function spontFromProfile(){
+  const empId=$('profileEmpId').value;
+  const emp=_emps.find(e=>e.id===empId);
+  if(!emp){toast('שגיאה','error');return;}
+  const freeDate=$('pSpontDate').value;
+  let shift;
+  if(freeDate){
+    const start=$('pSpontStart').value,end=$('pSpontEnd').value,name=$('pSpontName').value||'ספונטני';
+    const id=genId();shift={id,date:freeDate,name,start,end,needs:{}};shift.needs[emp.role]=1;
+    await fbSet('shifts',id,shift);
+    if(!_ap[id])_ap[id]={};if(!_ap[id][emp.role])_ap[id][emp.role]=[];
+    _ap[id][emp.role].push(empId);await fbSet('approvals',id,_ap[id]);
+  }else{
+    const shiftId=$('pSpontShift').value;
+    shift=_shifts.find(s=>s.id===shiftId);
+    if(!shift){toast('בחר משמרת או הזן תאריך חופשי','error');return;}
+    if(!_ap[shiftId])_ap[shiftId]={};if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
+    if(!_ap[shiftId][emp.role].includes(empId)){_ap[shiftId][emp.role].push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);}
+  }
+  toast('✅ '+emp.name+' שובץ');
+  showWaModal([{label:emp.name,phone:emp.phone,msg:waSpontMsg(emp,shift)}]);
+}
+
+// Event delegation
+document.addEventListener('change',async function(e){
   if(e.target.classList.contains('ck-time-input')){
-    const {eid,sid,idx,field,date} = e.target.dataset;
-    await updateProfileEntryDirect(eid,sid,parseInt(idx),field,e.target.value,date);
+    const {eid,sid,idx,field,date}=e.target.dataset;
+    function toTs(t){if(!t)return null;const[h,m]=t.split(':').map(Number);const d=new Date(date);d.setHours(h,m,0,0);return d.getTime();}
+    const existing=_ck[eid+'_'+sid]||{};
+    let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+    if(!entries[idx])return;
+    entries[parseInt(idx)][field]=toTs(e.target.value);
+    await fbSet('clockins',eid+'_'+sid,{entries});
+    toast('שעה עודכנה ✓');
   }
 });
-document.addEventListener('click', async function(e){
-  if(e.target.classList.contains('edit-clock-btn')){
-    const eid=e.target.dataset.eid, sid=e.target.dataset.sid, ename=e.target.dataset.ename;
-    openEditClockMgr(eid,sid,ename);
+document.addEventListener('click',async function(e){
+  if(e.target.classList.contains('ck-del-btn')||e.target.closest('.ck-del-btn')){
+    const btn=e.target.classList.contains('ck-del-btn')?e.target:e.target.closest('.ck-del-btn');
+    const {eid,sid,idx}=btn.dataset;
+    const existing=_ck[eid+'_'+sid]||{};
+    let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+    entries.splice(parseInt(idx),1);
+    await fbSet('clockins',eid+'_'+sid,{entries});
+    const date=$('pClockDate').value;
+    if(date)renderProfileClockEntries(eid,date);
+    toast('נמחק','error');
   }
-  if(e.target.classList.contains('ck-del-btn')){
-    const {eid,sid,idx} = e.target.dataset;
-    await delProfileEntry(eid,sid,parseInt(idx));
+  if(e.target.classList.contains('open-profile-btn')||e.target.closest('.open-profile-btn')){
+    const card=e.target.classList.contains('open-profile-btn')?e.target:e.target.closest('.open-profile-btn');
+    openEmpProfile(card.dataset.empid);
+  }
+  if(e.target.classList.contains('edit-clock-mgr-btn')||e.target.closest('.edit-clock-mgr-btn')){
+    const btn=e.target.classList.contains('edit-clock-mgr-btn')?e.target:e.target.closest('.edit-clock-mgr-btn');
+    openEmpProfile(btn.dataset.eid);
+    setTimeout(()=>{
+      const shift=_shifts.find(s=>s.id===btn.dataset.sid);
+      if(shift){$('pClockDate').value=shift.date;renderProfileClockEntries(btn.dataset.eid,shift.date);}
+    },200);
+  }
+  if(e.target.classList.contains('emp-week-row')||e.target.closest('.emp-week-row')){
+    const row=e.target.classList.contains('emp-week-row')?e.target:e.target.closest('.emp-week-row');
+    openEmpProfile(row.dataset.empid);
+  }
+  if(e.target.classList.contains('goto-approve')){
+    const date=e.target.dataset.date;
+    const d=new Date(date),sun=new Date(d);sun.setDate(d.getDate()-d.getDay());
+    $('approveWeekStart').value=sun.toISOString().slice(0,10);
+    showPanel('approve');loadApproveWeek();
+    setTimeout(()=>{document.querySelectorAll('.approve-shift').forEach(el=>{if(el.querySelector('h4')?.textContent.includes(fmtDate(date))){el.scrollIntoView({behavior:'smooth',block:'center'});el.style.outline='2px solid var(--accent)';setTimeout(()=>el.style.outline='',2000);}});},200);
   }
 });
 
-async function updateProfileEntryDirect(empId, shiftId, idx, field, val, date){
-  function toTs(t){ if(!t)return null; const[h,m]=t.split(':').map(Number); const d=new Date(date); d.setHours(h,m,0,0); return d.getTime(); }
-  const existing = _ck[empId+'_'+shiftId]||{};
-  let entries = Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  if(!entries[idx]) return;
-  entries[idx][field] = toTs(val);
-  await fbSet('clockins', empId+'_'+shiftId, {entries});
-  toast('שעה עודכנה ✓');
-}
-
-window.updateProfileEntry = async function(empId, shiftId, idx, field, val, date){
-  function toTs(t){ if(!t)return null; const[h,m]=t.split(':').map(Number); const d=new Date(date); d.setHours(h,m,0,0); return d.getTime(); }
-  const existing = _ck[empId+'_'+shiftId]||{};
-  let entries = Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  if(!entries[idx]) return;
-  entries[idx][field] = toTs(val);
-  await fbSet('clockins', empId+'_'+shiftId, {entries});
-  toast('שעה עודכנה ✓');
-};
-
-window.delProfileEntry = async function(empId, shiftId, idx){
-  const existing = _ck[empId+'_'+shiftId]||{};
-  let entries = Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  entries.splice(idx,1);
-  await fbSet('clockins', empId+'_'+shiftId, {entries});
-  const date = document.getElementById('pClockDate').value;
-  if(date) renderProfileClockEntries(empId, date);
-  toast('נמחק','error');
-};
-
-window.spontFromProfile = async function(){
-  const empId = document.getElementById('profileEmpId').value;
-  const shiftId = document.getElementById('pSpontShift').value;
-  const emp = _emps.find(e=>e.id===empId), shift = _shifts.find(s=>s.id===shiftId);
-  if(!emp||!shift){ toast('בחר משמרת','error'); return; }
-  if(!_ap[shiftId])_ap[shiftId]={};
-  if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
-  if(!_ap[shiftId][emp.role].includes(empId)){ _ap[shiftId][emp.role].push(empId); await fbSet('approvals',shiftId,_ap[shiftId]); }
-  toast(`✅ ${emp.name} שובץ`);
-  sendSMS(emp,shift,emp.role);
-};
-
-// Manager edit clock from today widget - open profile
-window.openEditClockMgr=function(empId,shiftId,empName){
-  openEmpProfile(empId);
-  // Pre-fill date from shift
-  setTimeout(()=>{
-    const shift=_shifts.find(s=>s.id===shiftId);
-    if(shift){
-      document.getElementById('pClockDate').value=shift.date;
-      renderProfileClockEntries(empId,shift.date);
-    }
-  },150);
-};
-
-// ===== SCHEDULE =====
-window.loadWeek=function(){
-  const ws=document.getElementById('weekStart').value;if(!ws){toast('בחר תאריך','error');return;}
+// SCHEDULE
+$('loadWeekBtn').addEventListener('click',loadWeek);
+function loadWeek(){
+  const ws=$('weekStart').value;if(!ws){toast('בחר תאריך','error');return;}
   const dates=getWeekDates(ws);let html='';
+  const todayIso=new Date().toISOString().slice(0,10);
   dates.forEach((date,di)=>{
     const ds=_shifts.filter(s=>s.date===date);
-    html+=`<div class="day-section"><div class="day-header" onclick="toggleDay('dd-${di}')"><span style="font-weight:700">${fmtDate(date)}</span><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--text2)">${ds.length} משמרות</span><button class="bs ba" style="padding:5px 12px;font-size:12px" onclick="event.stopPropagation();addShift('${date}')">+ הוסף</button></div></div><div class="day-body" id="dd-${di}">${ds.length?ds.map(renderShiftCard).join(''):'<p style="color:var(--text2);font-size:13px;padding:8px 0">אין משמרות</p>'}</div></div>`;
+    const isPastDay=date<todayIso;
+    if(isPastDay){
+      html+='<div class="day-section" style="opacity:.5"><div class="day-header"><span style="font-weight:700;color:var(--text2)">'+fmtDate(date)+'</span><span style="font-size:11px;color:var(--text2);margin-right:auto"> – עבר</span></div></div>';
+    } else {
+      html+='<div class="day-section"><div class="day-header toggle-day" data-target="dd-'+di+'"><span style="font-weight:700">'+fmtDate(date)+'</span><div style="display:flex;gap:8px;align-items:center"><span style="font-size:12px;color:var(--text2)">'+ds.length+' משמרות</span><button class="bs ba add-shift-btn" data-date="'+date+'" style="padding:5px 12px;font-size:12px">+ הוסף</button></div></div><div class="day-body" id="dd-'+di+'">'+(ds.length?ds.map(renderShiftCard).join(''):'<p style="color:var(--text2);font-size:13px;padding:8px 0">אין משמרות</p>')+'</div></div>';
+    }
   });
-  document.getElementById('weekBuilder').innerHTML=html;
-};
-window.toggleDay=function(id){const el=document.getElementById(id);el.style.display=el.style.display==='none'?'':'none';};
+  $('weekBuilder').innerHTML=html;
+}
 
 function renderShiftCard(s){
+  // Save current needs as baseline for change detection
+  if(!_cf[s.id]?.dirty) _prevNeeds[s.id]=JSON.parse(JSON.stringify(s.needs||{}));
   const isDirty=_cf[s.id]?.dirty,isConf=!!_cf[s.id]&&!isDirty;
-  const btnCls=isDirty?'dirty':isConf?'confirmed':'';
+  const btnCls=isDirty?'red':isConf?'green':'green';
   const btnTxt=isDirty?'🔴 עדכן משמרת':'✅ אשר משמרת';
   const full=isShiftFull(s),anyN=RK.some(r=>(s.needs?.[r]||0)>0);
   const statusLbl=anyN?(full?'<span style="font-size:11px;color:var(--green);font-weight:700">✅ סגורה</span>':'<span style="font-size:11px;color:var(--red);font-weight:700">⚠️ לא סגורה</span>'):'';
-  const roles=RK.map(r=>`<div class="ri"><label>${ROLES[r]}</label><div style="display:flex;gap:3px;align-items:center"><input type="number" min="0" value="${s.needs?.[r]||0}" onchange="updNeed('${s.id}','${r}',this.value)" style="flex:1"/><span style="font-size:9px;color:var(--text2)">כולל</span><input type="number" min="0" value="${s.seniors?.[r]||0}" onchange="updSenior('${s.id}','${r}',this.value)" style="flex:1;border-color:rgba(139,105,20,0.4)"/><span style="font-size:9px;color:var(--accent)">בכיר</span></div></div>`).join('');
-  return`<div class="shift-card" id="sc-${s.id}" style="border-color:${isDirty?'rgba(192,57,43,0.4)':isConf?'rgba(45,122,58,0.4)':'var(--border)'}">
-    <button class="shift-remove" onclick="delShift('${s.id}')">✕ מחק</button>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-left:60px">
-      <span style="font-weight:700;color:var(--accent);font-size:13px">⏰ ${s.start||''}–${s.end||''}</span>
-      <span style="color:var(--text2);font-size:12px">${s.name||''}</span>
-      ${statusLbl}
-    </div>
-    <div class="shift-name-tabs">${SN.map(n=>`<button class="snt ${s.name===n?'active':''}" onclick="setShiftName('${s.id}','${n}',this)">${n}</button>`).join('')}</div>
-    <div class="form-row" style="margin-bottom:10px">
-      <div class="fg"><label>שעת התחלה</label><input type="time" value="${s.start||''}" onchange="updField('${s.id}','start',this.value)"/></div>
-      <div class="fg"><label>שעת סיום</label><input type="time" value="${s.end||''}" onchange="updField('${s.id}','end',this.value)"/></div>
-    </div>
-    <div class="roles-grid">${roles}</div>
-    <button class="confirm-btn ${btnCls}" onclick="confirmShift('${s.id}')">${btnTxt}</button>
-  </div>`;
+  let html='<div class="shift-card" id="sc-'+s.id+'" style="border-color:'+(isDirty?'rgba(192,57,43,0.4)':isConf?'rgba(45,122,58,0.4)':'var(--border)')+';">';
+  html+='<button class="shift-remove del-shift-btn" data-sid="'+s.id+'">✕ מחק</button>';
+  html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-left:60px"><span style="font-weight:700;color:var(--accent);font-size:13px">⏰ '+(s.start||'')+'–'+(s.end||'')+'</span><span style="color:var(--text2);font-size:12px">'+(s.name||'')+'</span>'+statusLbl+'</div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">';
+  SN.forEach(n=>{html+='<button class="snt snt-btn '+(s.name===n?'active':'')+'" data-sid="'+s.id+'" data-name="'+n+'">'+n+'</button>';});
+  html+='</div>';
+  html+='<div class="form-row" style="margin-bottom:10px"><div class="fg"><label>שעת התחלה</label><input type="time" value="'+(s.start||'')+'" class="shift-time-input" data-sid="'+s.id+'" data-field="start"/></div><div class="fg"><label>שעת סיום</label><input type="time" value="'+(s.end||'')+'" class="shift-time-input" data-sid="'+s.id+'" data-field="end"/></div></div>';
+  html+='<div class="roles-grid">';
+  RK.forEach(r=>{html+='<div class="ri"><label>'+ROLES[r]+'</label><div style="display:flex;gap:3px;align-items:center"><input type="number" min="0" value="'+(s.needs?.[r]||0)+'" class="need-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1"/><span style="font-size:9px;color:var(--text2)">כולל</span><input type="number" min="0" value="'+(s.seniors?.[r]||0)+'" class="senior-input" data-sid="'+s.id+'" data-role="'+r+'" style="flex:1;border-color:rgba(139,105,20,0.4)"/><span style="font-size:9px;color:var(--accent)">בכיר</span></div></div>';});
+  html+='</div>';
+  html+='<button class="confirm-btn '+btnCls+' confirm-shift-btn" data-sid="'+s.id+'">'+btnTxt+'</button>';
+  html+='</div>';
+  return html;
 }
-function markDirty(id){_cf[id]={confirmed:true,dirty:true};fbSet('confirmed',id,{confirmed:true,dirty:true});const card=document.getElementById('sc-'+id);if(card){card.style.borderColor='rgba(192,57,43,0.4)';const btn=card.querySelector('.confirm-btn');if(btn){btn.className='confirm-btn dirty';btn.textContent='🔴 עדכן משמרת';}}}
-window.setShiftName=function(id,name,btn){const s=_shifts.find(x=>x.id===id);if(!s)return;s.name=name;fbSet('shifts',id,s);markDirty(id);btn.closest('.shift-card').querySelectorAll('.snt').forEach(t=>t.classList.toggle('active',t.textContent===name));};
-window.confirmShift=async function(id){
-  const wasDirty=_cf[id]?.dirty;
+
+function markDirty(id){
+  _cf[id]={confirmed:true,dirty:true};
+  fbSet('confirmed',id,{confirmed:true,dirty:true});
+  const card=document.getElementById('sc-'+id);
+  if(card){card.style.borderColor='rgba(192,57,43,0.4)';const btn=card.querySelector('.confirm-shift-btn');if(btn){btn.className='confirm-btn red confirm-shift-btn';btn.textContent='🔴 עדכן משמרת';}}
+}
+
+// Schedule event delegation
+document.getElementById('weekBuilder').addEventListener
+  && (document.addEventListener('click',function(e){
+  const toggleBtn=e.target.closest('.toggle-day');
+  if(toggleBtn){const target=document.getElementById(toggleBtn.dataset.target);if(target)target.style.display=target.style.display==='none'?'':'none';}
+  const addBtn=e.target.closest('.add-shift-btn');
+  if(addBtn){e.stopPropagation();addShift(addBtn.dataset.date);}
+  const delBtn=e.target.closest('.del-shift-btn');
+  if(delBtn){_pendDelShift=delBtn.dataset.sid;openModal('confirmDelShift');}
+  const sntBtn=e.target.closest('.snt-btn');
+  if(sntBtn){const s=_shifts.find(x=>x.id===sntBtn.dataset.sid);if(s){s.name=sntBtn.dataset.name;fbSet('shifts',s.id,s);markDirty(s.id);sntBtn.closest('.shift-card').querySelectorAll('.snt-btn').forEach(b=>b.classList.toggle('active',b.dataset.name===sntBtn.dataset.name));}}
+  const confBtn=e.target.closest('.confirm-shift-btn');
+  if(confBtn){confirmShift(confBtn.dataset.sid);}
+}));
+document.addEventListener('change',function(e){
+  const timeInput=e.target.closest('.shift-time-input');
+  if(timeInput){const s=_shifts.find(x=>x.id===timeInput.dataset.sid);if(s){s[timeInput.dataset.field]=e.target.value;fbSet('shifts',s.id,s);markDirty(s.id);}}
+  const needInput=e.target.closest('.need-input');
+  if(needInput){const s=_shifts.find(x=>x.id===needInput.dataset.sid);if(s){
+    // Save prev before change
+    if(!_prevNeeds[s.id]) _prevNeeds[s.id]=JSON.parse(JSON.stringify(s.needs||{}));
+    if(!s.needs)s.needs={};s.needs[needInput.dataset.role]=parseInt(e.target.value)||0;fbSet('shifts',s.id,s);markDirty(s.id);}}
+  const seniorInput=e.target.closest('.senior-input');
+  if(seniorInput){const s=_shifts.find(x=>x.id===seniorInput.dataset.sid);if(s){if(!s.seniors)s.seniors={};s.seniors[seniorInput.dataset.role]=parseInt(e.target.value)||0;fbSet('shifts',s.id,s);}}
+});
+
+async function confirmShift(id){
   await fbSet('confirmed',id,{confirmed:true,dirty:false});
   _cf[id]={confirmed:true,dirty:false};
   toast('✅ משמרת אושרה!');
-  // If was dirty (updated), offer to notify all approved employees
-  if(wasDirty){
-    const shift=_shifts.find(s=>s.id===id);
-    if(shift){
-      const appEmps=_emps.filter(e=>Object.entries(_ap[id]||{}).some(([,ids])=>ids.includes(e.id)));
-      if(appEmps.length>0){
-        const items=appEmps.map(e=>({label:e.name, phone:e.phone, msg:waChangeMsg(e,shift)}));
-        showWaModal(items);
+  try{
+    const snap=await getDoc(doc(db,'shifts',id));
+    if(snap.exists()){
+      const shift=snap.data();
+      const needs=shift.needs||{};
+      const prev=_prevNeeds[id]||{};
+      // Find roles that changed OR are new with value > 0
+      const relevantRoles=[];
+      RK.forEach(r=>{
+        const cur=Number(needs[r])||0;
+        const old=Number(prev[r])||0;
+        // Include if: value > 0 AND (it's new OR changed)
+        if(cur>0 && cur!==old) relevantRoles.push(r);
+      });
+      // If nothing changed (first confirm), send to all roles > 0
+      const finalRoles=relevantRoles.length>0?relevantRoles:RK.filter(r=>Number(needs[r])>0);
+      if(finalRoles.length>0){
+        const relevantEmps=_emps.filter(e=>e.phone&&finalRoles.indexOf(e.role)!==-1);
+        if(relevantEmps.length>0){
+          const items=relevantEmps.map(e=>({label:e.name,phone:e.phone,msg:waShiftMsg(e,shift)}));
+          showWaModal(items);
+        }
       }
     }
-  }
+  }catch(err){console.error('WA error:',err);}
+  delete _prevNeeds[id];
   loadWeek();
-};
-let _pendDelShift;
-window.delShift=function(id){_pendDelShift=id;openModal('confirmDelShift');};
-window.doDelShift=async function(){await fbDel('shifts',_pendDelShift);await fbDel('confirmed',_pendDelShift);closeModal('confirmDelShift');loadWeek();toast('משמרת נמחקה','error');};
-window.addShift=async function(date){const id=genId(),s={id,date,name:'בוקר',start:'08:00',end:'16:00',needs:{}};RK.forEach(r=>s.needs[r]=0);await fbSet('shifts',id,s);loadWeek();toast('משמרת נוספה');};
-window.updField=function(id,f,v){const s=_shifts.find(x=>x.id===id);if(s){s[f]=v;fbSet('shifts',id,s);markDirty(id);}};
-window.updNeed=function(id,r,v){const s=_shifts.find(x=>x.id===id);if(s){if(!s.needs)s.needs={};s.needs[r]=parseInt(v)||0;fbSet('shifts',id,s);markDirty(id);}};
-window.updSenior=function(id,r,v){const s=_shifts.find(x=>x.id===id);if(s){if(!s.seniors)s.seniors={};s.seniors[r]=parseInt(v)||0;fbSet('shifts',id,s);}};
+}
+async function addShift(date){const id=genId(),s={id,date,name:'בוקר',start:'08:00',end:'16:00',needs:{}};RK.forEach(r=>s.needs[r]=0);await fbSet('shifts',id,s);loadWeek();toast('משמרת נוספה');}
+$('cancelDelShiftBtn').addEventListener('click',()=>closeModal('confirmDelShift'));
+$('confirmDelShiftBtn').addEventListener('click',async()=>{if(_pendDelShift){await fbDel('shifts',_pendDelShift);await fbDel('confirmed',_pendDelShift);}closeModal('confirmDelShift');loadWeek();toast('משמרת נמחקה','error');});
 
-// ===== APPROVE =====
-window.loadApproveWeek=function(){
-  const ws=document.getElementById('approveWeekStart').value;if(!ws)return;
+// APPROVE
+$('loadApproveBtn').addEventListener('click',loadApproveWeek);
+$('openSpontBtn').addEventListener('click',openSpont);
+function loadApproveWeek(){
+  const ws=$('approveWeekStart').value;if(!ws)return;
   const dates=getWeekDates(ws),shifts=_shifts.filter(s=>dates.includes(s.date));
-  if(!shifts.length){document.getElementById('approveList').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין משמרות בשבוע זה</p>';return;}
-  let html=`<button class="bs bo" style="margin-bottom:14px;width:auto" onclick="openSpont()">⚡ שיבוץ ספונטני</button>`;
+  if(!shifts.length){$('approveList').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין משמרות בשבוע זה</p>';return;}
+  let html='';
   shifts.sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
   shifts.forEach(s=>{
     if(!_ap[s.id])_ap[s.id]={};
-    const full=isShiftFull(s);let rolesHtml='';
+    const full=isShiftFull(s);
+    let rolesHtml='';
     RK.forEach(role=>{
       const needed=s.needs?.[role]||0;if(!needed)return;
       const avEmps=_emps.filter(e=>e.role===role&&_av[e.id]?.[s.id]==='yes');
       const appIds=_ap[s.id][role]||[],appCnt=appIds.length;
       const isOver=appCnt>needed,isOk=appCnt>=needed;
-      rolesHtml+=`<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase">${ROLES[role]}</span><span style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1px 7px;font-size:10px;color:var(--text2)">נדרש: ${needed}</span><span style="border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700;background:${isOver?'rgba(196,95,10,0.12)':isOk?'rgba(45,122,58,0.12)':'rgba(139,105,20,0.12)'};color:${isOver?'var(--orange)':isOk?'var(--green)':'var(--accent)'}">מאושר: ${appCnt}${isOver?' ⚠️':''}</span></div><div style="display:flex;flex-wrap:wrap;gap:4px">${avEmps.length?avEmps.map(e=>{const app=appIds.includes(e.id);return`<div style="display:inline-flex;align-items:center;gap:4px"><div class="worker-chip ${app?'approved':''}" onclick="toggleApproval('${s.id}','${role}','${e.id}','${needed}')"><span class="wname" style="font-weight:600">${e.name}${e.senior?' ⭐':''}</span><span style="font-size:10px;color:${app?'rgba(45,122,58,0.7)':'var(--text2)'}">${app?'✓':''}</span></div><button onclick="cancelAvail('${e.id}','${s.id}')" style="padding:3px 6px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:10px;font-weight:700">✕</button></div>`;}).join(''):'<span style="color:var(--text2);font-size:12px">אין עובדים זמינים</span>'}</div></div>`;
+      rolesHtml+='<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap">';
+      rolesHtml+='<span style="font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase">'+ROLES[role]+'</span>';
+      rolesHtml+='<span style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1px 7px;font-size:10px;color:var(--text2)">נדרש: '+needed+'</span>';
+      rolesHtml+='<span style="border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700;background:'+(isOver?'rgba(196,95,10,0.12)':isOk?'rgba(45,122,58,0.12)':'rgba(139,105,20,0.12)')+';color:'+(isOver?'var(--orange)':isOk?'var(--green)':'var(--accent)')+'">מאושר: '+appCnt+(isOver?' ⚠️':'')+'</span></div>';
+      rolesHtml+='<div style="display:flex;flex-wrap:wrap;gap:4px">';
+      if(avEmps.length){avEmps.forEach(e=>{const app=appIds.includes(e.id);rolesHtml+='<div style="display:inline-flex;align-items:center;gap:4px"><div class="worker-chip toggle-approval-btn '+(app?'approved':'')+'" data-sid="'+s.id+'" data-role="'+role+'" data-eid="'+e.id+'" data-needed="'+needed+'"><span style="font-weight:600">'+e.name+(e.senior?' ⭐':'')+'</span></div><button class="cancel-avail-btn" data-eid="'+e.id+'" data-sid="'+s.id+'" style="padding:3px 6px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:10px;font-weight:700">✕</button></div>';});}
+      else{rolesHtml+='<span style="color:var(--text2);font-size:12px">אין עובדים זמינים</span>';}
+      rolesHtml+='</div></div>';
     });
     if(!rolesHtml)rolesHtml='<p style="color:var(--text2);font-size:13px">לא הוגדרו דרישות</p>';
     const anyN=RK.some(r=>(s.needs?.[r]||0)>0);
-    const banner=anyN?(full?`<div class="s-complete"><span style="font-size:20px">🎉</span><div><div style="font-weight:800;color:var(--green)">משמרת הושלמה!</div><div style="font-size:12px;color:var(--green)">כל התפקידים אוישו</div></div></div>`:`<div class="s-incomplete"><span style="font-size:20px">⚠️</span><div><div style="font-weight:800;color:var(--red)">משמרת לא סגורה</div><div style="font-size:12px;color:var(--red)">חסרים עובדים</div></div></div>`):'';
-    html+=`<div class="approve-shift ${full?'complete':''}" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px"><div><h4 style="font-size:14px;font-weight:700">${fmtDate(s.date)} – ${s.name||''}</h4><p style="font-size:12px;color:var(--text2)">${s.start} – ${s.end}</p></div></div>${rolesHtml}${banner}</div>`;
+    const banner=anyN?(full?'<div class="s-complete"><span style="font-size:20px">🎉</span><div><div style="font-weight:800;color:var(--green)">משמרת הושלמה!</div><div style="font-size:12px;color:var(--green)">כל התפקידים אוישו</div></div></div>':'<div class="s-incomplete"><span style="font-size:20px">⚠️</span><div><div style="font-weight:800;color:var(--red)">משמרת לא סגורה</div><div style="font-size:12px;color:var(--red)">חסרים עובדים</div></div></div>'):'';
+    html+='<div class="approve-shift '+(full?'complete':'')+'" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px"><div><h4 style="font-size:14px;font-weight:700">'+fmtDate(s.date)+' – '+(s.name||'')+'</h4><p style="font-size:12px;color:var(--text2)">'+s.start+' – '+s.end+'</p></div></div>'+rolesHtml+banner+'</div>';
   });
-  document.getElementById('approveList').innerHTML=html;
-};
+  $('approveList').innerHTML=html;
+}
 
-let _pendOQ;
-window.toggleApproval=async function(shiftId,role,empId,needed){
+document.addEventListener('click',async function(e){
+  const tapBtn=e.target.closest('.toggle-approval-btn');
+  if(tapBtn){await toggleApproval(tapBtn.dataset.sid,tapBtn.dataset.role,tapBtn.dataset.eid,tapBtn.dataset.needed);}
+  const cavBtn=e.target.closest('.cancel-avail-btn');
+  if(cavBtn){await cancelAvail(cavBtn.dataset.eid,cavBtn.dataset.sid);}
+});
+
+async function toggleApproval(shiftId,role,empId,needed){
   if(!_ap[shiftId])_ap[shiftId]={};if(!_ap[shiftId][role])_ap[shiftId][role]=[];
   const arr=_ap[shiftId][role],idx=arr.indexOf(empId);
   const emp=_emps.find(e=>e.id===empId),shift=_shifts.find(s=>s.id===shiftId);
   if(idx===-1){
     if(arr.length>=parseInt(needed)&&parseInt(needed)>0){
       _pendOQ={shiftId,role,empId,arr,emp,shift,needed};
-      document.getElementById('overQuotaMsg').innerHTML=`לאשר <strong>${emp?.name}</strong> לתפקיד <strong>${ROLES[role]}</strong>?<br>הוגדרו ${needed} עובדים, כבר מאושרים ${arr.length}.`;
-      document.getElementById('overQuotaOK').onclick=async()=>{arr.push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);sendSMS(emp,shift,role);toast(`✅ ${emp?.name} אושר`,'warning');closeModal('overQuotaModal');loadApproveWeek();};
+      $('overQuotaMsg').innerHTML='לאשר <strong>'+emp?.name+'</strong> לתפקיד <strong>'+ROLES[role]+'</strong>?<br>הוגדרו '+needed+' עובדים, כבר מאושרים '+arr.length+'.';
+      $('cancelOQBtn').onclick=()=>closeModal('overQuotaModal');
+      $('confirmOQBtn').onclick=async()=>{arr.push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);sendSMS(emp,shift,role);toast(emp?.name+' אושר','warning');closeModal('overQuotaModal');loadApproveWeek();};
       openModal('overQuotaModal');return;
     }
-    arr.push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);sendSMS(emp,shift,role);toast(`✅ ${emp?.name} אושר`);
+    arr.push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);sendSMS(emp,shift,role);toast('✅ '+emp?.name+' אושר');
   }else{
     arr.splice(idx,1);await fbSet('approvals',shiftId,_ap[shiftId]);
-    toast(`${emp?.name} הוסר`,'error');
-    if(emp&&shift){
-      const msg=waCancelMsg(emp,shift);
-      showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
-    }
+    toast(emp?.name+' הוסר','error');
+    if(emp&&shift)showWaModal([{label:emp.name,phone:emp.phone,msg:waCancelMsg(emp,shift)}]);
   }
   loadApproveWeek();
-};
-window.cancelAvail=async function(empId,shiftId){
-  if(!_av[empId])return;
-  _av[empId][shiftId]='no';await fbSet('availability',empId,_av[empId]);
-  if(_ap[shiftId]){let ch=false;RK.forEach(r=>{const a=_ap[shiftId][r]||[],i=a.indexOf(empId);if(i!==-1){a.splice(i,1);ch=true;}});if(ch)await fbSet('approvals',shiftId,_ap[shiftId]);}
-  const emp=_emps.find(e=>e.id===empId);
-  const shift=_shifts.find(s=>s.id===shiftId);
-  toast(`זמינות ${emp?.name||''} בוטלה`,'error');
-  if(emp&&shift){
-    const msg=waCancelMsg(emp,shift);
-    showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
-  }
-  loadApproveWeek();
-};
-function sendSMS(emp,shift,role){
-  if(!emp||!shift)return;
-  const msg=waApprovalMsg(emp,shift,role);
-  showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
 }
 
-// ===== SPONTANEOUS =====
-window.setSpontMode=function(mode){
-  document.getElementById('spontExistBlock').style.display=mode==='exist'?'block':'none';
-  document.getElementById('spontFreeBlock').style.display=mode==='free'?'block':'none';
-  document.getElementById('spontModeExist').className='bs '+(mode==='exist'?'ba':'bg');
-  document.getElementById('spontModeFree').className='bs '+(mode==='free'?'ba':'bg');
-};
+async function cancelAvail(empId,shiftId){
+  if(!_av[empId])return;_av[empId][shiftId]='no';await fbSet('availability',empId,_av[empId]);
+  if(_ap[shiftId]){let ch=false;RK.forEach(r=>{const a=_ap[shiftId][r]||[],i=a.indexOf(empId);if(i!==-1){a.splice(i,1);ch=true;}});if(ch)await fbSet('approvals',shiftId,_ap[shiftId]);}
+  const emp=_emps.find(e=>e.id===empId),shift=_shifts.find(s=>s.id===shiftId);
+  toast('זמינות '+(emp?.name||'')+' בוטלה','error');
+  if(emp&&shift)showWaModal([{label:emp.name,phone:emp.phone,msg:waCancelMsg(emp,shift)}]);
+  loadApproveWeek();
+}
+function sendSMS(emp,shift,role){if(!emp||!shift)return;showWaModal([{label:emp.name,phone:emp.phone,msg:waApprovalMsg(emp,shift,role)}]);}
 
-window.openSpont=function(){
-  const sel1=document.getElementById('spontShift'),sel2=document.getElementById('spontEmp');
-  sel1.innerHTML=_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>`<option value="${s.id}">${fmtDate(s.date)} ${s.name||''} ${s.start}–${s.end}</option>`).join('');
-  sel2.innerHTML=_emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).map(e=>`<option value="${e.id}">${e.name} – ${ROLES[e.role]||e.role}</option>`).join('');
-  setSpontMode('exist');
-  document.getElementById('spontDate').value=new Date().toISOString().slice(0,10);
+// SPONT
+function openSpont(){
+  $('spontEmp').innerHTML=_emps.sort((a,b)=>a.name.localeCompare(b.name,'he')).map(e=>'<option value="'+e.id+'">'+e.name+' – '+(ROLES[e.role]||e.role)+'</option>').join('');
+  $('spontShift').innerHTML='<option value="">-- ללא משמרת קיימת --</option>'+_shifts.sort((a,b)=>a.date.localeCompare(b.date)).map(s=>'<option value="'+s.id+'">'+fmtDate(s.date)+' '+(s.name||'')+' '+s.start+'–'+s.end+'</option>').join('');
+  $('spontDate').value='';
   openModal('spontModal');
-};
-
-
-window.doSpont=async function(){
-  const empId=document.getElementById('spontEmp').value;
-  const emp=_emps.find(e=>e.id===empId);
+}
+$('closeSpontBtn').addEventListener('click',()=>closeModal('spontModal'));
+$('doSpontBtn').addEventListener('click',doSpont);
+async function doSpont(){
+  const empId=$('spontEmp').value,emp=_emps.find(e=>e.id===empId);
   if(!emp){toast('בחר עובד','error');return;}
-  const freeMode=document.getElementById('spontType').value==='free';
+  const freeDate=$('spontDate').value;
   let shift;
-  if(freeMode){
-    const date=document.getElementById('spontDate').value;
-    const start=document.getElementById('spontStart').value;
-    const end=document.getElementById('spontEnd').value;
-    const name=document.getElementById('spontName').value||'ספונטני';
-    if(!date){toast('בחר תאריך','error');return;}
-    // Create new shift
-    const id=genId();
-    shift={id,date,name,start,end,needs:{}};
-    shift.needs[emp.role]=1;
+  if(freeDate){
+    const start=$('spontStart').value,end=$('spontEnd').value,name=$('spontName').value||'ספונטני';
+    const id=genId();shift={id,date:freeDate,name,start,end,needs:{}};shift.needs[emp.role]=1;
     await fbSet('shifts',id,shift);
-    if(!_ap[id])_ap[id]={};
-    if(!_ap[id][emp.role])_ap[id][emp.role]=[];
-    _ap[id][emp.role].push(empId);
-    await fbSet('approvals',id,_ap[id]);
-  } else {
-    const shiftId=document.getElementById('spontShift').value;
-    shift=_shifts.find(s=>s.id===shiftId);
-    if(!shift){toast('בחר משמרת','error');return;}
-    if(!_ap[shiftId])_ap[shiftId]={};
-    if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
+    if(!_ap[id])_ap[id]={};if(!_ap[id][emp.role])_ap[id][emp.role]=[];
+    _ap[id][emp.role].push(empId);await fbSet('approvals',id,_ap[id]);
+  }else{
+    const shiftId=$('spontShift').value;shift=_shifts.find(s=>s.id===shiftId);
+    if(!shift){toast('בחר משמרת או הזן תאריך חופשי','error');return;}
+    if(!_ap[shiftId])_ap[shiftId]={};if(!_ap[shiftId][emp.role])_ap[shiftId][emp.role]=[];
     if(!_ap[shiftId][emp.role].includes(empId)){_ap[shiftId][emp.role].push(empId);await fbSet('approvals',shiftId,_ap[shiftId]);}
   }
-  closeModal('spontModal');
-  toast(`✅ ${emp.name} שובץ`);
-  const msg=waSpontMsg(emp,shift);
-  showWaModal([{label:emp.name, phone:emp.phone, msg:msg}]);
+  closeModal('spontModal');toast('✅ '+emp.name+' שובץ');
+  showWaModal([{label:emp.name,phone:emp.phone,msg:waSpontMsg(emp,shift)}]);
   loadApproveWeek();
-};
+}
 
-// ===== EMPLOYEE: MY SHIFTS (unified) =====
+// EMPLOYEE VIEWS
 function renderMyShifts(){
   const emp=CU.emp;
   const shifts=_shifts.filter(s=>(s.needs?.[emp.role]||0)>0).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!shifts.length){document.getElementById('myShiftsList').innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)"><span style="font-size:40px;display:block;margin-bottom:10px">📅</span><p>אין משמרות רלוונטיות כרגע</p></div>';return;}
+  if(!shifts.length){$('myShiftsList').innerHTML='<div style="text-align:center;padding:40px;color:var(--text2)"><span style="font-size:40px;display:block;margin-bottom:10px">📅</span><p>אין משמרות רלוונטיות כרגע</p></div>';return;}
   if(!_av[emp.id])_av[emp.id]={};
-  document.getElementById('myShiftsList').innerHTML=shifts.map(s=>{
+  $('myShiftsList').innerHTML=shifts.map(s=>{
     const val=_av[emp.id][s.id]||'none';
     const appHere=Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id));
-    // Senior blocking
     const isSen=emp.senior===1,senN=s.seniors?.[emp.role]||0;
     let blocked=false,blockedBy='';
     if(isSen&&senN>0&&val!=='yes'){const others=_emps.filter(e=>e.role===emp.role&&e.senior===1&&e.id!==emp.id&&_av[e.id]?.[s.id]==='yes');if(others.length>=senN){blocked=true;blockedBy=others.map(e=>e.name).join(', ');}}
-    let statusEl=appHere?`<span class="sbadge s-app">✓ אושרת</span>`:val==='yes'?`<span class="sbadge s-pend">⏳ ממתין</span>`:`<span class="sbadge s-none">לא הוגשה זמינות</span>`;
-    // Clock in/out entries
+    let statusEl=appHere?'<span class="sbadge s-app">✓ אושרת</span>':val==='yes'?'<span class="sbadge s-pend">⏳ ממתין</span>':'<span class="sbadge s-none">לא הוגשה זמינות</span>';
     const entries=getCkEntries(emp.id,s.id);
     const inNow=isCurrentlyIn(emp.id,s.id);
     const totalMins=calcActualMins(emp.id,s.id);
@@ -936,112 +984,117 @@ function renderMyShifts(){
     const isToday=s.date===today;
     let clockHtml='';
     if(appHere){
-      // Show all entries
       if(entries.length>0){
-        clockHtml+=`<div class="clock-entries">`;
-        entries.forEach((e2,i)=>{clockHtml+=`<div class="clock-entry"><span>כניסה ${i+1}:</span><span style="color:var(--green);font-weight:600">${fmtTime(e2.in)}</span>${e2.out?`<span style="color:var(--text2)">←</span><span style="color:var(--red);font-weight:600">${fmtTime(e2.out)}</span>`:''}</div>`;});
-        if(totalMins>0)clockHtml+=`<div style="font-size:12px;color:var(--green);font-weight:700;margin-top:4px">סה"כ: ${fmtMins(totalMins)}</div>`;
-        clockHtml+=`</div>`;
+        clockHtml+='<div style="margin-top:8px;padding:8px;background:var(--surface);border-radius:8px;border:1px solid var(--border)">';
+        entries.forEach((e2,i)=>{clockHtml+='<div style="display:flex;gap:8px;font-size:12px;padding:3px 0"><span style="color:var(--text2)">כניסה '+(i+1)+':</span><span style="color:var(--green);font-weight:600">'+fmtTime(e2.in)+'</span>'+(e2.out?'<span style="color:var(--text2)">←</span><span style="color:var(--red);font-weight:600">'+fmtTime(e2.out)+'</span>':'')+'</div>';});
+        if(totalMins>0)clockHtml+='<div style="font-size:12px;color:var(--green);font-weight:700;margin-top:4px">סה"כ: '+fmtMins(totalMins)+'</div>';
+        clockHtml+='</div>';
       }
       if(isToday){
+        const swId='sw_'+emp.id+'_'+s.id;
         if(inNow){
-          const swId='sw_'+emp.id+'_'+s.id;
-          clockHtml+=`<div class="clock-row" style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <div class="stopwatch" id="${swId}">00:00</div>
-            <button class="bs bd" style="padding:8px 16px;font-size:13px" onclick="clockOut('${emp.id}','${s.id}')">🔴 יציאה</button>
-            <button class="bs ba" style="padding:8px 16px;font-size:13px" onclick="clockIn('${emp.id}','${s.id}')">🟢 כניסה נוספת</button>
-          </div>`;
+          clockHtml+='<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;align-items:center">';
+          clockHtml+='<div class="stopwatch" id="'+swId+'">00:00</div>';
+          clockHtml+='<button class="bs bd clock-out-btn" data-eid="'+emp.id+'" data-sid="'+s.id+'" style="padding:8px 16px;font-size:13px">🔴 יציאה</button>';
+          clockHtml+='<button class="bs bgr clock-in-btn" data-eid="'+emp.id+'" data-sid="'+s.id+'" style="padding:8px 16px;font-size:13px">🟢 כניסה נוספת</button>';
+          clockHtml+='</div>';
           startStopwatch(swId,emp.id,s.id);
-        } else {
-          clockHtml+=`<div class="clock-row" style="margin-top:8px"><button class="bs bgr" style="padding:8px 16px;font-size:13px" onclick="clockIn('${emp.id}','${s.id}')">🟢 ${entries.length>0?'כניסה נוספת':'כניסה למשמרת'}</button></div>`;
+        }else{
+          clockHtml+='<div style="margin-top:8px"><button class="bs bgr clock-in-btn" data-eid="'+emp.id+'" data-sid="'+s.id+'" style="padding:8px 16px;font-size:13px">🟢 '+(entries.length>0?'כניסה נוספת':'כניסה למשמרת')+'</button></div>';
         }
-      } else if(s.date>today){
-        clockHtml+=`<div style="font-size:11px;color:var(--text2);margin-top:8px">⏳ כניסה אפשרית ביום המשמרת</div>`;
-      }
+      }else if(s.date>today){clockHtml+='<div style="font-size:11px;color:var(--text2);margin-top:8px">⏳ כניסה אפשרית ביום המשמרת</div>';}
     }
-    const availBtns=!appHere&&!blocked?`<div class="toggle-avail" style="margin-top:10px"><button class="avail-btn yes ${val==='yes'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','yes')">זמין ✓</button><button class="avail-btn no ${val==='no'?'active':''}" onclick="setAvail('${emp.id}','${s.id}','no')">לא זמין ✗</button></div>`:'';
-    const blockedHtml=blocked?`<div style="margin-top:8px;padding:7px 12px;border-radius:8px;background:rgba(139,105,20,0.08);border:1px solid rgba(139,105,20,0.25);font-size:12px;color:var(--accent)">🔒 מאויש – ${blockedBy}</div>`:'';
-    return`<div class="ms-card">
-      <div class="ms-top"><div class="ms-info"><h4>${fmtDate(s.date)} – ${s.name||''}</h4><p>${s.start} – ${s.end} | ${ROLES[emp.role]}${isSen?' ⭐':''}</p></div>${statusEl}</div>
-      ${availBtns}${blockedHtml}${clockHtml}
-    </div>`;
+    const isPast = s.date < new Date().toISOString().slice(0,10);
+    const availBtns=!appHere&&!blocked&&!isPast?'<div style="display:flex;gap:6px;margin-top:10px"><button class="avail-btn yes '+(val==='yes'?'active':'')+' avail-yes-btn" data-eid="'+emp.id+'" data-sid="'+s.id+'">זמין ✓</button><button class="avail-btn no '+(val==='no'?'active':'')+' avail-no-btn" data-eid="'+emp.id+'" data-sid="'+s.id+'">לא זמין ✗</button></div>':'';
+    const pastLabel=isPast&&!appHere?'<div style="font-size:11px;color:var(--text2);margin-top:6px;padding:5px 10px;background:var(--surface2);border-radius:6px">📅 משמרת עברה</div>':'';
+    const blockedHtml=blocked?'<div style="margin-top:8px;padding:7px 12px;border-radius:8px;background:rgba(139,105,20,0.08);border:1px solid rgba(139,105,20,0.25);font-size:12px;color:var(--accent)">🔒 מאויש – '+blockedBy+'</div>':'';
+    return '<div class="ms-card"'+(isPast?' style="opacity:.75"':'')+'>'
+      +'<div class="ms-top"><div class="ms-info"><h4>'+fmtDate(s.date)+' – '+(s.name||'')+'</h4><p>'+s.start+' – '+s.end+' | '+ROLES[emp.role]+(isSen?' ⭐':'')+'</p></div>'+statusEl+'</div>'
+      +availBtns+blockedHtml+(isPast?pastLabel:'')+clockHtml+'</div>';
   }).join('');
-  // restart stopwatches if any active
-  shifts.forEach(s=>{if(isCurrentlyIn(emp.id,s.id)&&s.date===new Date().toISOString().slice(0,10)){startStopwatch('sw_'+emp.id+'_'+s.id,emp.id,s.id);}});
+  shifts.forEach(s=>{if(isCurrentlyIn(emp.id,s.id)&&s.date===new Date().toISOString().slice(0,10))startStopwatch('sw_'+emp.id+'_'+s.id,emp.id,s.id);});
 }
 
-window.setAvail=async function(empId,shiftId,val){if(!_av[empId])_av[empId]={};_av[empId][shiftId]=val;await fbSet('availability',empId,_av[empId]);renderMyShifts();toast(val==='yes'?'נרשמת כזמין ✓':'נרשמת כלא זמין');};
+document.addEventListener('click',async function(e){
+  const yBtn=e.target.closest('.avail-yes-btn');if(yBtn){await setAvail(yBtn.dataset.eid,yBtn.dataset.sid,'yes');}
+  const nBtn=e.target.closest('.avail-no-btn');if(nBtn){await setAvail(nBtn.dataset.eid,nBtn.dataset.sid,'no');}
+  const ciBtn=e.target.closest('.clock-in-btn');
+  if(ciBtn){
+    const shift=_shifts.find(s=>s.id===ciBtn.dataset.sid);
+    if(!shift)return;
+    if(shift.date!==new Date().toISOString().slice(0,10)){toast('ניתן לרשום כניסה רק ביום המשמרת','error');return;}
+    const existing=_ck[ciBtn.dataset.eid+'_'+ciBtn.dataset.sid]||{};
+    let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+    if(entries.length>0&&!entries[entries.length-1].out){toast('יש לסגור את הכניסה הקודמת תחילה','error');return;}
+    entries.push({in:Date.now(),out:null});
+    await fbSet('clockins',ciBtn.dataset.eid+'_'+ciBtn.dataset.sid,{entries});
+    toast('✅ כניסה נרשמה!');
+  }
+  const coBtn=e.target.closest('.clock-out-btn');
+  if(coBtn){
+    const existing=_ck[coBtn.dataset.eid+'_'+coBtn.dataset.sid]||{};
+    let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
+    if(!entries.length||entries[entries.length-1].out){toast('אין כניסה פתוחה','error');return;}
+    entries[entries.length-1].out=Date.now();
+    await fbSet('clockins',coBtn.dataset.eid+'_'+coBtn.dataset.sid,{entries});
+    const swId='sw_'+coBtn.dataset.eid+'_'+coBtn.dataset.sid;
+    if(stopwatchTimers[swId]){clearInterval(stopwatchTimers[swId]);delete stopwatchTimers[swId];}
+    toast('🔴 יציאה נרשמה!');
+  }
+});
 
-window.clockIn=async function(empId,shiftId){
-  const shift=_shifts.find(s=>s.id===shiftId);if(!shift)return;
-  if(shift.date!==new Date().toISOString().slice(0,10)){toast('ניתן לרשום כניסה רק ביום המשמרת','error');return;}
-  const existing=_ck[empId+'_'+shiftId]||{};
-  let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  // If last entry has no out, close it first
-  if(entries.length>0&&!entries[entries.length-1].out){toast('יש לסגור את הכניסה הקודמת תחילה','error');return;}
-  entries.push({in:Date.now(),out:null});
-  await fbSet('clockins',empId+'_'+shiftId,{entries});
-  toast('✅ כניסה נרשמה!');
-};
-
-window.clockOut=async function(empId,shiftId){
-  const existing=_ck[empId+'_'+shiftId]||{};
-  let entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
-  if(!entries.length||entries[entries.length-1].out){toast('אין כניסה פתוחה','error');return;}
-  entries[entries.length-1].out=Date.now();
-  await fbSet('clockins',empId+'_'+shiftId,{entries});
-  const swId='sw_'+empId+'_'+shiftId;
-  if(stopwatchTimers[swId]){clearInterval(stopwatchTimers[swId]);delete stopwatchTimers[swId];}
-  toast('🔴 יציאה נרשמה!');
-};
+async function setAvail(empId,shiftId,val){
+  if(!_av[empId])_av[empId]={};_av[empId][shiftId]=val;
+  await fbSet('availability',empId,_av[empId]);renderMyShifts();
+  toast(val==='yes'?'נרשמת כזמין ✓':'נרשמת כלא זמין');
+}
 
 function startStopwatch(swId,empId,shiftId){
   if(stopwatchTimers[swId])clearInterval(stopwatchTimers[swId]);
   stopwatchTimers[swId]=setInterval(()=>{
     const el=document.getElementById(swId);if(!el){clearInterval(stopwatchTimers[swId]);return;}
-    const entries=getCkEntries(empId,shiftId);
-    if(!entries.length)return;
-    const last=entries[entries.length-1];
-    if(!last.in||last.out){clearInterval(stopwatchTimers[swId]);return;}
+    const entries=getCkEntries(empId,shiftId);if(!entries.length)return;
+    const last=entries[entries.length-1];if(!last.in||last.out){clearInterval(stopwatchTimers[swId]);return;}
     const elapsed=Math.floor((Date.now()-last.in)/1000);
     const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=elapsed%60;
-    el.textContent=h>0?`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`:`${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    el.textContent=h>0?h+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'):String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
   },1000);
 }
 
-// ===== MY HOURS =====
-window.renderMyHours=function(period){
+// MY HOURS
+$('myHoursWeekBtn').addEventListener('click',()=>renderMyHours('week'));
+$('myHoursMonthBtn').addEventListener('click',()=>renderMyHours('month'));
+function renderMyHours(period){
   const emp=CU.emp;const now=new Date();now.setHours(0,0,0,0);
   let from,to=new Date(now);to.setDate(to.getDate()+1);
   if(period==='week'){from=new Date(now);from.setDate(now.getDate()-now.getDay());}else{from=new Date(now.getFullYear(),now.getMonth(),1);}
   const myShifts=_shifts.filter(s=>{const d=new Date(s.date);return d>=from&&d<to&&Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id));}).sort((a,b)=>a.date.localeCompare(b.date));
   let totalPlan=0,totalAct=0,rows='';
   myShifts.forEach(s=>{
-    const planned=shiftHours(s),actual=calcActualMins(emp.id,s.id);
+    const planned=shiftMins(s),actual=calcActualMins(emp.id,s.id);
     totalPlan+=planned;totalAct+=actual;
     const entries=getCkEntries(emp.id,s.id);
-    const entryStr=entries.map(e2=>`${fmtTime(e2.in)}–${e2.out?fmtTime(e2.out):'בפנים'}`).join(', ')||'—';
-    rows+=`<tr><td>${fmtDate(s.date)}</td><td style="color:var(--accent);font-weight:600">${s.name||''}</td><td style="text-align:center">${fmtMins(planned)}</td><td style="text-align:center;color:var(--green);font-weight:700">${actual>0?fmtMins(actual):'—'}</td><td style="font-size:11px;color:var(--text2)">${entryStr}</td></tr>`;
+    const entryStr=entries.map(e2=>fmtTime(e2.in)+'–'+(e2.out?fmtTime(e2.out):'בפנים')).join(', ')||'—';
+    rows+='<tr><td>'+fmtDate(s.date)+'</td><td style="color:var(--accent);font-weight:600">'+(s.name||'')+'</td><td style="text-align:center">'+fmtMins(planned)+'</td><td style="text-align:center;color:var(--green);font-weight:700">'+(actual>0?fmtMins(actual):'—')+'</td><td style="font-size:11px;color:var(--text2)">'+entryStr+'</td></tr>';
   });
-  if(!rows){document.getElementById('myHoursList').innerHTML='<p style="color:var(--text2);text-align:center;padding:30px">אין נתונים לתקופה זו</p>';return;}
-  rows+=`<tr style="background:var(--surface2)"><td colspan="2"><strong>סה"כ</strong></td><td style="text-align:center"><strong>${fmtMins(totalPlan)}</strong></td><td style="text-align:center;color:var(--green)"><strong>${totalAct>0?fmtMins(totalAct):'—'}</strong></td><td></td></tr>`;
-  document.getElementById('myHoursList').innerHTML=`<div style="overflow-x:auto"><table class="rep-table" style="min-width:400px"><thead><tr><th>תאריך</th><th>משמרת</th><th style="text-align:center">מתוכנן</th><th style="text-align:center">בפועל</th><th>כניסות/יציאות</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-};
-
-// ===== REPORTS =====
-function populateRepEmpSelect(){
-  filterRepEmps();
+  if(!rows){$('myHoursList').innerHTML='<p style="color:var(--text2);text-align:center;padding:30px">אין נתונים לתקופה זו</p>';return;}
+  rows+='<tr style="background:var(--surface2)"><td colspan="2"><strong>סה"כ</strong></td><td style="text-align:center"><strong>'+fmtMins(totalPlan)+'</strong></td><td style="text-align:center;color:var(--green)"><strong>'+(totalAct>0?fmtMins(totalAct):'—')+'</strong></td><td></td></tr>';
+  $('myHoursList').innerHTML='<div style="overflow-x:auto"><table class="rep-table" style="min-width:400px"><thead><tr><th>תאריך</th><th>משמרת</th><th style="text-align:center">מתוכנן</th><th style="text-align:center">בפועל</th><th>כניסות/יציאות</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
-window.filterRepEmps=function(){
-  const q=(document.getElementById('repEmpSearch')?.value||'').toLowerCase();
-  const sel=document.getElementById('repEmp');if(!sel)return;
+
+// REPORTS
+function populateRepEmpSelect(){
+  const q=$('repEmpSearch').value.toLowerCase();
   const sorted=[..._emps].filter(e=>!q||e.name.toLowerCase().includes(q)||(e.tz||'').includes(q)).sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
-  sel.innerHTML=`<option value="">כל העובדים</option>`+sorted.map(e=>`<option value="${e.id}">${e.name} – ${ROLES[e.role]||e.role}</option>`).join('');
-};
-window.genHoursReport=function(){
-  const from=new Date(document.getElementById('repFrom').value),to=new Date(document.getElementById('repTo').value);
-  to.setDate(to.getDate()+1);
-  const filtEmp=document.getElementById('repEmp').value;
+  $('repEmp').innerHTML='<option value="">כל העובדים</option>'+sorted.map(e=>'<option value="'+e.id+'">'+e.name+' – '+(ROLES[e.role]||e.role)+'</option>').join('');
+}
+$('repEmpSearch').addEventListener('input',populateRepEmpSelect);
+$('repHoursBtn').addEventListener('click',genHoursReport);
+$('repShiftsBtn').addEventListener('click',genShiftsReport);
+
+function genHoursReport(){
+  const from=new Date($('repFrom').value),to=new Date($('repTo').value);to.setDate(to.getDate()+1);
+  const filtEmp=$('repEmp').value;
   const shifts=_shifts.filter(s=>{const d=new Date(s.date);return d>=from&&d<to;});
   const emps=filtEmp?_emps.filter(e=>e.id===filtEmp):[..._emps].sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
   const isMob=window.innerWidth<=680;
@@ -1049,106 +1102,62 @@ window.genHoursReport=function(){
   emps.forEach(emp=>{
     const myS=shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id)));
     if(!myS.length)return;
-    let empTotal=0,hasAny=false;
-    let rows='';
+    let empTotal=0,hasAny=false,rows='';
     myS.forEach(s=>{
-      const entries=getCkEntries(emp.id,s.id);const actual=calcActualMins(emp.id,s.id);
+      const entries=getCkEntries(emp.id,s.id),actual=calcActualMins(emp.id,s.id);
       if(!entries.length)return;
       hasAny=true;empTotal+=actual;grand+=actual;
-      const entryStr=entries.map(e2=>`${fmtTime(e2.in)}–${e2.out?fmtTime(e2.out):'בפנים'}`).join(', ');
-      rows+=isMob?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${fmtDate(s.date)} ${s.name||''}</span><span style="color:var(--green);font-weight:700">${fmtMins(actual)}</span></div>`:`<tr><td>${fmtDate(s.date)}</td><td>${s.name||''}</td><td style="font-size:11px;color:var(--text2)">${entryStr}</td><td style="text-align:center;color:var(--green);font-weight:700">${fmtMins(actual)}</td></tr>`;
+      const entryStr=entries.map(e2=>fmtTime(e2.in)+'–'+(e2.out?fmtTime(e2.out):'בפנים')).join(', ');
+      rows+=isMob?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>'+fmtDate(s.date)+' '+(s.name||'')+'</span><span style="color:var(--green);font-weight:700">'+fmtMins(actual)+'</span></div>':'<tr><td>'+fmtDate(s.date)+'</td><td>'+(s.name||'')+'</td><td style="font-size:11px;color:var(--text2)">'+entryStr+'</td><td style="text-align:center;color:var(--green);font-weight:700">'+fmtMins(actual)+'</td></tr>';
     });
     if(!hasAny)return;
-    content+=isMob?`<div class="rep-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><strong style="font-size:14px">${emp.name}</strong><div style="font-size:11px;color:var(--text2)">${ROLES[emp.role]||emp.role}</div></div><span style="font-weight:800;color:var(--accent);font-size:16px">${fmtMins(empTotal)}</span></div>${rows}</div>`:`<tr style="background:var(--surface2)"><td colspan="3" style="font-weight:700;color:var(--accent)"><strong>${emp.name}</strong> – ${ROLES[emp.role]||emp.role}</td><td style="text-align:center;font-weight:700;color:var(--accent)">${fmtMins(empTotal)}</td></tr>${rows}`;
+    content+=isMob?'<div class="rep-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><strong style="font-size:14px">'+emp.name+'</strong><div style="font-size:11px;color:var(--text2)">'+(ROLES[emp.role]||emp.role)+'</div></div><span style="font-weight:800;color:var(--accent);font-size:16px">'+fmtMins(empTotal)+'</span></div>'+rows+'</div>':'<tr style="background:var(--surface2)"><td colspan="3" style="font-weight:700;color:var(--accent)"><strong>'+emp.name+'</strong> – '+(ROLES[emp.role]||emp.role)+'</td><td style="text-align:center;font-weight:700;color:var(--accent)">'+fmtMins(empTotal)+'</td></tr>'+rows;
   });
-  if(!content){document.getElementById('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין נתוני כניסה/יציאה לתקופה זו</p>';return;}
-  const header=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל | ${document.getElementById('repFrom').value} – ${document.getElementById('repTo').value}</h4><button class="bs bg" onclick="window.print()">🖨️ הדפס</button></div>`;
-  document.getElementById('reportOutput').innerHTML=isMob?`<div class="rep-card">${header}${content}<div style="font-weight:700;color:var(--accent);padding-top:10px;border-top:2px solid var(--border)">סה"כ כללי: ${fmtMins(grand)}</div></div>`:`<div class="rep-card">${header}<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>כניסות/יציאות</th><th style="text-align:center">שעות</th></tr></thead><tbody>${content}<tr class="tot"><td colspan="3"><strong>סה"כ כללי</strong></td><td style="text-align:center"><strong>${fmtMins(grand)}</strong></td></tr></tbody></table></div></div>`;
-};
+  if(!content){$('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין נתוני כניסה/יציאה לתקופה זו</p>';return;}
+  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות בפועל | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="window.print()">🖨️ הדפס</button></div>';
+  $('reportOutput').innerHTML=isMob?'<div class="rep-card">'+hdr+content+'<div style="font-weight:700;color:var(--accent);padding-top:10px;border-top:2px solid var(--border)">סה"כ כללי: '+fmtMins(grand)+'</div></div>':'<div class="rep-card">'+hdr+'<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>כניסות/יציאות</th><th style="text-align:center">שעות</th></tr></thead><tbody>'+content+'<tr class="tot"><td colspan="3"><strong>סה"כ כללי</strong></td><td style="text-align:center"><strong>'+fmtMins(grand)+'</strong></td></tr></tbody></table></div></div>';
+}
 
-window.genShiftsReport=function(){
-  const from=new Date(document.getElementById('repFrom').value),to=new Date(document.getElementById('repTo').value);
-  to.setDate(to.getDate()+1);
-  const filtEmp=document.getElementById('repEmp').value;
-  const filtEmpObj=filtEmp?_emps.find(e=>e.id===filtEmp):null;
+function genShiftsReport(){
+  const from=new Date($('repFrom').value),to=new Date($('repTo').value);to.setDate(to.getDate()+1);
+  const filtEmp=$('repEmp').value,filtEmpObj=filtEmp?_emps.find(e=>e.id===filtEmp):null;
   let shifts=_shifts.filter(s=>{const d=new Date(s.date);return d>=from&&d<to;}).sort((a,b)=>a.date.localeCompare(b.date));
-  // If filtering by employee, only show shifts they are approved for
-  if(filtEmp) shifts=shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(filtEmp)));
-  if(!shifts.length){document.getElementById('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין משמרות לתקופה זו</p>';return;}
-  const isMob=window.innerWidth<=680;
-  let content='';
+  if(filtEmp)shifts=shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(filtEmp)));
+  if(!shifts.length){$('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין משמרות לתקופה זו</p>';return;}
+  const isMob=window.innerWidth<=680;let content='';
   shifts.forEach(s=>{
     const appE=filtEmp?_emps.filter(e=>e.id===filtEmp&&Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(e.id))):_emps.filter(e=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(e.id)));
     const full=isShiftFull(s);
-    const names=appE.map(e=>`${e.name} (${ROLES[e.role]||e.role})`).join(', ')||'—';
-    content+=isMob?`<div class="rep-card" style="border-right:3px solid ${full?'var(--green)':'var(--red)'}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><strong>${fmtDate(s.date)}</strong> – <span style="color:var(--accent);font-weight:700">${s.name||''}</span></div><span class="pill ${full?'pill-ok':'pill-no'}">${full?'✅':'⚠️'}</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:6px">⏰ ${s.start}–${s.end} | ${appE.length} עובדים</div><div style="font-size:12px">${names}</div></div>`:`<tr><td>${fmtDate(s.date)}</td><td style="color:var(--accent);font-weight:600">${s.name||''}</td><td>${s.start}–${s.end}</td><td style="text-align:center">${appE.length}</td><td style="font-size:12px">${names}</td><td><span class="pill ${full?'pill-ok':'pill-no'}">${full?'✅ סגורה':'⚠️ פתוחה'}</span></td></tr>`;
+    const names=appE.map(e=>e.name+' ('+( ROLES[e.role]||e.role)+')').join(', ')||'—';
+    content+=isMob?'<div class="rep-card" style="border-right:3px solid '+(full?'var(--green)':'var(--red)')+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><strong>'+fmtDate(s.date)+'</strong> – <span style="color:var(--accent);font-weight:700">'+(s.name||'')+'</span></div><span class="pill '+(full?'pill-ok':'pill-no')+'">'+(full?'✅':'⚠️')+'</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:6px">⏰ '+s.start+'–'+s.end+' | '+appE.length+' עובדים</div><div style="font-size:12px">'+names+'</div></div>':'<tr><td>'+fmtDate(s.date)+'</td><td style="color:var(--accent);font-weight:600">'+(s.name||'')+'</td><td>'+s.start+'–'+s.end+'</td><td style="text-align:center">'+appE.length+'</td><td style="font-size:12px">'+names+'</td><td><span class="pill '+(full?'pill-ok':'pill-no')+'">'+(full?'✅ סגורה':'⚠️ פתוחה')+'</span></td></tr>';
   });
-  const empTitle=filtEmpObj?` | ${filtEmpObj.name}`:'';
-  const header=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות${empTitle} | ${document.getElementById('repFrom').value} – ${document.getElementById('repTo').value}</h4><button class="bs bg" onclick="window.print()">🖨️ הדפס</button></div>`;
-  document.getElementById('reportOutput').innerHTML=isMob?`<div>${header}${content}</div>`:`<div class="rep-card">${header}<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>${content}</tbody></table></div></div>`;
-};
-
-// ===== WHATSAPP =====
-let _waPending = []; // array of {phone, msg} for pending sends
-
-function sendWhatsApp(phone, msg){
-  if(!phone){ toast('אין מספר טלפון לעובד זה','error'); return; }
-  let p = phone.replace(/[-\s]/g,'');
-  if(p.startsWith('0')) p = '972' + p.slice(1);
-  if(p.startsWith('+')) p = p.slice(1);
-  const url = 'https://wa.me/' + p + '?text=' + encodeURIComponent(msg);
-  window.open(url, '_blank');
+  const empTitle=filtEmpObj?' | '+filtEmpObj.name:'';
+  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות'+empTitle+' | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="window.print()">🖨️ הדפס</button></div>';
+  $('reportOutput').innerHTML=isMob?'<div>'+hdr+content+'</div>':'<div class="rep-card">'+hdr+'<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות ותפקידים</th><th>סטטוס</th></tr></thead><tbody>'+content+'</tbody></table></div></div>';
 }
 
-window.sendWaPending = function(idx){
-  const item = _waPending[idx];
-  if(item) sendWhatsApp(item.phone, item.msg);
-};
-
-function waApprovalMsg(emp, shift, role){
-  return 'שלום ' + emp.name + '! 👋\n\nאושרת למשמרת:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n💼 ' + ROLES[role] + '\n\nבהצלחה! 🙂';
-}
-function waSpontMsg(emp, shift){
-  return 'שלום ' + emp.name + '! 👋\n\nשובצת למשמרת:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n💼 ' + ROLES[emp.role] + '\n\nבהצלחה! 🙂';
-}
-function waChangeMsg(emp, shift){
-  return 'שלום ' + emp.name + '! 🔄\n\nעודכנה משמרת שלך:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n\nנא לבדוק פרטים במערכת.';
-}
-function waCancelMsg(emp, shift){
-  return 'שלום ' + emp.name + '! ❌\n\nהמשמרת הבאה בוטלה:\n📅 ' + fmtDate(shift.date) + '\n⏰ ' + shift.start + '–' + shift.end + '\n\nלפרטים פנה/י למנהל.';
-}
-
-function waLink(phone, msg){
-  let p = phone.replace(/[-\s]/g,'');
-  if(p.startsWith('0')) p = '972' + p.slice(1);
-  if(p.startsWith('+')) p = p.slice(1);
-  const cleanMsg = msg.split('\\n').join('\n');
-  return 'https://wa.me/' + p + '?text=' + encodeURIComponent(cleanMsg);
-}
-
+// WHATSAPP
+function waLink(phone,msg){let p=phone.replace(/[-\s]/g,'');if(p.startsWith('0'))p='972'+p.slice(1);if(p.startsWith('+'))p=p.slice(1);return 'https://wa.me/'+p+'?text='+encodeURIComponent(msg);}
 function showWaModal(items){
-  _waPending = items;
-  let btns = items.map((item) => {
-    const preview = item.msg.split('\\n').join('<br>').split('\n').join('<br>');
-    const link = waLink(item.phone||'', item.msg);
-    return '<div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px">' +
-      '<div style="font-size:13px;line-height:1.7;margin-bottom:10px">' + preview + '</div>' +
-      '<a href="' + link + '" target="_blank" rel="noopener" style="display:block;width:100%;padding:10px;background:rgba(45,122,58,0.15);border:1px solid rgba(45,122,58,0.3);border-radius:10px;color:var(--green);font-weight:700;font-size:13px;text-align:center;text-decoration:none">📱 שלח לוואטסאפ של ' + item.label + '</a></div>';
-  }).join('');
-  document.getElementById('smsContent').innerHTML = btns;
-  openModal('smsModal');
+  let btns=items.map(item=>'<div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px"><div style="font-size:13px;line-height:1.7;margin-bottom:10px;white-space:pre-wrap">'+item.msg+'</div><a href="'+waLink(item.phone||'',item.msg)+'" target="_blank" rel="noopener" style="display:block;width:100%;padding:10px;background:rgba(45,122,58,0.15);border:1px solid rgba(45,122,58,0.3);border-radius:10px;color:var(--green);font-weight:700;font-size:13px;text-align:center;text-decoration:none">📱 שלח לוואטסאפ של '+item.label+'</a></div>').join('');
+  $('smsContent').innerHTML=btns;openModal('smsModal');
 }
+$('closeSmsBtn').addEventListener('click',()=>closeModal('smsModal'));
+function waShiftMsg(emp,shift){
+  return 'שלום '+emp.name+'!\n\nמשמרת '+(shift.name||'')+' פורסמה:\nתאריך: '+fmtDate(shift.date)+'\nשעות: '+shift.start+'-'+shift.end+'\nתפקיד: '+(ROLES[emp.role]||emp.role)+'\n\nניתן לסמן זמינות במערכת.';
+}
+function waApprovalMsg(emp,shift,role){return 'שלום '+emp.name+'! 👋\n\nאושרת למשמרת:\n📅 '+fmtDate(shift.date)+'\n⏰ '+shift.start+'–'+shift.end+'\n💼 '+ROLES[role]+'\n\nבהצלחה! 🙂';}
+function waSpontMsg(emp,shift){return 'שלום '+emp.name+'! 👋\n\nשובצת למשמרת:\n📅 '+fmtDate(shift.date)+'\n⏰ '+shift.start+'–'+shift.end+'\n💼 '+(ROLES[emp.role]||emp.role)+'\n\nבהצלחה! 🙂';}
+function waChangeMsg(emp,shift){return 'שלום '+emp.name+'! 🔄\n\nעודכנה משמרת שלך:\n📅 '+fmtDate(shift.date)+'\n⏰ '+shift.start+'–'+shift.end+'\n\nנא לבדוק פרטים במערכת.';}
+function waCancelMsg(emp,shift){return 'שלום '+emp.name+'! ❌\n\nהמשמרת הבאה בוטלה:\n📅 '+fmtDate(shift.date)+'\n⏰ '+shift.start+'–'+shift.end+'\n\nלפרטים פנה/י למנהל.';}
 
-// ===== INIT =====
+// CLOSE SMS
+$('closeSmsBtn').addEventListener('click',()=>closeModal('smsModal'));
+
+// INIT
 document.addEventListener('DOMContentLoaded',()=>{
-  document.getElementById('spontType').addEventListener('change', function(){
-    document.getElementById('spontExistBlock').style.display = this.value==='exist' ? 'block' : 'none';
-    document.getElementById('spontFreeBlock').style.display = this.value==='free' ? 'block' : 'none';
-  });
-
   startListeners();
-  setTimeout(()=>{document.getElementById('loadingOverlay').style.display='none';document.getElementById('loginScreen').classList.add('active');},1500);
-  ['mgrPass','empCode','mgrUser'].forEach(id=>{document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});});
+  setTimeout(()=>{$('loadingOverlay').style.display='none';$('loginScreen').classList.add('active');},1500);
 });
 </script>
 </body>
