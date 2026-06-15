@@ -1271,8 +1271,20 @@ function waCancelMsg(emp,shift){return'שלום '+emp.name+'!\n\nמשמרת בו
 
 // RESET
 // ===== ARCHIVE =====
-document.getElementById('archiveShowDeletedBtn').addEventListener('click',loadDeletedEmps);
-document.getElementById('archiveShowShiftsBtn').addEventListener('click',loadArchiveShifts);
+document.getElementById('archiveShowDeletedBtn').addEventListener('click',function(){
+  document.getElementById('archiveShowDeletedBtn').classList.add('ba');
+  document.getElementById('archiveShowDeletedBtn').classList.remove('bg2');
+  document.getElementById('archiveShowShiftsBtn').classList.remove('ba');
+  document.getElementById('archiveShowShiftsBtn').classList.add('bg2');
+  loadDeletedEmps();
+});
+document.getElementById('archiveShowShiftsBtn').addEventListener('click',function(){
+  document.getElementById('archiveShowShiftsBtn').classList.add('ba');
+  document.getElementById('archiveShowShiftsBtn').classList.remove('bg2');
+  document.getElementById('archiveShowDeletedBtn').classList.remove('ba');
+  document.getElementById('archiveShowDeletedBtn').classList.add('bg2');
+  loadArchiveShifts();
+});
 document.addEventListener('click',function(e){
   const card=e.target.closest('.del-emp-card');
   if(card){
@@ -1287,7 +1299,7 @@ async function loadDeletedEmps(){
     const snap=await getDocs(collection(db,'deletedEmployees'));
     window._allDeletedEmps=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
     window._expandedDelEmp=null;
-    let html='<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">';
+    let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
     html+='<div class="fg" style="margin:0;flex:1"><label style="font-size:12px;color:var(--text2)">מתאריך</label><input type="date" id="archDelFrom" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
     html+='<div class="fg" style="margin:0;flex:1"><label style="font-size:12px;color:var(--text2)">עד תאריך</label><input type="date" id="archDelTo" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
     html+='<button class="bs bg2" id="filterDelBtn">סנן</button></div>';
@@ -1334,7 +1346,7 @@ function renderDeletedEmpRows(list){
 function loadArchiveShifts(){
   const today=new Date().toISOString().slice(0,10);
   window._allPastShifts=_shifts.filter(function(s){return s.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
-  let html='<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">';
+  let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
   html+='<div class="fg" style="margin:0;flex:1"><label style="font-size:12px;color:var(--text2)">מתאריך</label><input type="date" id="archShiftFrom" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
   html+='<div class="fg" style="margin:0;flex:1"><label style="font-size:12px;color:var(--text2)">עד תאריך</label><input type="date" id="archShiftTo" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
   html+='<button class="bs bg2" id="filterShiftsBtn">סנן</button></div>';
