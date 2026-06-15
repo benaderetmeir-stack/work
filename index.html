@@ -2,6 +2,10 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="version" content="1781525816">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ניהול משמרות</title>
 <link rel="manifest" href="data:application/json,{%22name%22:%22משמרת%22,%22short_name%22:%22משמרת%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23f5f0e8%22,%22theme_color%22:%22%238b6914%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%238b6914'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E🍽️%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
@@ -167,7 +171,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 <div id="appScreen" class="screen">
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:10px"><span class="topbar-logo">🍽️ משמרות</span><span class="sync-dot"></span></div>
-  <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--text2)">שלום, <span id="topbarName" style="font-weight:600">—</span></span><button class="btn-logout" id="logoutBtn">יציאה</button></div>
+  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--text2)">שלום, <span id="topbarName" style="font-weight:600">—</span></span><button class="btn-logout" id="refreshBtn" title="רענן">🔄</button><button class="btn-logout" id="logoutBtn">יציאה</button></div>
 </div>
 <div id="mgrNav" style="background:var(--surface);border-bottom:2px solid var(--border);display:none">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
@@ -522,7 +526,7 @@ function startListeners(){
     _emps=s.docs.map(d=>({id:d.id,...d.data()}));
     // Restore session on first load
     if(!CU){
-      const saved=sessionStorage.getItem('cu');
+      const saved=localStorage.getItem('cu');
       if(saved){
         try{
           const cu=JSON.parse(saved);
@@ -530,9 +534,9 @@ function startListeners(){
           else if(cu.type==='employee'&&cu.empId){
             const emp=_emps.find(e=>e.id===cu.empId&&!e.archived);
             if(emp){CU={type:'employee',emp};enterApp(emp.name);}
-            else sessionStorage.removeItem('cu');
+            else localStorage.removeItem('cu');
           }
-        }catch(e){sessionStorage.removeItem('cu');}
+        }catch(e){localStorage.removeItem('cu');}
       }
     }
     if(CU?.type==='manager'){renderEmployees();renderDashboard();populateRepEmpSelect();}
@@ -567,11 +571,15 @@ $('tabEmp').addEventListener('click',()=>{$('tabEmp').classList.add('active');$(
 $('loginBtn').addEventListener('click',doLogin);
 ['mgrPass','empCode','mgrUser'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
 $('logoutBtn').addEventListener('click',logout);
+$('refreshBtn').addEventListener('click',()=>{
+  if(CU?.type==='manager'){renderDashboard();renderEmployees();loadApproveWeek();toast('✅ רוענן!');}
+  else if(CU?.type==='employee'){renderMyShifts();renderMyHours('week');toast('✅ רוענן!');}
+});
 function doLogin(){
   const err=$('loginErr');err.textContent='';
   const isMgr=$('mgrForm').style.display!=='none';
-  if(isMgr){if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};sessionStorage.setItem('cu',JSON.stringify({type:'manager'}));enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
-  else{const code=$('empCode').value.trim();const emp=_emps.find(e=>e.code===code&&!e.archived);if(emp){CU={type:'employee',emp};sessionStorage.setItem('cu',JSON.stringify({type:'employee',empId:emp.id}));enterApp(emp.name);}else err.textContent='קוד לא נמצא';}
+  if(isMgr){if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};localStorage.setItem('cu',JSON.stringify({type:'manager'}));enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
+  else{const code=$('empCode').value.trim();const emp=_emps.find(e=>e.code===code&&!e.archived);if(emp){CU={type:'employee',emp};localStorage.setItem('cu',JSON.stringify({type:'employee',empId:emp.id}));enterApp(emp.name);}else err.textContent='קוד לא נמצא';}
 }
 function enterApp(name){
   $('loginScreen').classList.remove('active');$('appScreen').classList.add('active');
@@ -590,7 +598,7 @@ function enterApp(name){
   ['pClockDate'].forEach(id=>{const el=$(id);if(el)el.max=todayMin;});
   ['spontDate','pSpontDate'].forEach(id=>{const el=$(id);if(el)el.min=todayMin;});
 }
-function logout(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;sessionStorage.removeItem('cu');$('appScreen').classList.remove('active');$('loginScreen').classList.add('active');}
+function logout(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;localStorage.removeItem('cu');$('appScreen').classList.remove('active');$('loginScreen').classList.add('active');}
 
 // PANELS
 document.querySelectorAll('#mgrNav .nav-tab-icon,#empNav .nav-tab').forEach(btn=>{btn.addEventListener('click',()=>showPanel(btn.dataset.panel));});
@@ -1307,9 +1315,9 @@ async function loadDeletedEmps(){
     const snap=await getDocs(collection(db,'deletedEmployees'));
     window._allDeletedEmps=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
     window._expandedDelEmp=null;
-    let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
-    html+='<div class="fg" style="margin:0"><label style="font-size:12px;color:var(--text2)">מתאריך</label><input type="date" id="archDelFrom" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
-    html+='<div class="fg" style="margin:0"><label style="font-size:12px;color:var(--text2)">עד תאריך</label><input type="date" id="archDelTo" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
+    let html='<div class="form-row" style="margin-bottom:14px">';
+    html+='<div class="fg"><label>מתאריך מחיקה</label><input type="date" id="archDelFrom"/></div>';
+    html+='<div class="fg"><label>עד תאריך</label><input type="date" id="archDelTo"/></div>';
     html+='<button class="bs bg2" id="filterDelBtn">סנן</button></div>';
     html+='<div id="deletedEmpsList">'+renderDeletedEmpRows(window._allDeletedEmps)+'</div>';
     document.getElementById('archiveOutput').innerHTML=html;
@@ -1354,9 +1362,9 @@ function renderDeletedEmpRows(list){
 function loadArchiveShifts(){
   const today=new Date().toISOString().slice(0,10);
   window._allPastShifts=_shifts.filter(function(s){return s.date<today;}).sort(function(a,b){return b.date.localeCompare(a.date);});
-  let html='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">';
-  html+='<div class="fg" style="margin:0"><label style="font-size:12px;color:var(--text2)">מתאריך</label><input type="date" id="archShiftFrom" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
-  html+='<div class="fg" style="margin:0"><label style="font-size:12px;color:var(--text2)">עד תאריך</label><input type="date" id="archShiftTo" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--surface2)"/></div>';
+  let html='<div class="form-row" style="margin-bottom:14px">';
+  html+='<div class="fg"><label>מתאריך</label><input type="date" id="archShiftFrom"/></div>';
+  html+='<div class="fg"><label>עד תאריך</label><input type="date" id="archShiftTo"/></div>';
   html+='<button class="bs bg2" id="filterShiftsBtn">סנן</button></div>';
   html+='<div id="archiveShiftsList">'+renderPastShifts(window._allPastShifts)+'</div>';
   document.getElementById('archiveOutput').innerHTML=html;
@@ -1395,7 +1403,7 @@ $('closeProfileBtn').addEventListener('click',()=>closeModal('empProfileModal'))
 document.addEventListener('DOMContentLoaded',()=>{
   loadCustomRoles().then(()=>startListeners());
   // Check session immediately
-  const _savedCu=sessionStorage.getItem('cu');
+  const _savedCu=localStorage.getItem('cu');
   setTimeout(()=>{
     $('loadingOverlay').style.display='none';
     // Only show login if no session saved and not restored
@@ -1406,7 +1414,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(CU){clearInterval(_waitLogin);}
         else if(_emps.length>0){
           clearInterval(_waitLogin);
-          sessionStorage.removeItem('cu');
+          localStorage.removeItem('cu');
           $('loginScreen').classList.add('active');
         }
       },300);
