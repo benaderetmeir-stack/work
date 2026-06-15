@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ניהול משמרות</title>
+<link rel="manifest" href="data:application/json,{%22name%22:%22משמרת%22,%22short_name%22:%22משמרת%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23f5f0e8%22,%22theme_color%22:%22%238b6914%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%238b6914'/%3E%3Ctext x='96' y='130' font-size='100' text-anchor='middle'%3E🍽️%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="משמרת">
+<meta name="theme-color" content="#8b6914">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
@@ -35,6 +40,11 @@ body{font-family:"Heebo",sans-serif;background:var(--bg);color:var(--text);min-h
 .nav-tabs{display:flex;padding:0 16px;border-bottom:2px solid var(--border);background:var(--surface);overflow-x:auto;}
 .nav-tab{padding:12px 14px;border:none;background:transparent;color:var(--text2);font-family:"Heebo",sans-serif;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;}
 .nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.nav-tab-icon{border:none;background:transparent;cursor:pointer;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text2);font-family:"Heebo",sans-serif;transition:all .2s;border-bottom:3px solid transparent;width:100%;}
+.nav-tab-icon:hover{background:rgba(139,105,20,0.05);}
+.nav-tab-icon.active{color:var(--accent);background:rgba(139,105,20,0.06);border-bottom-color:var(--accent);}
+.nav-icon{font-size:22px;line-height:1;}
+.nav-label{font-size:11px;font-weight:700;}
 .content{padding:16px;flex:1;}
 .panel{display:none;}.panel.active{display:block;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
@@ -83,6 +93,9 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 .ms-info h4{font-size:14px;font-weight:700;}.ms-info p{font-size:12px;color:var(--text2);margin-top:3px;}
 .sbadge{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;}
 .s-app{background:rgba(45,122,58,0.12);color:var(--green);}.s-pend{background:rgba(139,105,20,0.12);color:var(--accent);}.s-none{background:var(--surface);color:var(--text2);border:1px solid var(--border);}
+.avail-btn{padding:8px 18px;border-radius:8px;border:1px solid var(--border);font-family:"Heebo",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:var(--surface2);color:var(--text);}
+.avail-btn.yes.active{background:rgba(45,122,58,0.15);border-color:var(--green);color:var(--green);}
+.avail-btn.no.active{background:rgba(192,57,43,0.12);border-color:var(--red);color:var(--red);}
 .stopwatch{background:var(--green);color:#fff;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:700;font-family:monospace;display:inline-block;}
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
 .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
@@ -156,13 +169,17 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
   <div style="display:flex;align-items:center;gap:10px"><span class="topbar-logo">🍽️ משמרות</span><span class="sync-dot"></span></div>
   <div style="display:flex;align-items:center;gap:12px"><span style="font-size:12px;color:var(--text2)">שלום, <span id="topbarName" style="font-weight:600">—</span></span><button class="btn-logout" id="logoutBtn">יציאה</button></div>
 </div>
-<div class="nav-tabs" id="mgrNav">
-  <button class="nav-tab active" data-panel="dashboard">📊 סקירה</button>
-  <button class="nav-tab" data-panel="employees">👥 עובדים</button>
-  <button class="nav-tab" data-panel="schedule">📅 לוח</button>
-  <button class="nav-tab" data-panel="approve">✅ אישור</button>
-  <button class="nav-tab" data-panel="reports">📄 דוחות</button>
-  <button class="nav-tab" data-panel="archive">📦 ארכיון</button>
+<div id="mgrNav" style="background:var(--surface);border-bottom:2px solid var(--border);display:none">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
+    <button class="nav-tab-icon active" data-panel="dashboard"><span class="nav-icon">📊</span><span class="nav-label">סקירה</span></button>
+    <button class="nav-tab-icon" data-panel="employees"><span class="nav-icon">👥</span><span class="nav-label">עובדים</span></button>
+    <button class="nav-tab-icon" data-panel="schedule"><span class="nav-icon">📅</span><span class="nav-label">לוח</span></button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--border)">
+    <button class="nav-tab-icon" data-panel="approve"><span class="nav-icon">✅</span><span class="nav-label">אישור</span></button>
+    <button class="nav-tab-icon" data-panel="reports"><span class="nav-icon">📄</span><span class="nav-label">דוחות</span></button>
+    <button class="nav-tab-icon" data-panel="archive"><span class="nav-icon">📦</span><span class="nav-label">ארכיון</span></button>
+  </div>
 </div>
 <div class="nav-tabs" id="empNav" style="display:none">
   <button class="nav-tab active" data-panel="myshifts">📋 המשמרות שלי</button>
@@ -501,7 +518,25 @@ async function loadCustomRoles(){
 }
 
 function startListeners(){
-  onSnapshot(collection(db,'employees'),s=>{_emps=s.docs.map(d=>({id:d.id,...d.data()}));if(CU?.type==='manager'){renderEmployees();renderDashboard();populateRepEmpSelect();}});
+  onSnapshot(collection(db,'employees'),s=>{
+    _emps=s.docs.map(d=>({id:d.id,...d.data()}));
+    // Restore session on first load
+    if(!CU){
+      const saved=sessionStorage.getItem('cu');
+      if(saved){
+        try{
+          const cu=JSON.parse(saved);
+          if(cu.type==='manager'){CU={type:'manager'};enterApp('מנהל');}
+          else if(cu.type==='employee'&&cu.empId){
+            const emp=_emps.find(e=>e.id===cu.empId&&!e.archived);
+            if(emp){CU={type:'employee',emp};enterApp(emp.name);}
+            else sessionStorage.removeItem('cu');
+          }
+        }catch(e){sessionStorage.removeItem('cu');}
+      }
+    }
+    if(CU?.type==='manager'){renderEmployees();renderDashboard();populateRepEmpSelect();}
+  });
   onSnapshot(collection(db,'shifts'),s=>{_shifts=s.docs.map(d=>({id:d.id,...d.data()}));if(CU?.type==='manager')renderDashboard();if(CU?.type==='employee')renderMyShifts();});
   onSnapshot(collection(db,'availability'),s=>{_av={};s.docs.forEach(d=>{_av[d.id]=d.data();});if(CU?.type==='employee')renderMyShifts();if(CU?.type==='manager')renderDashboard();});
   onSnapshot(collection(db,'approvals'),s=>{_ap={};s.docs.forEach(d=>{_ap[d.id]=d.data();});if(CU?.type==='employee')renderMyShifts();if(CU?.type==='manager')renderDashboard();});
@@ -535,13 +570,13 @@ $('logoutBtn').addEventListener('click',logout);
 function doLogin(){
   const err=$('loginErr');err.textContent='';
   const isMgr=$('mgrForm').style.display!=='none';
-  if(isMgr){if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
-  else{const code=$('empCode').value.trim();const emp=_emps.find(e=>e.code===code&&!e.archived);if(emp){CU={type:'employee',emp};enterApp(emp.name);}else err.textContent='קוד לא נמצא';}
+  if(isMgr){if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};sessionStorage.setItem('cu',JSON.stringify({type:'manager'}));enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
+  else{const code=$('empCode').value.trim();const emp=_emps.find(e=>e.code===code&&!e.archived);if(emp){CU={type:'employee',emp};sessionStorage.setItem('cu',JSON.stringify({type:'employee',empId:emp.id}));enterApp(emp.name);}else err.textContent='קוד לא נמצא';}
 }
 function enterApp(name){
   $('loginScreen').classList.remove('active');$('appScreen').classList.add('active');
   $('topbarName').textContent=name;
-  $('mgrNav').style.display=CU.type==='manager'?'':'none';
+  $('mgrNav').style.display=CU.type==='manager'?'block':'none';
   $('empNav').style.display=CU.type==='employee'?'':'none';
   if(CU.type==='manager'){showPanel('dashboard');renderDashboard();populateRepEmpSelect();}
   else{showPanel('myshifts');renderMyShifts();}
@@ -555,17 +590,18 @@ function enterApp(name){
   ['pClockDate'].forEach(id=>{const el=$(id);if(el)el.max=todayMin;});
   ['spontDate','pSpontDate'].forEach(id=>{const el=$(id);if(el)el.min=todayMin;});
 }
-function logout(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;$('appScreen').classList.remove('active');$('loginScreen').classList.add('active');}
+function logout(){Object.values(stopwatchTimers).forEach(clearInterval);stopwatchTimers={};CU=null;sessionStorage.removeItem('cu');$('appScreen').classList.remove('active');$('loginScreen').classList.add('active');}
 
 // PANELS
-document.querySelectorAll('#mgrNav .nav-tab,#empNav .nav-tab').forEach(btn=>{btn.addEventListener('click',()=>showPanel(btn.dataset.panel));});
+document.querySelectorAll('#mgrNav .nav-tab-icon,#empNav .nav-tab').forEach(btn=>{btn.addEventListener('click',()=>showPanel(btn.dataset.panel));});
 function showPanel(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   $('panel-'+id).classList.add('active');
   const mgr=['dashboard','employees','schedule','approve','reports','archive'],emp=['myshifts','myhours'];
   const tabs=CU?.type==='manager'?mgr:emp;
   const navSel=CU?.type==='manager'?'#mgrNav':'#empNav';
-  document.querySelectorAll(navSel+' .nav-tab').forEach((t,i)=>t.classList.toggle('active',tabs[i]===id));
+  const tabClass=CU?.type==='manager'?'.nav-tab-icon':'.nav-tab';
+  document.querySelectorAll(navSel+' '+tabClass).forEach((t,i)=>t.classList.toggle('active',tabs[i]===id));
   if(id==='dashboard')renderDashboard();
   if(id==='employees')renderEmployees();
   if(id==='approve')loadApproveWeek();
