@@ -138,7 +138,10 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 .spinner{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .spont-free-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;}
-@media print{.topbar,.nav-tabs,.bs,.btn-primary,.modal-overlay,.toast,.loading-overlay{display:none!important;}.card{box-shadow:none;}body{background:#fff;}}
+@media print{
+  body > *{display:none!important;}
+  #printArea{display:block!important;}
+}
 @media(max-width:680px){
   .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
   .grid-2{grid-template-columns:1fr;}
@@ -560,7 +563,16 @@ function getWeekDates(iso){const s=new Date(iso);return Array.from({length:7},(_
 function shiftMins(s){try{const[sh,sm]=s.start.split(':').map(Number),[eh,em]=s.end.split(':').map(Number);let m=(eh*60+em)-(sh*60+sm);if(m<0)m+=1440;return m;}catch{return 0;}}
 function fmtMins(m){const h=Math.floor(m/60),mn=m%60;return h>0?(mn>0?h+'h '+mn+'m':h+'h'):mn+'m';}
 function getCkEntries(eId,sId){const d=_ck[eId+'_'+sId];if(!d)return[];if(Array.isArray(d.entries))return d.entries;if(d.in)return[{in:d.in,out:d.out||null}];return[];}
-function calcActualMins(eId,sId){let t=0;getCkEntries(eId,sId).forEach(e=>{if(e.in&&e.out)t+=Math.round((e.out-e.in)/60000);});return t;}
+function calcActualMins(eId,sId){
+  // Also check manual key
+  if(sId&&sId.startsWith('manual_')){
+    const key=eId+'_'+sId;
+    const d=_ck[key]||{};
+    let t=0;
+    const entries=Array.isArray(d.entries)?d.entries:(d.in?[{in:d.in,out:d.out||null}]:[]);
+    entries.forEach(e=>{if(e.in&&e.out)t+=Math.round((e.out-e.in)/60000);});
+    return t;
+  }let t=0;getCkEntries(eId,sId).forEach(e=>{if(e.in&&e.out)t+=Math.round((e.out-e.in)/60000);});return t;}
 function isCurrentlyIn(eId,sId){const e=getCkEntries(eId,sId);if(!e.length)return false;const l=e[e.length-1];return l.in&&!l.out;}
 function isShiftFull(s){if(!s.needs)return false;return RK.every(r=>{const n=s.needs[r]||0;if(!n)return true;return(_ap[s.id]?.[r]||[]).length>=n;});}
 function activeEmps(){return _emps.filter(e=>!e.archived);}
@@ -571,10 +583,7 @@ $('tabEmp').addEventListener('click',()=>{$('tabEmp').classList.add('active');$(
 $('loginBtn').addEventListener('click',doLogin);
 ['mgrPass','empCode','mgrUser'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
 $('logoutBtn').addEventListener('click',logout);
-$('refreshBtn').addEventListener('click',()=>{
-  if(CU?.type==='manager'){renderDashboard();renderEmployees();loadApproveWeek();toast('✅ רוענן!');}
-  else if(CU?.type==='employee'){renderMyShifts();renderMyHours('week');toast('✅ רוענן!');}
-});
+$('refreshBtn').addEventListener('click',()=>location.reload());
 function doLogin(){
   const err=$('loginErr');err.textContent='';
   const isMgr=$('mgrForm').style.display!=='none';
@@ -798,10 +807,11 @@ async function addProfileClockEntry(){
   function toTs(t){if(!t)return null;const[h,m]=t.split(':').map(Number);const d=new Date(date);d.setHours(h,m,0,0);return d.getTime();}
   const dayShifts=_shifts.filter(s=>s.date===date);
   const shiftId=dayShifts.length?dayShifts[0].id:'manual_'+date;
-  const existing=_ck[empId+'_'+shiftId]||{};
+  const ckKey=empId+'_'+shiftId;
+  const existing=_ck[ckKey]||{};
   const entries=Array.isArray(existing.entries)?[...existing.entries]:(existing.in?[{in:existing.in,out:existing.out||null}]:[]);
   entries.push({in:toTs(inVal),out:toTs(outVal)||null});
-  await fbSet('clockins',empId+'_'+shiftId,{entries});
+  await fbSet('clockins',ckKey,{entries});
   toast('✅ כניסה נוספה!');renderProfileClockEntries(empId,date);
 }
 function renderProfileClockEntries(empId,date){
@@ -1143,6 +1153,17 @@ function renderMyHours(period){
   let from,to=new Date(now);to.setDate(to.getDate()+1);
   if(period==='week'){from=new Date(now);from.setDate(now.getDate()-now.getDay());}else{from=new Date(now.getFullYear(),now.getMonth(),1);}
   const myShifts=_shifts.filter(s=>{const d=new Date(s.date);return d>=from&&d<to&&Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id));}).sort((a,b)=>a.date.localeCompare(b.date));
+  // Add manual entries not linked to shifts
+  Object.entries(_ck).forEach(([key,val])=>{
+    const parts=key.split('_manual_');
+    if(parts.length===2&&parts[0]===emp.id){
+      const d=new Date(parts[1]);
+      if(d>=from&&d<to&&!myShifts.find(s=>s.date===parts[1])){
+        myShifts.push({id:'manual_'+parts[1],date:parts[1],name:'ידני',start:'',end:'',_manualKey:key});
+      }
+    }
+  });
+  myShifts.sort((a,b)=>a.date.localeCompare(b.date));
   let totalPlan=0,totalAct=0,rows='';
   myShifts.forEach(s=>{
     const planned=shiftMins(s),actual=calcActualMins(emp.id,s.id);totalPlan+=planned;totalAct+=actual;
@@ -1194,22 +1215,50 @@ function genHoursReport(){
   const from=new Date($('repFrom').value),to=new Date($('repTo').value);to.setDate(to.getDate()+1);
   const filtEmp=$('repEmp').value;
   const shifts=_shifts.filter(s=>{const d=new Date(s.date);return d>=from&&d<to;});
+  // Also find manual clockin entries (manual_DATE keys) not linked to shifts
+  const manualEntries={};
+  Object.entries(_ck).forEach(([key,val])=>{
+    if(key.startsWith('manual_')){
+      const date=key.split('manual_')[1].split('_').slice(1).join('_')||key.replace('manual_','').slice(0,10);
+      const empId=key.replace('manual_'+date,'').replace(/^_/,'');
+      // key format: empId_manual_date
+      const parts=key.split('_manual_');
+      if(parts.length===2){
+        const eId=parts[0],d=parts[1];
+        const dd=new Date(d);
+        if(dd>=from&&dd<to){
+          if(!manualEntries[eId])manualEntries[eId]=[];
+          manualEntries[eId].push({date:d,entries:Array.isArray(val.entries)?val.entries:(val.in?[{in:val.in,out:val.out||null}]:[])});
+        }
+      }
+    }
+  });
   const emps=filtEmp?_emps.filter(e=>e.id===filtEmp):[..._emps].sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
   const isMob=window.innerWidth<=680;let content='',grand=0;
   emps.forEach(emp=>{
     const myS=shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id)));
+    // Add manual entries
+    Object.entries(_ck).forEach(([key,val])=>{
+      if(key.startsWith(emp.id+'_manual_')){
+        const date=key.replace(emp.id+'_manual_','');
+        const d=new Date(date);
+        if(d>=from&&d<to&&!myS.find(s=>s.date===date)){
+          myS.push({id:'manual_'+date,date,name:'ידני',start:'',end:'',_manual:true});
+        }
+      }
+    });
     if(!myS.length)return;let empTotal=0,hasAny=false,rows='';
     myS.forEach(s=>{
       const entries=getCkEntries(emp.id,s.id),actual=calcActualMins(emp.id,s.id);if(!entries.length)return;
       hasAny=true;empTotal+=actual;grand+=actual;
       const entryStr=entries.map(e2=>fmtTime(e2.in)+'–'+(e2.out?fmtTime(e2.out):'בפנים')).join(', ');
-      rows+=isMob?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>'+fmtDate(s.date)+' '+(s.name||'')+'</span><span style="color:var(--green);font-weight:700">'+fmtMins(actual)+'</span></div>':'<tr><td>'+fmtDate(s.date)+'</td><td>'+(s.name||'')+'</td><td style="font-size:11px;color:var(--text2)">'+entryStr+'</td><td style="text-align:center;color:var(--green);font-weight:700">'+fmtMins(actual)+'</td></tr>';
+      rows+=isMob?'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px"><span>'+fmtDate(s.date)+' '+(s.name||'')+'<br><span style="font-size:11px;color:var(--text2)">'+entryStr+'</span></span><span style="color:var(--green);font-weight:700">'+fmtMins(actual)+'</span></div>':'<tr><td>'+fmtDate(s.date)+'</td><td>'+(s.name||'')+'</td><td style="font-size:11px;color:var(--text2)">'+entryStr+'</td><td style="text-align:center;color:var(--green);font-weight:700">'+fmtMins(actual)+'</td></tr>';
     });
     if(!hasAny)return;
     content+=isMob?'<div class="rep-card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div><strong style="font-size:14px">'+emp.name+'</strong><div style="font-size:11px;color:var(--text2)">'+(ROLES[emp.role]||emp.role)+(emp.archived?' (ישן)':'')+'</div></div><span style="font-weight:800;color:var(--accent);font-size:16px">'+fmtMins(empTotal)+'</span></div>'+rows+'</div>':'<tr style="background:var(--surface2)"><td colspan="3" style="font-weight:700;color:var(--accent)"><strong>'+emp.name+'</strong> – '+(ROLES[emp.role]||emp.role)+(emp.archived?' <span style="color:var(--text2);font-size:11px">(ישן)</span>':'')+'</td><td style="text-align:center;font-weight:700;color:var(--accent)">'+fmtMins(empTotal)+'</td></tr>'+rows;
   });
   if(!content){$('reportOutput').innerHTML='<p style="color:var(--text2);text-align:center;padding:20px">אין נתוני כניסה/יציאה לתקופה זו</p>';return;}
-  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="window.print()">🖨️ הדפס</button></div>';
+  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח שעות | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="printReport()">🖨️ הדפס</button></div>';
   $('reportOutput').innerHTML=isMob?'<div class="rep-card">'+hdr+content+'<div style="font-weight:700;color:var(--accent);padding-top:10px;border-top:2px solid var(--border)">סה"כ: '+fmtMins(grand)+'</div></div>':'<div class="rep-card">'+hdr+'<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>כניסות/יציאות</th><th style="text-align:center">שעות</th></tr></thead><tbody>'+content+'<tr class="tot"><td colspan="3"><strong>סה"כ</strong></td><td style="text-align:center"><strong>'+fmtMins(grand)+'</strong></td></tr></tbody></table></div></div>';
 }
 function genShiftsReport(){
@@ -1225,7 +1274,7 @@ function genShiftsReport(){
     content+=isMob?'<div class="rep-card" style="border-right:3px solid '+(full?'var(--green)':'var(--red)')+'"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><strong>'+fmtDate(s.date)+'</strong> – <span style="color:var(--accent);font-weight:700">'+(s.name||'')+'</span></div><span class="pill '+(full?'pill-ok':'pill-no')+'">'+(full?'✅':'⚠️')+'</span></div><div style="font-size:12px;color:var(--text2);margin-bottom:6px">⏰ '+s.start+'–'+s.end+' | '+appE.length+' עובדים</div><div style="font-size:12px">'+names+'</div></div>':'<tr><td>'+fmtDate(s.date)+'</td><td style="color:var(--accent);font-weight:600">'+(s.name||'')+'</td><td>'+s.start+'–'+s.end+'</td><td style="text-align:center">'+appE.length+'</td><td style="font-size:12px">'+names+'</td><td><span class="pill '+(full?'pill-ok':'pill-no')+'">'+(full?'✅ סגורה':'⚠️ פתוחה')+'</span></td></tr>';
   });
   const empTitle=filtEmpObj?' | '+filtEmpObj.name:'';
-  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות'+empTitle+' | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="window.print()">🖨️ הדפס</button></div>';
+  const hdr='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px"><h4 style="font-size:14px">דוח משמרות'+empTitle+' | '+$('repFrom').value+' – '+$('repTo').value+'</h4><button class="bs bg2" onclick="printReport()">🖨️ הדפס</button></div>';
   $('reportOutput').innerHTML=isMob?'<div>'+hdr+content+'</div>':'<div class="rep-card">'+hdr+'<div style="overflow-x:auto"><table class="rep-table"><thead><tr><th>תאריך</th><th>משמרת</th><th>שעות</th><th style="text-align:center">עובדים</th><th>שמות</th><th>סטטוס</th></tr></thead><tbody>'+content+'</tbody></table></div></div>';
 }
 
@@ -1386,8 +1435,18 @@ function renderPastShifts(list){
   }).join('');
 }
 
+// PRINT
+window.printReport=function printReport(){
+  const output=$('reportOutput').innerHTML;
+  if(!output||output.trim()===''){toast('אין דוח להדפסה','error');return;}
+  const win=window.open('','_blank');
+  win.document.write('<html dir="rtl"><head><meta charset="UTF-8"><title>דוח</title><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;font-size:13px;color:#2c1f0a;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#8b6914;color:#fff;padding:8px 10px;text-align:right;font-size:12px;}td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:12px;}.rep-card{background:#f9f5ee;border:1px solid #d4c4a0;border-radius:8px;padding:12px;margin-bottom:10px;}h4{margin-bottom:8px;}button{display:none!important;}</style></head><body>'+output+'</body></html>');
+  win.document.close();
+  setTimeout(()=>{win.print();},300);
+}
+
 // ===== RESET =====
-async function resetSystem(){const cols=['employees','shifts','approvals','availability','clockins','confirmed'];for(const c of cols){const snap=await getDocs(collection(db,c));for(const d of snap.docs)await deleteDoc(doc(db,c,d.id));}}
+async function resetSystem(){const cols=['employees','shifts','approvals','availability','clockins','confirmed','deletedEmployees','settings'];for(const c of cols){const snap=await getDocs(collection(db,c));for(const d of snap.docs)await deleteDoc(doc(db,c,d.id));}}
 $('cancelResetBtn').addEventListener('click',()=>closeModal('resetModal'));
 $('confirmResetBtn').addEventListener('click',async()=>{
   if($('resetConfirmInput').value.trim()!=='אפס'){toast('נא להקליד "אפס" לאישור','error');return;}
