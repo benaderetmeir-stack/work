@@ -36,7 +36,7 @@ body{font-family:"Heebo",sans-serif;background:var(--bg);color:var(--text);min-h
 .btn-primary{width:100%;padding:13px;border:none;border-radius:var(--radius);font-family:"Heebo",sans-serif;font-size:15px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff;margin-top:8px;}
 .error-msg{color:var(--red);font-size:13px;text-align:center;margin-top:10px;min-height:18px;}
 #appScreen{flex-direction:column;}
-.topbar{background:var(--surface);border-bottom:2px solid var(--border);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar{background:var(--surface);border-bottom:2px solid var(--border);padding:0 12px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;overflow:hidden;}
 .topbar-logo{font-size:17px;font-weight:800;color:var(--accent);}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
@@ -148,6 +148,8 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
   #_printDiv button{display:none!important;}
 }
 @media(max-width:680px){
+  .topbar-greeting{display:none;}
+  .topbar-logo{font-size:14px;}
   .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
   .grid-2{grid-template-columns:1fr;}
   .roles-grid{grid-template-columns:1fr 1fr;}
@@ -179,7 +181,7 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 <div id="appScreen" class="screen">
 <div class="topbar">
   <div style="display:flex;align-items:center;gap:10px"><span class="topbar-logo">🍽️ משמרות</span><span class="sync-dot"></span></div>
-  <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--text2)">שלום, <span id="topbarName" style="font-weight:600">—</span></span><button class="btn-logout" id="refreshBtn" title="רענן">🔄</button><button class="btn-logout" id="logoutBtn">יציאה</button></div>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topbar-greeting" style="font-size:12px;color:var(--text2)">שלום, <button id="topbarName" style="font-weight:600;cursor:pointer;text-decoration:underline;color:var(--accent);background:none;border:none;font-family:Heebo,sans-serif;font-size:14px;padding:4px 8px;border-radius:6px">—</button></span><button class="btn-logout" id="refreshBtn" title="רענן">🔄</button><button class="btn-logout" id="adminSettingsTopBtn" title="הגדרות" style="font-size:16px">⚙️</button><button class="btn-logout" id="logoutBtn">יציאה</button></div>
 </div>
 <div id="mgrNav" style="background:var(--surface);border-bottom:2px solid var(--border);display:none">
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0">
@@ -426,6 +428,22 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 </div>
 </div>
 
+<div class="modal-overlay" id="adminSettingsModal">
+<div class="modal" style="width:380px">
+  <h3>⚙️ הגדרות מנהל</h3>
+  <div class="fg"><label>שם משתמש נוכחי</label><input id="adminCurrentName" readonly style="opacity:.7"/></div>
+  <div class="fg"><label>שם משתמש חדש</label><input id="adminNewName" placeholder="הזן שם חדש"/></div>
+  <hr style="border:none;border-top:1px solid var(--border);margin:16px 0"/>
+  <div class="fg"><label>סיסמה נוכחית</label><input type="password" id="adminCurrentPass" placeholder="הזן סיסמה נוכחית"/></div>
+  <div class="fg"><label>סיסמה חדשה</label><input type="password" id="adminNewPass" placeholder="הזן סיסמה חדשה"/></div>
+  <div class="fg"><label>אימות סיסמה חדשה</label><input type="password" id="adminNewPass2" placeholder="הזן שוב סיסמה חדשה"/></div>
+  <div class="modal-footer">
+    <button class="bs bg2" id="closeAdminSettingsBtn">ביטול</button>
+    <button class="bs ba" id="saveAdminSettingsBtn">💾 שמור</button>
+  </div>
+</div>
+</div>
+
 <div class="modal-overlay" id="confirmArchiveEmpModal">
 <div class="modal" style="width:380px">
   <h3>📦 העברה ללא פעיל</h3>
@@ -592,12 +610,12 @@ $('refreshBtn').addEventListener('click',()=>location.reload());
 function doLogin(){
   const err=$('loginErr');err.textContent='';
   const isMgr=$('mgrForm').style.display!=='none';
-  if(isMgr){if($('mgrUser').value.trim()==='admin'&&$('mgrPass').value.trim()==='1234'){CU={type:'manager'};localStorage.setItem('cu',JSON.stringify({type:'manager'}));enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
+  if(isMgr){if($('mgrUser').value.trim()===_adminUser&&$('mgrPass').value.trim()===_adminPass){CU={type:'manager'};localStorage.setItem('cu',JSON.stringify({type:'manager'}));enterApp('מנהל');}else err.textContent='שם משתמש או סיסמה שגויים';}
   else{const code=$('empCode').value.trim();const emp=_emps.find(e=>e.code===code&&!e.archived);if(emp){CU={type:'employee',emp};localStorage.setItem('cu',JSON.stringify({type:'employee',empId:emp.id}));enterApp(emp.name);}else err.textContent='קוד לא נמצא';}
 }
 function enterApp(name){
   $('loginScreen').classList.remove('active');$('appScreen').classList.add('active');
-  $('topbarName').textContent=name;
+  $('topbarName').textContent=CU?.type==='manager'?_adminUser:name;
   $('mgrNav').style.display=CU.type==='manager'?'block':'none';
   $('empNav').style.display=CU.type==='employee'?'':'none';
   if(CU.type==='manager'){showPanel('dashboard');renderDashboard();populateRepEmpSelect();}
@@ -1459,6 +1477,72 @@ function renderPastShifts(list){
   }).join('');
 }
 
+// ADMIN SETTINGS
+let _adminUser='admin',_adminPass='1234';
+
+async function loadAdminSettings(){
+  try{
+    const snap=await getDoc(doc(db,'settings','admin'));
+    if(snap.exists()){
+      const d=snap.data();
+      if(d.username)_adminUser=d.username;
+      if(d.password)_adminPass=d.password;
+    }
+  }catch(e){}
+}
+
+function openAdminSettings(){
+  $('adminCurrentName').value=_adminUser;
+  $('adminNewName').value='';
+  $('adminCurrentPass').value='';
+  $('adminNewPass').value='';
+  $('adminNewPass2').value='';
+  openModal('adminSettingsModal');
+}
+
+$('topbarName').addEventListener('click',function(){
+  if(CU?.type==='manager') openAdminSettings();
+});
+$('adminSettingsTopBtn').addEventListener('click',function(){
+  if(CU?.type==='manager') openAdminSettings();
+});
+$('closeAdminSettingsBtn').addEventListener('click',()=>closeModal('adminSettingsModal'));
+$('saveAdminSettingsBtn').addEventListener('click',async()=>{
+  const newName=$('adminNewName').value.trim();
+  const curPass=$('adminCurrentPass').value.trim();
+  const newPass=$('adminNewPass').value.trim();
+  const newPass2=$('adminNewPass2').value.trim();
+  
+  let changed=false;
+  const update={username:_adminUser,password:_adminPass};
+  
+  // Change name
+  if(newName&&newName!==_adminUser){
+    update.username=newName;
+    changed=true;
+  }
+  
+  // Change password
+  if(curPass||newPass||newPass2){
+    if(!curPass){toast('נא להזין סיסמה נוכחית','error');return;}
+    if(curPass!==_adminPass){toast('סיסמה נוכחית שגויה','error');return;}
+    if(!newPass){toast('נא להזין סיסמה חדשה','error');return;}
+    if(newPass!==newPass2){toast('הסיסמאות לא תואמות','error');return;}
+    if(newPass.length<4){toast('סיסמה חייבת להכיל לפחות 4 תווים','error');return;}
+    update.password=newPass;
+    changed=true;
+  }
+  
+  if(!changed){toast('לא בוצעו שינויים','error');return;}
+  
+  await fbSet('settings','admin',update);
+  _adminUser=update.username;
+  _adminPass=update.password;
+  $('topbarName').textContent=_adminUser;
+  closeModal('adminSettingsModal');
+  toast('✅ הגדרות נשמרו!');
+});
+
 // PRINT
 window.printArchive=function printArchive(elId){
   const el=document.getElementById(elId);
@@ -1498,7 +1582,7 @@ $('closeProfileBtn').addEventListener('click',()=>closeModal('empProfileModal'))
 
 // INIT
 document.addEventListener('DOMContentLoaded',()=>{
-  loadCustomRoles().then(()=>startListeners());
+  loadAdminSettings().then(()=>loadCustomRoles()).then(()=>startListeners());
   // Check session immediately
   const _savedCu=localStorage.getItem('cu');
   setTimeout(()=>{
