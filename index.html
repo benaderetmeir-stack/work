@@ -140,7 +140,12 @@ tr:last-child td{border-bottom:none;}tr:hover td{background:rgba(139,105,20,0.03
 .spont-free-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-top:12px;}
 @media print{
   body > *{display:none!important;}
-  #printArea{display:block!important;}
+  #_printDiv{display:block!important;font-family:Arial,sans-serif;direction:rtl;padding:20px;font-size:13px;color:#2c1f0a;}
+  #_printDiv table{width:100%;border-collapse:collapse;margin-bottom:16px;}
+  #_printDiv th{background:#8b6914;color:#fff;padding:8px 10px;text-align:right;font-size:12px;}
+  #_printDiv td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:12px;}
+  #_printDiv .rep-card{background:#f9f5ee;border:1px solid #ccc;border-radius:8px;padding:12px;margin-bottom:10px;}
+  #_printDiv button{display:none!important;}
 }
 @media(max-width:680px){
   .stats-row{grid-template-columns:1fr 1fr;gap:8px;}
@@ -1439,10 +1444,18 @@ function renderPastShifts(list){
 window.printReport=function printReport(){
   const output=$('reportOutput').innerHTML;
   if(!output||output.trim()===''){toast('אין דוח להדפסה','error');return;}
-  const win=window.open('','_blank');
-  win.document.write('<html dir="rtl"><head><meta charset="UTF-8"><title>דוח</title><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;font-size:13px;color:#2c1f0a;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#8b6914;color:#fff;padding:8px 10px;text-align:right;font-size:12px;}td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:12px;}.rep-card{background:#f9f5ee;border:1px solid #d4c4a0;border-radius:8px;padding:12px;margin-bottom:10px;}h4{margin-bottom:8px;}button{display:none!important;}</style></head><body>'+output+'</body></html>');
-  win.document.close();
-  setTimeout(()=>{win.print();win.close();},300);
+  // Add temporary print div
+  let pd=document.getElementById('_printDiv');
+  if(pd)pd.remove();
+  pd=document.createElement('div');
+  pd.id='_printDiv';
+  pd.innerHTML=output;
+  pd.style.cssText='display:none;';
+  document.body.appendChild(pd);
+  // Show only print div
+  pd.style.display='block';
+  window.print();
+  pd.style.display='none';
 }
 
 // ===== RESET =====
