@@ -659,7 +659,7 @@ function renderTodayWidget(){
   if(!ts.length){el.innerHTML='<p style="color:var(--text2);font-size:13px">אין משמרות היום</p>';return;}
   let html='';
   ts.forEach(s=>{
-    const appEmps=activeEmps().filter(e=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(e.id)));
+    const appEmps=activeEmps().filter(e=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(e.id))||getCkEntries(e.id,s.id).length>0);
     html+='<div style="margin-bottom:14px"><div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;border-right:3px solid var(--accent)"><span style="font-weight:800;color:var(--accent)">'+(s.name||'')+'</span><span style="font-size:12px;color:var(--text2)">'+s.start+'–'+s.end+'</span><span style="font-size:12px;color:var(--text2);margin-right:auto">'+appEmps.length+' עובדים</span></div>';
     appEmps.forEach(e=>{
       const entries=getCkEntries(e.id,s.id);const inNow=isCurrentlyIn(e.id,s.id);
@@ -1252,8 +1252,12 @@ function genHoursReport(){
   const emps=filtEmp?_emps.filter(e=>e.id===filtEmp):[..._emps].sort((a,b)=>RK.indexOf(a.role)-RK.indexOf(b.role)||a.name.localeCompare(b.name,'he'));
   const isMob=window.innerWidth<=680;let content='',grand=0;
   emps.forEach(emp=>{
-    const myS=shifts.filter(s=>Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id)));
-    // Add manual entries
+    // Include shifts where emp is approved OR has clock entries
+    const myS=shifts.filter(s=>
+      Object.entries(_ap[s.id]||{}).some(([,ids])=>ids.includes(emp.id))||
+      getCkEntries(emp.id,s.id).length>0
+    );
+    // Add manual entries (no shift on that day)
     Object.entries(_ck).forEach(([key,val])=>{
       if(key.startsWith(emp.id+'_manual_')){
         const date=key.replace(emp.id+'_manual_','');
