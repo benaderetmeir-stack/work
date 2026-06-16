@@ -1356,6 +1356,8 @@ document.getElementById('archiveShowShiftsBtn').addEventListener('click',functio
   loadArchiveShifts();
 });
 document.addEventListener('click',function(e){
+  const printArchBtn=e.target.closest('.print-archive-btn');
+  if(printArchBtn){window.printArchive(printArchBtn.dataset.elid);return;}
   const card=e.target.closest('.del-emp-card');
   if(card){
     const id=card.dataset.empid;
@@ -1374,6 +1376,7 @@ async function loadDeletedEmps(){
     html+='<div class="fg"><label>עד תאריך</label><input type="date" id="archDelTo"/></div>';
     html+='<button class="bs bg2" id="filterDelBtn">סנן</button></div>';
     html+='<div id="deletedEmpsList">'+renderDeletedEmpRows(window._allDeletedEmps)+'</div>';
+    html+='<div style="margin-top:14px"><button class="bs bg2 print-archive-btn" data-elid="deletedEmpsList">🖨️ הדפס</button></div>';
     document.getElementById('archiveOutput').innerHTML=html;
     document.getElementById('filterDelBtn').addEventListener('click',function(){
       const from=document.getElementById('archDelFrom').value;
@@ -1421,6 +1424,7 @@ function loadArchiveShifts(){
   html+='<div class="fg"><label>עד תאריך</label><input type="date" id="archShiftTo"/></div>';
   html+='<button class="bs bg2" id="filterShiftsBtn">סנן</button></div>';
   html+='<div id="archiveShiftsList">'+renderPastShifts(window._allPastShifts)+'</div>';
+  html+='<div style="margin-top:14px"><button class="bs bg2 print-archive-btn" data-elid="archiveShiftsList">🖨️ הדפס</button></div>';
   document.getElementById('archiveOutput').innerHTML=html;
   document.getElementById('filterShiftsBtn').addEventListener('click',function(){
     const from=document.getElementById('archShiftFrom').value;
@@ -1441,6 +1445,18 @@ function renderPastShifts(list){
 }
 
 // PRINT
+window.printArchive=function printArchive(elId){
+  const el=document.getElementById(elId);
+  if(!el||!el.innerHTML.trim()){toast('אין נתונים להדפסה','error');return;}
+  const output=el.innerHTML;
+  const win=window.open('','_blank','width=800,height=600');
+  if(!win){toast('אפשר ההדפסה בהגדרות הדפדפן','error');return;}
+  win.document.write('<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>ארכיון</title><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;font-size:13px;color:#2c1f0a;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#8b6914;color:#fff;padding:8px 10px;text-align:right;font-size:12px;}td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:12px;}.rep-card{background:#f9f5ee;border:1px solid #d4c4a0;border-radius:8px;padding:12px;margin-bottom:10px;}button{display:none!important;}</style></head><body>'+output+'</body></html>');
+  win.document.close();
+  win.addEventListener('afterprint',function(){win.close();});
+  setTimeout(function(){win.print();},400);
+};
+
 window.printReport=function printReport(){
   const output=$('reportOutput').innerHTML;
   if(!output||output.trim()===''){toast('אין דוח להדפסה','error');return;}
