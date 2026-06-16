@@ -1444,35 +1444,12 @@ function renderPastShifts(list){
 window.printReport=function printReport(){
   const output=$('reportOutput').innerHTML;
   if(!output||output.trim()===''){toast('אין דוח להדפסה','error');return;}
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
-  const isPWA=window.matchMedia('(display-mode: standalone)').matches;
-  if(isIOS||isPWA){
-    let pm=document.getElementById('_printModal');
-    if(!pm){pm=document.createElement('div');pm.id='_printModal';document.body.appendChild(pm);}
-    pm.style.cssText='position:fixed;inset:0;background:#fff;z-index:9999;overflow-y:auto;padding:20px;direction:rtl;font-family:Arial,sans-serif;font-size:13px;display:block';
-    pm.innerHTML='';
-    const hdr=document.createElement('div');
-    hdr.style.cssText='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #d4c4a0';
-    hdr.innerHTML='<h3 style="color:#8b6914;margin:0">תצוגת הדפסה</h3>';
-    const bGroup=document.createElement('div');
-    bGroup.style.display='flex';bGroup.style.gap='8px';
-    const b1=document.createElement('button');
-    b1.textContent='🖨️ הדפס';b1.style.cssText='padding:8px 14px;background:#8b6914;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer';
-    b1.addEventListener('click',function(){window.print();});
-    const b2=document.createElement('button');
-    b2.textContent='סגור';b2.style.cssText='padding:8px 14px;background:#f0e8d8;border:1px solid #d4c4a0;border-radius:8px;font-size:13px;cursor:pointer';
-    b2.addEventListener('click',function(){pm.style.display='none';});
-    bGroup.appendChild(b1);bGroup.appendChild(b2);hdr.appendChild(bGroup);
-    const bod=document.createElement('div');bod.innerHTML=output;
-    pm.appendChild(hdr);pm.appendChild(bod);
-  } else {
-    let pd=document.getElementById('_printDiv');
-    if(pd)pd.remove();
-    pd=document.createElement('div');pd.id='_printDiv';
-    pd.innerHTML=output;pd.style.display='none';
-    document.body.appendChild(pd);
-    pd.style.display='block';window.print();pd.style.display='none';
-  }
+  const win=window.open('','_blank','width=800,height=600');
+  if(!win){toast('אפשר ההדפסה בהגדרות הדפדפן','error');return;}
+  win.document.write('<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>דוח</title><style>body{font-family:Arial,sans-serif;direction:rtl;padding:20px;font-size:13px;color:#2c1f0a;}table{width:100%;border-collapse:collapse;margin-bottom:16px;}th{background:#8b6914;color:#fff;padding:8px 10px;text-align:right;font-size:12px;}td{padding:8px 10px;border-bottom:1px solid #ddd;font-size:12px;}.rep-card{background:#f9f5ee;border:1px solid #d4c4a0;border-radius:8px;padding:12px;margin-bottom:10px;}h4{margin-bottom:8px;}button{display:none!important;}</style></head><body>'+output+'</body></html>');
+  win.document.close();
+  win.addEventListener('afterprint',function(){win.close();});
+  setTimeout(function(){win.print();},400);
 }
 
 // ===== RESET =====
