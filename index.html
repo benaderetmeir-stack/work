@@ -579,7 +579,7 @@ function calcActualMins(eId,sId){
     return t;
   }let t=0;getCkEntries(eId,sId).forEach(e=>{if(e.in&&e.out)t+=Math.round((e.out-e.in)/60000);});return t;}
 function isCurrentlyIn(eId,sId){const e=getCkEntries(eId,sId);if(!e.length)return false;const l=e[e.length-1];return l.in&&!l.out;}
-function isShiftFull(s){if(!s.needs)return false;return RK.every(r=>{const n=s.needs[r]||0;if(!n)return true;return(_ap[s.id]?.[r]||[]).length>=n;});}
+function isShiftFull(s){if(!s.needs)return false;const activeIds=new Set(activeEmps().map(e=>e.id));return RK.every(r=>{const n=s.needs[r]||0;if(!n)return true;const approved=(_ap[s.id]?.[r]||[]).filter(id=>activeIds.has(id));return approved.length>=n;});}
 function activeEmps(){return _emps.filter(e=>!e.archived);}
 
 // LOGIN
@@ -770,14 +770,14 @@ $('cancelArchiveEmpBtn').addEventListener('click',()=>closeModal('confirmArchive
 $('confirmArchiveEmpBtn').addEventListener('click',async()=>{
   const emp=_emps.find(e=>e.id===_pendingArchiveEmpId);if(!emp)return;
   await fbSet('employees',emp.id,{...emp,archived:true,active:false});
-  closeModal('confirmArchiveEmpModal');closeModal('empProfileModal');toast('📦 עובד הועבר לישנים');
+  closeModal('confirmArchiveEmpModal');closeModal('empProfileModal');toast('📦 עובד הועבר לישנים');setTimeout(()=>{reloadSchedules();},800);
 });
 $('cancelPermDeleteEmpBtn').addEventListener('click',()=>closeModal('confirmPermDeleteEmpModal'));
 $('confirmPermDeleteEmpBtn').addEventListener('click',async()=>{
   const emp=_emps.find(e=>e.id===_pendingPermDelEmpId);
   if(emp){await fbSet('deletedEmployees',emp.id,{...emp,deletedAt:Date.now(),deletedDate:new Date().toISOString().slice(0,10)});}
   await fbDel('employees',_pendingPermDelEmpId);
-  closeModal('confirmPermDeleteEmpModal');toast('עובד נמחק לצמיתות','error');
+  closeModal('confirmPermDeleteEmpModal');toast('עובד נמחק לצמיתות','error');setTimeout(()=>{reloadSchedules();},800);
 });
 
 function openEmpProfile(id){
@@ -905,7 +905,7 @@ document.addEventListener('click',async function(e){
   if(e.target.classList.contains('restore-emp-btn')||e.target.closest('.restore-emp-btn')){
     const btn=e.target.classList.contains('restore-emp-btn')?e.target:e.target.closest('.restore-emp-btn');
     const emp=_emps.find(x=>x.id===btn.dataset.empid);
-    if(emp){const {archived,...rest}=emp;await fbSet('employees',emp.id,{...rest,archived:false,active:true});toast('✅ עובד שוחזר!');}
+    if(emp){const {archived,...rest}=emp;await fbSet('employees',emp.id,{...rest,archived:false,active:true});toast('✅ עובד שוחזר!');setTimeout(()=>{reloadSchedules();},800);}
   }
   if(e.target.classList.contains('perm-del-emp-btn')||e.target.closest('.perm-del-emp-btn')){
     const btn=e.target.classList.contains('perm-del-emp-btn')?e.target:e.target.closest('.perm-del-emp-btn');
@@ -953,6 +953,16 @@ document.addEventListener('click',async function(e){
 
 // SCHEDULE
 $('loadWeekBtn').addEventListener('click',loadWeek);
+function reloadSchedules(){
+  const sun=new Date();sun.setDate(sun.getDate()-sun.getDay());
+  const iso=sun.toISOString().slice(0,10);
+  if(!$('weekStart').value)$('weekStart').value=iso;
+  if(!$('approveWeekStart').value)$('approveWeekStart').value=iso;
+  loadWeek();
+  loadApproveWeek();
+  renderDashboard();
+}
+
 function loadWeek(){
   const ws=$('weekStart').value;if(!ws){toast('בחר תאריך','error');return;}
   const dates=getWeekDates(ws);let html='';
@@ -1022,7 +1032,8 @@ function loadApproveWeek(){
     RK.forEach(role=>{
       const needed=s.needs?.[role]||0;if(!needed)return;
       const avEmps=activeEmps().filter(e=>e.role===role&&_av[e.id]?.[s.id]==='yes');
-      const appIds=_ap[s.id][role]||[],appCnt=appIds.length;
+      const activeIds2=new Set(activeEmps().map(e=>e.id));
+      const appIds=(_ap[s.id][role]||[]).filter(id=>activeIds2.has(id)),appCnt=appIds.length;
       const isOver=appCnt>needed,isOk=appCnt>=needed;
       rolesHtml+='<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap"><span style="font-size:11px;font-weight:700;color:var(--text2)">'+ROLES[role]+'</span><span style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:1px 7px;font-size:10px;color:var(--text2)">נדרש: '+needed+'</span><span style="border-radius:20px;padding:1px 7px;font-size:10px;font-weight:700;background:'+(isOver?'rgba(196,95,10,0.12)':isOk?'rgba(45,122,58,0.12)':'rgba(139,105,20,0.12)')+';color:'+(isOver?'var(--orange)':isOk?'var(--green)':'var(--accent)')+'">מאושר: '+appCnt+(isOver?' ⚠️':'')+'</span></div>';
       rolesHtml+='<div style="display:flex;flex-wrap:wrap;gap:4px">'+(avEmps.length?avEmps.map(e=>{const app=appIds.includes(e.id);return'<div style="display:inline-flex;align-items:center;gap:4px"><div class="worker-chip toggle-approval-btn '+(app?'approved':'')+'" data-sid="'+s.id+'" data-role="'+role+'" data-eid="'+e.id+'" data-needed="'+needed+'"><span style="font-weight:600">'+e.name+(e.senior?' ⭐':'')+'</span></div><button class="cancel-avail-btn" data-eid="'+e.id+'" data-sid="'+s.id+'" style="padding:3px 6px;border:1px solid rgba(192,57,43,0.3);background:rgba(192,57,43,0.08);color:var(--red);border-radius:5px;cursor:pointer;font-size:10px;font-weight:700">✕</button></div>';}).join(''):'<span style="color:var(--text2);font-size:12px">אין עובדים זמינים</span>')+'</div></div>';
